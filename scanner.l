@@ -1,6 +1,6 @@
 %option yylineno
 %{
-	static int get_line_number(void);
+	#include "tokens.h"
 %}
 
 letra_ [A-Za-z_]
@@ -12,11 +12,12 @@ identificador {letra_}({letra_}|{digito})*
 %%
 
 "lexico" { get_line_number();}
-{identificador} {printf("identificador");}
+{identificador} {return(TK_IDENTIFICADOR);}
 \n  { }
-{inteiro} {printf("inteiro");}
+{inteiro} {return(TK_PR_INT);}
 
 %%
+
 int get_line_number(void)
 {
 	return yylineno;

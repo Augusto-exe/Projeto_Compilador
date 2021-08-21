@@ -471,7 +471,7 @@ int yy_flex_debug = 0;
 char *yytext;
 #line 1 "scanner.l"
 #line 3 "scanner.l"
-	static int get_line_number(void);
+	#include "tokens.h"
 #line 476 "lex.yy.c"
 #line 477 "lex.yy.c"
 
@@ -768,7 +768,7 @@ YY_RULE_SETUP
 case 2:
 YY_RULE_SETUP
 #line 15 "scanner.l"
-{printf("identificador");}
+{return(TK_IDENTIFICADOR);}
 	YY_BREAK
 case 3:
 /* rule 3 can match eol */
@@ -779,7 +779,7 @@ YY_RULE_SETUP
 case 4:
 YY_RULE_SETUP
 #line 17 "scanner.l"
-{printf("inteiro");}
+{return(TK_PR_INT);}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
@@ -1804,6 +1804,7 @@ void yyfree (void * ptr )
 #define YYTABLES_NAME "yytables"
 
 #line 19 "scanner.l"
+
 
 int get_line_number(void)
 {

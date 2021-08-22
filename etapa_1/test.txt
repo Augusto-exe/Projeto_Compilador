@@ -1,0 +1,14 @@
+abc
+def
+lexico
+aaaa
+lexico denovo
+lexico
+aaaaaa
+aux = 12 + 21
+string nova = "nova_string"
+string soma = "aux = 12 + 21"
+/*isso 
+deve ser ignorado 12 13 int
+ string */
+// comentario 1

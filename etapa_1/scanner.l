@@ -10,8 +10,8 @@ inteiro [+-]?{digito}+
 expoent [eE][+-]?{inteiro}
 float {inteiro}"."{digito}+({expoent})?
 identificador {letra_}({letra_}|{digito})*
-char_lit \'.\'
-string_lit \".+\"
+char_lit \'[^"'"]\'
+string_lit \"[^"""]+\"
 comment_1 \/\/.*"\n"
 comment_2 \/\*([^"*/"]*"\n"*[^"*/"]*)*\*\/
 comment comment_1|comment_2

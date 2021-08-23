@@ -10,5 +10,11 @@ string nova = "nova_string"
 string soma = "aux = 12 + 21"
 /*isso 
 deve ser ignorado 12 13 int
- string */
+ string 		*/12 novo
+234
 // comentario 1
+
+12 /*
+        34  56
+        */78
+

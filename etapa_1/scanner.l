@@ -1,30 +1,47 @@
 %option yylineno
 %{
 	#include "tokens.h"
+
 %}
 
 letra_ [A-Za-z_]
 digito [0-9]
-inteiro {digito}+
-expoent [eE][+-]?{integer}
+inteiro [+-]?{digito}+
+expoent [eE][+-]?{inteiro}
+float {inteiro}"."{digito}+({expoent})?
 identificador {letra_}({letra_}|{digito})*
 char_lit \'.\'
 string_lit \".+\"
 comment_1 \/\/.*"\n"
-comment_2 \/"*"(.*"\n".*)*"*"\/
+comment_2 \/\*([^"*/"]*"\n"*[^"*/"]*)*\*\/
 comment comment_1|comment_2
+char_esp ","|";"|":"|"("|")"|"["|"]"|"{"|"}"|"+"|"-"|"|"|"*"|"/"|"<"|">"|"="|"!"|"&"|"%"|"#"|"$"|"^"|"."
+
 
 
 %%
+{comment_1} { }
+{comment_2} { }
+
 "true" {return(TK_LIT_TRUE);}
 "false" {return(TK_LIT_FALSE);}
 {char_lit} {return(TK_LIT_CHAR);}
 {string_lit} {return(TK_LIT_STRING);}
 {inteiro} {return(TK_LIT_INT);}
+{float} {return(TK_LIT_FLOAT);}
+{char_esp} {return(*yytext);}
 
-{comment_1} 
-{comment_2}
 
+
+
+"<=" {return(TK_OC_LE);}
+">=" {return(TK_OC_GE);}
+"==" {return(TK_OC_EQ);}
+"!=" {return(TK_OC_NE);}
+"&&" {return(TK_OC_AND);}
+"||" {return(TK_OC_OR);}
+">>" {return(TK_OC_SL);}
+"<<" {return(TK_OC_SR);}
 "int" {return(TK_PR_INT);}
 "float" {return(TK_PR_FLOAT);}
 "bool" {return(TK_PR_BOOL);}
@@ -58,9 +75,11 @@ comment comment_1|comment_2
 
 
 
+"\t" { }
+"\n"  { }
+" " { }
 
-\n  { }
-[ ] { }
+. {return(TOKEN_ERRO);}
 %%
 
 int get_line_number(void)

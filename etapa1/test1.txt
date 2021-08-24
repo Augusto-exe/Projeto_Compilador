@@ -18,14 +18,18 @@ public class xxx
                         a = a - 4;
                         a = a * 2.5;
                         a = _numero / 1;
+                        numero[0] = 0 || 7;
+                        numero[1] = 1 && 2;
+                        numero[2] = 3 << 4;
+                        numero[3] = 5 << 6;
 
-                        if (a < 0)
-                                umafuncqualquer("numero negativo");
+                        if (a != 0)
+                                umafuncqualquer("um numero...");
                         then (a == 0)
                                 umafuncqualquer("%f, %d, %d", numero1, &numero1, *numero1);
                         else
                                 umafuncqualquer("vai cair aqui?");
-                } while (a > 0);
+                } while (a >= 0);
                 foreach (int aaa in numero1)
                 {
                         for (int x = 0; x < aa; x++)
@@ -47,3 +51,6 @@ public class xxx
 }
 
 end
+
+//a partir daqui é pra dar tudo errado
+\ @ ¨ ~                  ´ ` ?

@@ -80,7 +80,7 @@ char_esp ","|";"|":"|"("|")"|"["|"]"|"{"|"}"|"+"|"-"|"|"|"*"|"/"|"<"|">"|"="|"!"
 \r { }
 " " { }
 
-. {printf("char = - %d -", *yytext);return(TOKEN_ERRO);}
+. {return(TOKEN_ERRO);}
 %%
 
 int get_line_number(void)

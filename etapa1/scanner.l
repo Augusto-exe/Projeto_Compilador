@@ -75,11 +75,12 @@ char_esp ","|";"|":"|"("|")"|"["|"]"|"{"|"}"|"+"|"-"|"|"|"*"|"/"|"<"|">"|"="|"!"
 
 
 
-"\t" { }
-"\n"  { }
+\t { }
+\n  { }
+\r { }
 " " { }
 
-. {return(TOKEN_ERRO);}
+. {printf("char = - %d -", *yytext);return(TOKEN_ERRO);}
 %%
 
 int get_line_number(void)

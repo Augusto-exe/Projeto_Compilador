@@ -1,20 +1,49 @@
-abc
-def
-lexico
-aaaa
-lexico denovo
-lexico
-aaaaaa
-aux = 12 + 21
-string nova = "nova_string"
-string soma = "aux = 12 + 21"
-/*isso 
-deve ser ignorado 12 13 int
- string 		*/12 novo
-234
-// comentario 1
+/*é obvio que esse codigo não funciona,
+  não tenha esperanças 1234 12 13*/
 
-12 /*
-        34  56
-        */78
+public class xxx
+{
+        const aa = 6
+        //tá tudo errado
+        private float _numero = 2.5;
 
+        static int func() {
+                int a = 0, numero1[4] = {0, 1, 2, 3};
+                bool minhaBool123 = 1;
+                char num1num = 'a';
+                string minha_string = "int a = 2;";
+
+                do {
+                        a = a + 2;
+                        a = a - 4;
+                        a = a * 2.5;
+                        a = _numero / 1;
+
+                        if (a < 0)
+                                umafuncqualquer("numero negativo");
+                        then (a == 0)
+                                umafuncqualquer("%f, %d, %d", numero1, &numero1, *numero1);
+                        else
+                                umafuncqualquer("vai cair aqui?");
+                } while (a > 0);
+                foreach (int aaa in numero1)
+                {
+                        for (int x = 0; x < aa; x++)
+                                aaa += x;
+
+                        switch (aaa)
+                        {
+                                case 0:
+                                        umafuncqualquer("é zero");
+                                        break;
+                                case default:
+                                        umafuncqualquer("é nada");
+                        }
+                }
+                
+
+                return 0;
+        }
+}
+
+end

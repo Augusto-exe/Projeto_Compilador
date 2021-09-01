@@ -1,6 +1,8 @@
 %{
 int yylex(void);
 int yyerror (char const *s);
+extern int get_line_number (void);
+extern char *yytext;
 #include <stdlib.h>
 #include <stdio.h>
 %}
@@ -54,14 +56,18 @@ int yyerror (char const *s);
 %%
 
 programa: programa decla | programa func | func  | decla;
-decla: tipo lista_var ';' | TK_PR_STATIC tipo lista_var ';';
-tipo: TK_PR_INT | TK_PR_FLOAT | TK_PR_CHAR | TK_PR_BOOL | TK_PR_STRING;
+decla: tipo_stat lista_var ';';
+tipo_stat: TK_PR_STATIC tipo_nome | tipo_nome
+tipo_cons: TK_PR_CONST tipo_nome | tipo_nome
+tipo_nome: TK_PR_INT | TK_PR_FLOAT | TK_PR_CHAR | TK_PR_BOOL | TK_PR_STRING;
 lista_var: lista_var ',' var | var;
 var: TK_IDENTIFICADOR'['TK_LIT_INT ']' | TK_IDENTIFICADOR;
-func: TK_PR_FOREACH;
+func: tipo_stat TK_IDENTIFICADOR '(' lista_par ')' bloco;
+lista_par: lista_par ',' tipo_cons TK_IDENTIFICADOR | tipo_cons TK_IDENTIFICADOR; 
+bloco: '{' '}';
 
 %%
 int yyerror(char const *s){
-	printf("%s\n", s);
+	printf("%s at line %d UNEXPECTED token \"%s\" \n", s,get_line_number(), yytext);
 	return 1;
 }

@@ -1,3 +1,5 @@
+/* Grupo C -Augusto Exenberger Becker e Vitória Lentz */
+
 /*
 Função principal para realização da análise sintática.
 

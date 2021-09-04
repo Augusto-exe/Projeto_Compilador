@@ -1,3 +1,5 @@
+	/* Grupo C -Augusto Exenberger Becker e Vitória Lentz */
+
 %option yylineno
 %{
 	#include "parser.tab.h"

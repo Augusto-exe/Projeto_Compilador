@@ -580,11 +580,12 @@ int yy_flex_debug = 0;
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
 #line 1 "scanner.l"
-#line 3 "scanner.l"
+#line 2 "scanner.l"
+	/* Grupo C -Augusto Exenberger Becker e Vitória Lentz */
 	#include "parser.tab.h"
 
-#line 587 "lex.yy.c"
 #line 588 "lex.yy.c"
+#line 589 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -801,9 +802,9 @@ YY_DECL
 		}
 
 	{
-#line 22 "scanner.l"
+#line 24 "scanner.l"
 
-#line 807 "lex.yy.c"
+#line 808 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -873,264 +874,264 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 /* rule 1 can match eol */
 YY_RULE_SETUP
-#line 23 "scanner.l"
+#line 25 "scanner.l"
 { }
 	YY_BREAK
 case 2:
 /* rule 2 can match eol */
 YY_RULE_SETUP
-#line 24 "scanner.l"
+#line 26 "scanner.l"
 { }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 26 "scanner.l"
+#line 28 "scanner.l"
 {return(TK_LIT_TRUE);}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 27 "scanner.l"
+#line 29 "scanner.l"
 {return(TK_LIT_FALSE);}
 	YY_BREAK
 case 5:
 /* rule 5 can match eol */
 YY_RULE_SETUP
-#line 28 "scanner.l"
+#line 30 "scanner.l"
 {return(TK_LIT_CHAR);}
 	YY_BREAK
 case 6:
 /* rule 6 can match eol */
 YY_RULE_SETUP
-#line 29 "scanner.l"
+#line 31 "scanner.l"
 {return(TK_LIT_STRING);}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 30 "scanner.l"
+#line 32 "scanner.l"
 {return(TK_LIT_INT);}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 31 "scanner.l"
+#line 33 "scanner.l"
 {return(TK_LIT_FLOAT);}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 32 "scanner.l"
+#line 34 "scanner.l"
 {return(*yytext);}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 37 "scanner.l"
+#line 39 "scanner.l"
 {return(TK_OC_LE);}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 38 "scanner.l"
+#line 40 "scanner.l"
 {return(TK_OC_GE);}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 39 "scanner.l"
+#line 41 "scanner.l"
 {return(TK_OC_EQ);}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 40 "scanner.l"
+#line 42 "scanner.l"
 {return(TK_OC_NE);}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 41 "scanner.l"
+#line 43 "scanner.l"
 {return(TK_OC_AND);}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 42 "scanner.l"
+#line 44 "scanner.l"
 {return(TK_OC_OR);}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 43 "scanner.l"
+#line 45 "scanner.l"
 {return(TK_OC_SL);}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 44 "scanner.l"
+#line 46 "scanner.l"
 {return(TK_OC_SR);}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 45 "scanner.l"
+#line 47 "scanner.l"
 {return(TK_PR_INT);}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 46 "scanner.l"
+#line 48 "scanner.l"
 {return(TK_PR_FLOAT);}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 47 "scanner.l"
+#line 49 "scanner.l"
 {return(TK_PR_BOOL);}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 48 "scanner.l"
+#line 50 "scanner.l"
 {return(TK_PR_CHAR);}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 49 "scanner.l"
+#line 51 "scanner.l"
 {return(TK_PR_STRING);}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 50 "scanner.l"
+#line 52 "scanner.l"
 {return(TK_PR_IF);}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 51 "scanner.l"
+#line 53 "scanner.l"
 {return(TK_PR_THEN);}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 52 "scanner.l"
+#line 54 "scanner.l"
 {return(TK_PR_ELSE);}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 53 "scanner.l"
+#line 55 "scanner.l"
 {return(TK_PR_WHILE);}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 54 "scanner.l"
+#line 56 "scanner.l"
 {return(TK_PR_DO);}
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 55 "scanner.l"
+#line 57 "scanner.l"
 {return(TK_PR_INPUT);}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 56 "scanner.l"
+#line 58 "scanner.l"
 {return(TK_PR_OUTPUT);}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 57 "scanner.l"
+#line 59 "scanner.l"
 {return(TK_PR_RETURN);}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 58 "scanner.l"
+#line 60 "scanner.l"
 {return(TK_PR_CONST);}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 59 "scanner.l"
+#line 61 "scanner.l"
 {return(TK_PR_STATIC);}
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 60 "scanner.l"
+#line 62 "scanner.l"
 {return(TK_PR_FOREACH);}
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 61 "scanner.l"
+#line 63 "scanner.l"
 {return(TK_PR_FOR);}
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 62 "scanner.l"
+#line 64 "scanner.l"
 {return(TK_PR_SWITCH);}
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 63 "scanner.l"
+#line 65 "scanner.l"
 {return(TK_PR_CASE);}
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 64 "scanner.l"
+#line 66 "scanner.l"
 {return(TK_PR_BREAK);}
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 65 "scanner.l"
+#line 67 "scanner.l"
 {return(TK_PR_CONTINUE);}
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 66 "scanner.l"
+#line 68 "scanner.l"
 {return(TK_PR_CLASS);}
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 67 "scanner.l"
+#line 69 "scanner.l"
 {return(TK_PR_PRIVATE);}
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 68 "scanner.l"
+#line 70 "scanner.l"
 {return(TK_PR_PUBLIC);}
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 69 "scanner.l"
+#line 71 "scanner.l"
 {return(TK_PR_PROTECTED);}
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 70 "scanner.l"
+#line 72 "scanner.l"
 {return(TK_PR_END);}
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 71 "scanner.l"
+#line 73 "scanner.l"
 {return(TK_PR_DEFAULT);}
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 74 "scanner.l"
+#line 76 "scanner.l"
 {return(TK_IDENTIFICADOR);}
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 78 "scanner.l"
+#line 80 "scanner.l"
 { }
 	YY_BREAK
 case 47:
 /* rule 47 can match eol */
 YY_RULE_SETUP
-#line 79 "scanner.l"
+#line 81 "scanner.l"
 { }
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 80 "scanner.l"
+#line 82 "scanner.l"
 { }
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 81 "scanner.l"
+#line 83 "scanner.l"
 { }
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
-#line 83 "scanner.l"
+#line 85 "scanner.l"
 {return(TOKEN_ERRO);}
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
-#line 84 "scanner.l"
+#line 86 "scanner.l"
 ECHO;
 	YY_BREAK
-#line 1134 "lex.yy.c"
+#line 1135 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2147,7 +2148,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 84 "scanner.l"
+#line 86 "scanner.l"
 
 
 int get_line_number(void)

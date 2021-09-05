@@ -1,4 +1,4 @@
-/* Grupo C -Augusto Exenberger Becker e Vitória Lentz */
+/* Grupo C - Augusto Exenberger Becker e Vitória Lentz */
 %{
 int yylex(void);
 int yyerror (char const *s);
@@ -72,7 +72,7 @@ lista_par: lista_par ',' tipo_cons TK_IDENTIFICADOR | tipo_cons TK_IDENTIFICADOR
 bloco: '{' '}'; | '{' seq_comando '}' ;
 
 seq_comando: seq_comando comando | comando ;
-comando: bloco ';' | decla_loc ';' | atrib ';' | in_out ';' | fun_call ';';
+comando: bloco ';' | decla_loc ';' | atrib ';' | in_out ';' | fun_call ';' | shift_right ';' | shift_left ';';
 
 decla_loc: tipo_stat_cons lista_var_loc ;
 lista_var_loc: lista_var_loc ',' var_loc | var_loc;
@@ -84,6 +84,9 @@ atrib: var_vet '=' exp;
 var_vet: TK_IDENTIFICADOR | TK_IDENTFICADOR '[' exp ']';
 
 in_out: TK_PR_INPUT TK_IDENTIFICADOR | TK_PR_OUTPUT id_lit;
+
+shift_right:  var_vet TK_OC_SR TK_LIT_INT
+shift_left: TK_LIT_INT TK_OC_SL var_vet
 
 fun_call: TK_IDENTIFICADOR '(' lista_arg ')' ';'
 lista_arg:

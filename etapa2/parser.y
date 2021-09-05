@@ -72,7 +72,7 @@ lista_par: lista_par ',' tipo_cons TK_IDENTIFICADOR | tipo_cons TK_IDENTIFICADOR
 bloco: '{' '}'; | '{' seq_comando '}' ;
 
 seq_comando: seq_comando comando | comando ;
-comando: bloco ';' | decla_loc ';' | atrib ';' | in_out ';' | fun_call ';';
+comando: bloco ';' | decla_loc ';' | atrib ';' | in_out ';' | fun_call ';' | TK_PR_CONTINUE ';' | TK_PR_BREAK ';';
 
 decla_loc: tipo_stat_cons lista_var_loc ;
 lista_var_loc: lista_var_loc ',' var_loc | var_loc;
@@ -81,14 +81,18 @@ id_lit: literal | TK_IDENTIFICADOR ;
 literal: TK_LIT_INT | TK_LIT_FLOAT | TK_LIT_FALSE | TK_LIT_TRUE | TK_LIT_CHAR | TK_LIT_STRING;
 
 atrib: var_vet '=' exp;
-var_vet: TK_IDENTIFICADOR | TK_IDENTFICADOR '[' exp ']';
+var_vet: TK_IDENTIFICADOR | TK_IDENTFICADOR '[' exp_vazio ']';
+
+retorno: TK_PR_RETURN exp_vazio;
 
 in_out: TK_PR_INPUT TK_IDENTIFICADOR | TK_PR_OUTPUT id_lit;
 
-fun_call: TK_IDENTIFICADOR '(' lista_arg ')' ';'
-lista_arg:
+fun_call: TK_IDENTIFICADOR '(' fun_input ')' ';'
+lista_arg: lista_arg ',' id_lit | id_lit;
+fun_input: lista_arg | ;
 
-exp:
+exp: id_lit | fun_call;
+exp_vazio: exp | ;
 
 %%
 int yyerror(char const *s){

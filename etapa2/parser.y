@@ -85,8 +85,8 @@ var_vet: TK_IDENTIFICADOR | TK_IDENTFICADOR '[' exp ']';
 
 in_out: TK_PR_INPUT TK_IDENTIFICADOR | TK_PR_OUTPUT id_lit;
 
-shift_right:  var_vet TK_OC_SR TK_LIT_INT
-shift_left: TK_LIT_INT TK_OC_SL var_vet
+shift_right:  var_vet TK_OC_SR TK_LIT_INT;
+shift_left: TK_LIT_INT TK_OC_SL var_vet;
 
 fun_call: TK_IDENTIFICADOR '(' lista_arg ')' ';'
 lista_arg:

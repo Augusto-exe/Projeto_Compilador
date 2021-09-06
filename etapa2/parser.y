@@ -98,7 +98,7 @@ id_lit_exp: id_lit | exp;
 exp: TOKEN_ERRO;//id_lit | fun_call;
 exp_vazio: exp | ;
 
-comando_if: TK_PR_IF '(' fun_call ')' bloco comando_else;
+comando_if: TK_PR_IF '(' exp ')' bloco comando_else;
 comando_else: TK_PR_ELSE bloco | ;
 comando_for: TK_PR_FOR '(' exp_vazio ':' exp ':' exp_vazio ')' bloco;
 comando_while: TK_PR_WHILE '(' exp ')' TK_PR_DO bloco;

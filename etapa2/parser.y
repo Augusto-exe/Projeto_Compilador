@@ -90,13 +90,18 @@ in_out: TK_PR_INPUT TK_IDENTIFICADOR | TK_PR_OUTPUT id_lit;
 
 shift_right:  var_vet TK_OC_SR TK_LIT_INT;
 shift_left: TK_LIT_INT TK_OC_SL var_vet;
-fun_call: TK_IDENTIFICADOR '(' fun_input ')' ';'
+fun_call: TK_IDENTIFICADOR '(' fun_input ')' ';';
 lista_arg: lista_arg ',' id_lit_exp | id_lit_exp;
 fun_input: lista_arg | ;
 id_lit_exp: id_lit | exp;
 
 exp: TOKEN_ERRO;//id_lit | fun_call;
 exp_vazio: exp | ;
+
+comando_if: TK_PR_IF '(' exp ')' bloco comando_else;
+comando_else: TK_PR_ELSE bloco | ;
+comando_for: TK_PR_FOR '(' exp_vazio ':' exp ':' exp_vazio ')' bloco;
+comando_while: TK_PR_WHILE '(' exp ')' TK_PR_DO bloco;
 
 %%
 int yyerror(char const *s){

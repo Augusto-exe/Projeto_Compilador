@@ -3,7 +3,15 @@ string abc;
 int nome_fun ( const string abc, int guto) {
 static const string pala <= "aaa", gu, new;
 const int a <= 11, b;
-float b<= 7.5
+float b<= 7.5;
+continue;
+break;
+return true;
+input augusto;
+
+abc(guto(),vitoria, "lei de lentz");
+int a;
+return true;
 }
 string (){}
 a

@@ -103,6 +103,9 @@ comando_else: TK_PR_ELSE bloco | ;
 comando_for: TK_PR_FOR '(' exp_vazio ':' exp ':' exp_vazio ')' bloco;
 comando_while: TK_PR_WHILE '(' exp ')' TK_PR_DO bloco;
 
+op_unitario: '+'|'-'|'|'|'*'|'!'|'&'|'#'|'?';
+comando_unitario: op_unitario exp;
+
 %%
 int yyerror(char const *s){
 	printf("%s at line %d UNEXPECTED token \"%s\" \n", s,get_line_number(), yytext);

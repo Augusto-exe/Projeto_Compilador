@@ -53,6 +53,8 @@ extern char *yytext;
 %token TOKEN_ERRO
 
 %start programa
+//%left
+//%right
 
 %%
 
@@ -72,31 +74,33 @@ lista_par: lista_par ',' tipo_cons TK_IDENTIFICADOR | tipo_cons TK_IDENTIFICADOR
 bloco: '{' '}'; | '{' seq_comando '}' ;
 
 seq_comando: seq_comando comando | comando ;
-comando: bloco ';' | decla_loc ';' | atrib ';' | in_out ';' | fun_call ';' | shift_right ';' | shift_left ';'| ret_cont_break ';';
+comando: bloco ';' | decla_loc ';' | atrib ';' | in_out ';' | shift_right ';' | shift_left ';'| ret_cont_break ';' | fun_call ';';
 
 decla_loc: tipo_stat_cons lista_var_loc ;
 lista_var_loc: lista_var_loc ',' var_loc | var_loc;
 var_loc: TK_IDENTIFICADOR TK_OC_LE id_lit | TK_IDENTIFICADOR;
 id_lit: literal | TK_IDENTIFICADOR ;
-literal: TK_LIT_INT | TK_LIT_FLOAT | TK_LIT_FALSE | TK_LIT_TRUE | TK_LIT_CHAR | TK_LIT_STRING;
+literal: literal_num_bool  | TK_LIT_CHAR | TK_LIT_STRING;
+literal_num_bool: TK_LIT_INT | TK_LIT_FLOAT | TK_LIT_FALSE | TK_LIT_TRUE;
+
+
 
 atrib: var_vet '=' exp;
-var_vet: TK_IDENTIFICADOR | TK_IDENTIFICADOR '[' exp_vazio ']';
+var_vet: TK_IDENTIFICADOR | TK_IDENTIFICADOR '[' exp ']';
 
-retorno: TK_PR_RETURN exp_vazio;
+retorno: TK_PR_RETURN exp;
 ret_cont_break: retorno | TK_PR_BREAK | TK_PR_CONTINUE;
 
 in_out: TK_PR_INPUT TK_IDENTIFICADOR | TK_PR_OUTPUT id_lit;
 
 shift_right:  var_vet TK_OC_SR TK_LIT_INT;
 shift_left: TK_LIT_INT TK_OC_SL var_vet;
-fun_call: TK_IDENTIFICADOR '(' fun_input ')' ';';
+fun_call: TK_IDENTIFICADOR '(' fun_input ')' ;
 lista_arg: lista_arg ',' id_lit_exp | id_lit_exp;
 fun_input: lista_arg | ;
-id_lit_exp: id_lit | exp;
+id_lit_exp: TK_LIT_CHAR | TK_LIT_STRING | exp;
 
-exp: TOKEN_ERRO;//id_lit | fun_call;
-exp_vazio: exp | ;
+exp: literal_num_bool | var_vet | fun_call | '(' exp ')';
 
 comando_if: TK_PR_IF '(' exp ')' bloco comando_else;
 comando_else: TK_PR_ELSE bloco | ;

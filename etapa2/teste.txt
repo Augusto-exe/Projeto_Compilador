@@ -10,6 +10,7 @@ return true;
 input augusto;
 
 abc(guto(),vitoria, "lei de lentz");
+u = 12.3 + guto - 12;
 int a;
 return true;
 }

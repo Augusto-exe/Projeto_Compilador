@@ -8,7 +8,7 @@
 
 letra_ [A-Za-z_]
 digito [0-9]
-inteiro [+-]?{digito}+
+inteiro {digito}+
 expoent [eE][+-]?{inteiro}
 float {inteiro}"."{digito}+({expoent})?
 identificador {letra_}({letra_}|{digito})*
@@ -18,7 +18,7 @@ comment_1 \/\/.*"\n"
 comment_2 \/\*([^"*/"]*"\n"*[^"*/"]*)*\*\/
 comment comment_1|comment_2
 char_esp ","|";"|":"|"("|")"|"["|"]"|"{"|"}"|"+"|"-"|"|"|"*"|"/"|"<"|">"|"="|"!"|"&"|"%"|"#"|"$"|"^"|"."|"?"
-
+erro_com \/\*([^"*/"]*"\n"*[^"*/"]*)*
 
 
 %%
@@ -83,6 +83,7 @@ char_esp ","|";"|":"|"("|")"|"["|"]"|"{"|"}"|"+"|"-"|"|"|"*"|"/"|"<"|">"|"="|"!"
 " " { }
 
 . {return(TOKEN_ERRO);}
+{erro_com} {return(TOKEN_ERRO);}
 %%
 
 int get_line_number(void)

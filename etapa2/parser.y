@@ -74,7 +74,7 @@ lista_par: lista_par ',' tipo_cons TK_IDENTIFICADOR | tipo_cons TK_IDENTIFICADOR
 bloco: '{' '}'; | '{' seq_comando '}' ;
 
 seq_comando: seq_comando comando | comando ;
-comando: bloco ';' | decla_loc ';' | atrib ';' | in_out ';' | shift_right ';' | shift_left ';'| ret_cont_break ';' | exp ';';
+comando: bloco ';' | decla_loc ';' | atrib ';' | in_out ';' | shift_right ';' | shift_left ';'| ret_cont_break ';' | fun_call ';';
 
 decla_loc: tipo_stat_cons lista_var_loc ;
 lista_var_loc: lista_var_loc ',' var_loc | var_loc;
@@ -88,20 +88,20 @@ literal_num_bool: TK_LIT_INT | TK_LIT_FLOAT | TK_LIT_FALSE | TK_LIT_TRUE;
 atrib: var_vet '=' exp;
 var_vet: TK_IDENTIFICADOR | TK_IDENTIFICADOR '[' exp ']';
 
-retorno: TK_PR_RETURN exp_vazio;
+retorno: TK_PR_RETURN exp;
 ret_cont_break: retorno | TK_PR_BREAK | TK_PR_CONTINUE;
 
 in_out: TK_PR_INPUT TK_IDENTIFICADOR | TK_PR_OUTPUT id_lit;
 
 shift_right:  var_vet TK_OC_SR TK_LIT_INT;
 shift_left: TK_LIT_INT TK_OC_SL var_vet;
-fun_call: TK_IDENTIFICADOR '(' fun_input ')' ';'
+fun_call: TK_IDENTIFICADOR '(' fun_input ')' ;
 lista_arg: lista_arg ',' id_lit_exp | id_lit_exp;
 fun_input: lista_arg | ;
 id_lit_exp: TK_LIT_CHAR | TK_LIT_STRING | exp;
 
 exp: literal_num_bool | var_vet | fun_call | '(' exp ')';
-exp_vazio: exp | ;
+
 
 %%
 int yyerror(char const *s){

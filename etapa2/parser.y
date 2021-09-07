@@ -56,10 +56,14 @@ extern char *yytext;
 
 %left TK_OC_AND TK_OC_OR
 %left TK_OC_EQ TK_OC_NE
-%right '&' '#'
+%right '&' '#' '!'
 %left '<' '>' TK_OC_LE TK_OC_GE 
+%left '%' '^' '|'
 %left '+' '-'
 %left '*' '/'
+%nonassoc '?' ':'
+%right UMINUS
+%left AMINUS
 
 %%
 
@@ -114,10 +118,10 @@ comando_for: TK_PR_FOR '(' atrib ':' exp ':' atrib ')' bloco;
 comando_while: TK_PR_WHILE '(' exp ')' TK_PR_DO bloco;
 
 op_unitario: '+'|'-'|'|'|'*'|'!'|'&'|'#'|'?';
-exp_unitaria: op_unitario exp;
+exp_unitaria: op_unitario exp %prec UMINUS;
 
 op_binario: '+' | '-' | '*' | '/' | '%' | '|' | '&' | '^' | TK_OC_LE | TK_OC_GE | TK_OC_EQ | TK_OC_NE | TK_OC_AND | TK_OC_OR | '<' | '>' ;
-exp_binaria: exp op_binario exp;
+exp_binaria: exp op_binario exp %prec AMINUS;
 
 
 exp_ternaria: exp '?' exp ':' exp;

@@ -67,7 +67,7 @@ tipo_nome: TK_PR_INT | TK_PR_FLOAT | TK_PR_CHAR | TK_PR_BOOL | TK_PR_STRING;
 tipo_stat_cons: TK_PR_STATIC TK_PR_CONST tipo_nome | TK_PR_CONST tipo_nome | TK_PR_STATIC tipo_nome | tipo_nome;
 
 lista_var: lista_var ',' var | var;
-var: TK_IDENTIFICADOR'['TK_LIT_INT ']' | TK_IDENTIFICADOR;
+var: TK_IDENTIFICADOR'[' pos_int ']' | TK_IDENTIFICADOR;
 
 func: tipo_stat TK_IDENTIFICADOR '(' lista_par ')' bloco;
 lista_par: lista_par ',' tipo_cons TK_IDENTIFICADOR | tipo_cons TK_IDENTIFICADOR; 
@@ -82,7 +82,7 @@ var_loc: TK_IDENTIFICADOR TK_OC_LE id_lit | TK_IDENTIFICADOR;
 id_lit: literal | TK_IDENTIFICADOR ;
 literal: literal_num_bool  | TK_LIT_CHAR | TK_LIT_STRING;
 literal_num_bool: TK_LIT_INT | TK_LIT_FLOAT | TK_LIT_FALSE | TK_LIT_TRUE;
-
+pos_int: '+' TK_LIT_INT | TK_LIT_INT;
 
 
 atrib: var_vet '=' exp;

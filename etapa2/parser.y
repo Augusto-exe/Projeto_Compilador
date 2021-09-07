@@ -78,8 +78,10 @@ func: tipo_stat TK_IDENTIFICADOR '(' lista_par ')' bloco;
 lista_par: lista_par ',' tipo_cons TK_IDENTIFICADOR | tipo_cons TK_IDENTIFICADOR; 
 bloco: '{' '}' | '{' seq_comando '}' ;
 
+
 seq_comando: seq_comando comando | comando ;
 comando: bloco ';' | decla_loc ';' | atrib ';' | in_out ';' | shift_right ';' | shift_left ';'| ret_cont_break ';' | fun_call ';' | comando_controle_fluxo ';' ;
+
 
 decla_loc: tipo_stat_cons lista_var_loc ;
 lista_var_loc: lista_var_loc ',' var_loc | var_loc;
@@ -92,11 +94,10 @@ all_int: '-' TK_LIT_INT | TK_LIT_INT | '+' TK_LIT_INT;
 all_float: '-' TK_LIT_FLOAT | TK_LIT_FLOAT | '+' TK_LIT_FLOAT;
 
 
-atrib: var_vet '=' exp;
-var_vet: TK_IDENTIFICADOR | TK_IDENTIFICADOR '[' exp ']';
+atrib: var_vet '=' exp_plus;
+var_vet: TK_IDENTIFICADOR | TK_IDENTIFICADOR '[' exp_plus ']';
 
-retorno: TK_PR_RETURN exp;
-ret_cont_break: retorno | TK_PR_BREAK | TK_PR_CONTINUE;
+ret_cont_break: TK_PR_RETURN exp_plus | TK_PR_BREAK | TK_PR_CONTINUE;
 
 in_out: TK_PR_INPUT TK_IDENTIFICADOR | TK_PR_OUTPUT id_lit;
 
@@ -105,23 +106,23 @@ shift_left: var_vet TK_OC_SL pos_int;
 fun_call: TK_IDENTIFICADOR '(' fun_input ')' ;
 lista_arg: lista_arg ',' id_lit_exp | id_lit_exp;
 fun_input: lista_arg | ;
-id_lit_exp: TK_LIT_CHAR | TK_LIT_STRING | exp;
+id_lit_exp: literal | exp;
 
-exp: literal_num_bool | var_vet | fun_call | '(' exp ')' | exp_unitaria | exp_binaria | exp_ternaria;
+exp: var_vet | fun_call | '(' exp ')' | exp_unitaria | exp_binaria | exp_ternaria;
+exp_plus: exp | literal_num_bool;
 
-comando_controle_fluxo: comando_if | comando_for | comando_while;
-comando_if: TK_PR_IF '(' exp ')' bloco comando_else;
-comando_else: TK_PR_ELSE bloco | ;
-comando_for: TK_PR_FOR '(' atrib ':' exp ':' atrib ')' bloco;
-comando_while: TK_PR_WHILE '(' exp ')' TK_PR_DO bloco;
+comando_if: TK_PR_IF '(' exp_plus ')' bloco | TK_PR_IF '(' exp_plus ')' bloco TK_PR_ELSE bloco;
+comando_for: TK_PR_FOR '(' atrib ':' exp_plus ':' atrib ')' bloco;
+comando_while: TK_PR_WHILE '(' exp_plus ')' TK_PR_DO bloco;
 
 op_unitario: '+'|'-'|'|'|'*'|'!'|'&'|'#'|'?';
-exp_unitaria: op_unitario exp;
+exp_unitaria: op_unitario exp_plus;
 
 op_binario: '+' | '-' | '*' | '/' | '%' | '|' | '&' | '^' | TK_OC_LE | TK_OC_GE | TK_OC_EQ | TK_OC_NE | TK_OC_AND | TK_OC_OR | '<' | '>' ;
 exp_binaria: exp op_binario exp;
 
-exp_ternaria: exp '?' exp ':' exp;
+
+exp_ternaria: exp_plus '?' exp_plus ':' exp_plus;
 %%
 int yyerror(char const *s){
 	printf("%s at line %d UNEXPECTED token \"%s\" \n", s,get_line_number(), yytext);

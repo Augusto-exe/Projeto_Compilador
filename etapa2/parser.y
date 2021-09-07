@@ -67,7 +67,7 @@ tipo_nome: TK_PR_INT | TK_PR_FLOAT | TK_PR_CHAR | TK_PR_BOOL | TK_PR_STRING;
 tipo_stat_cons: TK_PR_STATIC TK_PR_CONST tipo_nome | TK_PR_CONST tipo_nome | TK_PR_STATIC tipo_nome | tipo_nome;
 
 lista_var: lista_var ',' var | var;
-var: TK_IDENTIFICADOR'['TK_LIT_INT ']' | TK_IDENTIFICADOR;
+var: TK_IDENTIFICADOR'[' pos_int ']' | TK_IDENTIFICADOR;
 
 func: tipo_stat TK_IDENTIFICADOR '(' lista_par ')' bloco;
 lista_par: lista_par ',' tipo_cons TK_IDENTIFICADOR | tipo_cons TK_IDENTIFICADOR; 
@@ -81,8 +81,9 @@ lista_var_loc: lista_var_loc ',' var_loc | var_loc;
 var_loc: TK_IDENTIFICADOR TK_OC_LE id_lit | TK_IDENTIFICADOR;
 id_lit: literal | TK_IDENTIFICADOR ;
 literal: literal_num_bool  | TK_LIT_CHAR | TK_LIT_STRING;
-literal_num_bool: TK_LIT_INT | TK_LIT_FLOAT | TK_LIT_FALSE | TK_LIT_TRUE;
-
+literal_num_bool: all_int | TK_LIT_FLOAT | TK_LIT_FALSE | TK_LIT_TRUE;
+pos_int: '+' TK_LIT_INT | TK_LIT_INT;
+all_int: '-' TK_LIT_INT | TK_LIT_INT | '+' TK_LIT_INT;
 
 
 atrib: var_vet '=' exp;
@@ -93,8 +94,8 @@ ret_cont_break: retorno | TK_PR_BREAK | TK_PR_CONTINUE;
 
 in_out: TK_PR_INPUT TK_IDENTIFICADOR | TK_PR_OUTPUT id_lit;
 
-shift_right:  var_vet TK_OC_SR TK_LIT_INT;
-shift_left: TK_LIT_INT TK_OC_SL var_vet;
+shift_right:  var_vet TK_OC_SR pos_int;
+shift_left: var_vet TK_OC_SL pos_int;
 fun_call: TK_IDENTIFICADOR '(' fun_input ')' ;
 lista_arg: lista_arg ',' id_lit_exp | id_lit_exp;
 fun_input: lista_arg | ;

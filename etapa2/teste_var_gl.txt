@@ -1,0 +1,7 @@
+int meu[10], novo, aux;
+string abc;
+static char str1;
+bool bl_N;
+
+int vet[-1];
+int ab <=10;

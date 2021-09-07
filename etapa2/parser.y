@@ -78,7 +78,7 @@ tipo_stat_cons: TK_PR_STATIC TK_PR_CONST tipo_nome | TK_PR_CONST tipo_nome | TK_
 lista_var: lista_var ',' var | var;
 var: TK_IDENTIFICADOR'[' pos_int ']' | TK_IDENTIFICADOR;
 
-func: tipo_stat TK_IDENTIFICADOR '(' lista_par ')' bloco;
+func: tipo_stat TK_IDENTIFICADOR '(' lista_par ')' bloco | tipo_stat TK_IDENTIFICADOR '('')' bloco;
 lista_par: lista_par ',' tipo_cons TK_IDENTIFICADOR | tipo_cons TK_IDENTIFICADOR; 
 bloco: '{' '}' | '{' seq_comando '}' ;
 

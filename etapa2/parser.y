@@ -52,79 +52,169 @@ extern char *yytext;
 %token TK_IDENTIFICADOR
 %token TOKEN_ERRO
 
+
 %start programa
 
+%right '?' ':'
 %left TK_OC_AND TK_OC_OR
+%left '|'
+%left '&' 
 %left TK_OC_EQ TK_OC_NE
-%right '&' '#' '!'
 %left '<' '>' TK_OC_LE TK_OC_GE 
-%left '%' '^' '|'
 %left '+' '-'
-%left '*' '/'
-%nonassoc '?' ':'
-%right PREC_UNI
-%left PREC_BIN
+%left '*' '/' '%'
+%right '^'
+%right PREC_UNA
 
 %%
 
-programa: programa decla | programa func | ;
+programa:  
+| programa func 
+| programa decla;
 decla: tipo_stat lista_var ';';
 
-tipo_stat: TK_PR_STATIC tipo_nome | tipo_nome;
-tipo_cons: TK_PR_CONST tipo_nome | tipo_nome;
-tipo_nome: TK_PR_INT | TK_PR_FLOAT | TK_PR_CHAR | TK_PR_BOOL | TK_PR_STRING;
-tipo_stat_cons: TK_PR_STATIC TK_PR_CONST tipo_nome | TK_PR_CONST tipo_nome | TK_PR_STATIC tipo_nome | tipo_nome;
+tipo_stat: TK_PR_STATIC tipo_nome 
+| tipo_nome;
+tipo_cons: TK_PR_CONST tipo_nome 
+| tipo_nome;
 
-lista_var: lista_var ',' var | var;
-var: TK_IDENTIFICADOR'[' pos_int ']' | TK_IDENTIFICADOR;
+tipo_nome: TK_PR_INT 
+| TK_PR_FLOAT 
+| TK_PR_CHAR 
+| TK_PR_BOOL 
+| TK_PR_STRING;
 
-func: tipo_stat TK_IDENTIFICADOR '(' lista_par ')' bloco | tipo_stat TK_IDENTIFICADOR '('')' bloco;
-lista_par: lista_par ',' tipo_cons TK_IDENTIFICADOR | tipo_cons TK_IDENTIFICADOR; 
-bloco: '{' '}' | '{' seq_comando '}' ;
+tipo_stat_cons: TK_PR_STATIC TK_PR_CONST tipo_nome 
+| TK_PR_CONST tipo_nome 
+| TK_PR_STATIC tipo_nome 
+| tipo_nome;
 
-seq_comando: seq_comando comando | comando;
-comando: bloco ';' | decla_loc ';' | atrib ';' | in_out ';' | shift_right ';' | shift_left ';'| ret_cont_break ';' | fun_call ';' | comando_controle_fluxo ';';
+lista_var: lista_var ',' var 
+| var;
+var: TK_IDENTIFICADOR'[' pos_int ']' 
+| TK_IDENTIFICADOR;
+
+func: tipo_stat TK_IDENTIFICADOR '(' lista_par ')' bloco 
+| tipo_stat TK_IDENTIFICADOR '('')' bloco;
+
+lista_par: lista_par ',' tipo_cons TK_IDENTIFICADOR 
+| tipo_cons TK_IDENTIFICADOR; 
+
+bloco: '{' '}' 
+| '{' seq_comando '}' ;
+
+seq_comando: seq_comando comando 
+| comando;
+
+comando: bloco ';' 
+| decla_loc ';' 
+| atrib ';' 
+| in_out ';' 
+| shift_right ';' 
+| shift_left ';'
+| ret_cont_break ';' 
+| fun_call ';' 
+| comando_controle_fluxo ';';
 
 decla_loc: tipo_stat_cons lista_var_loc ;
-lista_var_loc: lista_var_loc ',' var_loc | var_loc;
-var_loc: TK_IDENTIFICADOR TK_OC_LE id_lit | TK_IDENTIFICADOR;
-id_lit: literal | TK_IDENTIFICADOR ;
-literal: all_int | all_float | TK_LIT_FALSE | TK_LIT_TRUE  | TK_LIT_CHAR | TK_LIT_STRING;
-literal_num_bool: TK_LIT_INT | TK_LIT_FLOAT | TK_LIT_FALSE | TK_LIT_TRUE;
-pos_int: '+' TK_LIT_INT | TK_LIT_INT;
-all_int: '-' TK_LIT_INT | TK_LIT_INT | '+' TK_LIT_INT;
-all_float: '-' TK_LIT_FLOAT | TK_LIT_FLOAT | '+' TK_LIT_FLOAT;
 
+lista_var_loc: lista_var_loc ',' var_loc 
+| var_loc;
+
+var_loc: TK_IDENTIFICADOR TK_OC_LE id_lit 
+| TK_IDENTIFICADOR;
+
+id_lit: literal 
+| TK_IDENTIFICADOR ;
+
+literal: all_int 
+| all_float 
+| TK_LIT_FALSE 
+| TK_LIT_TRUE  
+| TK_LIT_CHAR 
+| TK_LIT_STRING;
+
+literal_num_bool: TK_LIT_INT 
+| TK_LIT_FLOAT 
+| TK_LIT_FALSE 
+| TK_LIT_TRUE;
+
+pos_int: '+' TK_LIT_INT 
+| TK_LIT_INT;
+
+all_int: '-' TK_LIT_INT 
+| TK_LIT_INT 
+| '+' TK_LIT_INT;
+
+all_float: '-' TK_LIT_FLOAT 
+| TK_LIT_FLOAT 
+| '+' TK_LIT_FLOAT;
 
 atrib: var_vet '=' exp;
-var_vet: TK_IDENTIFICADOR | TK_IDENTIFICADOR '[' exp ']';
 
-ret_cont_break: TK_PR_RETURN exp | TK_PR_BREAK | TK_PR_CONTINUE;
+var_vet: TK_IDENTIFICADOR 
+| TK_IDENTIFICADOR '[' exp ']';
 
-in_out: TK_PR_INPUT TK_IDENTIFICADOR | TK_PR_OUTPUT id_lit;
+ret_cont_break: TK_PR_RETURN exp 
+| TK_PR_BREAK 
+| TK_PR_CONTINUE;
+
+in_out: TK_PR_INPUT TK_IDENTIFICADOR 
+| TK_PR_OUTPUT id_lit;
 
 shift_right:  var_vet TK_OC_SR pos_int;
+
 shift_left: var_vet TK_OC_SL pos_int;
+
 fun_call: TK_IDENTIFICADOR '(' fun_input ')' ;
-lista_arg: lista_arg ',' id_lit_exp | id_lit_exp;
-fun_input: lista_arg | ;
-id_lit_exp: TK_LIT_CHAR | TK_LIT_STRING | exp;
 
-exp: literal_num_bool | var_vet | fun_call | '(' exp ')' | exp_unitaria | exp_binaria | exp_ternaria;
+lista_arg: lista_arg ',' id_lit_exp 
+| id_lit_exp;
 
-comando_controle_fluxo: comando_if | comando_for | comando_while;
-comando_if: TK_PR_IF '(' exp ')' bloco | TK_PR_IF '(' exp ')' bloco TK_PR_ELSE bloco;
+fun_input: 
+|lista_arg ;
+
+id_lit_exp: TK_LIT_CHAR 
+| TK_LIT_STRING 
+| exp;
+
+exp: literal_num_bool 
+| var_vet 
+| fun_call 
+| '(' exp ')' 
+| exp_unitaria 
+| exp '+' exp 
+| exp '-' exp 
+| exp '*' exp 
+| exp '/' exp 
+| exp '%' exp 
+| exp '|' exp 
+| exp '&' exp 
+| exp '^' exp 
+| exp TK_OC_LE exp 
+| exp TK_OC_GE exp 
+| exp TK_OC_EQ exp 
+| exp TK_OC_NE exp 
+| exp TK_OC_AND exp 
+| exp TK_OC_OR exp 
+| exp '<' exp 
+| exp '>' exp 
+| exp '?' exp ':' exp;
+
+comando_controle_fluxo: comando_if 
+| comando_for 
+| comando_while;
+
+comando_if: TK_PR_IF '(' exp ')' bloco 
+| TK_PR_IF '(' exp ')' bloco TK_PR_ELSE bloco;
+
 comando_for: TK_PR_FOR '(' atrib ':' exp ':' atrib ')' bloco;
+
 comando_while: TK_PR_WHILE '(' exp ')' TK_PR_DO bloco;
 
 op_unitario: '+'|'-'|'|'|'*'|'!'|'&'|'#'|'?';
-exp_unitaria: op_unitario exp %prec PREC_UNI;
+exp_unitaria: op_unitario exp %prec PREC_UNA;
 
-op_binario: '+' | '-' | '*' | '/' | '%' | '|' | '&' | '^' | TK_OC_LE | TK_OC_GE | TK_OC_EQ | TK_OC_NE | TK_OC_AND | TK_OC_OR | '<' | '>' ;
-exp_binaria: exp op_binario exp %prec PREC_BIN;
-
-
-exp_ternaria: exp '?' exp ':' exp;
 %%
 
 int yyerror(char const *s){

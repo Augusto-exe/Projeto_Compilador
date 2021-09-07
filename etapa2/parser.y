@@ -67,11 +67,14 @@ extern char *yytext;
 %right PREC_UNA
 
 %%
+//Definição básica de um programa
 
 programa:  
 | programa func 
 | programa decla;
 decla: tipo_stat lista_var ';';
+
+//Definição dos tipos com indicadores prefixados ou não para declaracoes globais
 
 tipo_stat: TK_PR_STATIC tipo_nome 
 | tipo_nome;
@@ -103,6 +106,7 @@ lista_par: lista_par ',' tipo_cons TK_IDENTIFICADOR
 bloco: '{' '}' 
 | '{' seq_comando '}' ;
 
+//Definição da sequencia de comandos e abaixo os diferentes tipos de comandos
 seq_comando: seq_comando comando 
 | comando;
 
@@ -178,6 +182,8 @@ id_lit_exp: TK_LIT_CHAR
 | TK_LIT_STRING 
 | exp;
 
+//Definição das expressões
+
 exp: literal_num_bool 
 | var_vet 
 | fun_call 
@@ -213,7 +219,7 @@ comando_for: TK_PR_FOR '(' atrib ':' exp ':' atrib ')' bloco;
 comando_while: TK_PR_WHILE '(' exp ')' TK_PR_DO bloco;
 
 op_unitario: '+'|'-'|'|'|'*'|'!'|'&'|'#'|'?';
-exp_unitaria: op_unitario exp %prec PREC_UNA;
+exp_unitaria: op_unitario exp %prec PREC_UNA; 						//redefinindo a precedencia para operadores unários
 
 %%
 

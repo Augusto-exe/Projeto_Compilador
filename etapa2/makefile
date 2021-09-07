@@ -1,3 +1,4 @@
+#/* Grupo C - Augusto Exenberger Becker e Vitória Lentz */
 all:	
 	bison -d parser.y
 	flex scanner.l

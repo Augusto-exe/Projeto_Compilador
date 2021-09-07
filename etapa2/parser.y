@@ -86,6 +86,7 @@ literal_num_bool: TK_LIT_INT | TK_LIT_FLOAT | TK_LIT_FALSE | TK_LIT_TRUE;
 
 
 atrib: var_vet '=' exp;
+atrib_vazio: atrib | ;
 var_vet: TK_IDENTIFICADOR | TK_IDENTIFICADOR '[' exp ']';
 
 retorno: TK_PR_RETURN exp;
@@ -93,8 +94,8 @@ ret_cont_break: retorno | TK_PR_BREAK | TK_PR_CONTINUE;
 
 in_out: TK_PR_INPUT TK_IDENTIFICADOR | TK_PR_OUTPUT id_lit;
 
-shift_right:  var_vet TK_OC_SR TK_LIT_INT;
-shift_left: TK_LIT_INT TK_OC_SL var_vet;
+shift_right:  var_vet TK_OC_SR pos_int;
+shift_left: var_vet TK_OC_SL pos_int;
 fun_call: TK_IDENTIFICADOR '(' fun_input ')' ;
 lista_arg: lista_arg ',' id_lit_exp | id_lit_exp;
 fun_input: lista_arg | ;
@@ -105,7 +106,7 @@ exp: literal_num_bool | var_vet | fun_call | '(' exp ')' | exp_unitaria | exp_bi
 comando_controle_fluxo: comando_if | comando_for | comando_while;
 comando_if: TK_PR_IF '(' exp ')' bloco comando_else;
 comando_else: TK_PR_ELSE bloco | ;
-comando_for: TK_PR_FOR '(' atrib ':' exp ':' atrib ')' bloco;
+comando_for: TK_PR_FOR '(' atrib_vazio ':' exp ':' atrib_vazio ')' bloco;
 comando_while: TK_PR_WHILE '(' exp ')' TK_PR_DO bloco;
 
 op_unitario: '+'|'-'|'|'|'*'|'!'|'&'|'#'|'?';

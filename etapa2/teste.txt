@@ -24,7 +24,7 @@ int nome_fun ( const string abc, int guto) {
         return true;
     }
     while(minha_bool) do {
-        for (:minha_bool:) {
+        for (x = a:minha_bool:x = x + 2) {
             abc(guto(),pala, "lei de lentz");
         }
     }

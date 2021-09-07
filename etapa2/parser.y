@@ -87,7 +87,6 @@ all_int: '-' TK_LIT_INT | TK_LIT_INT | '+' TK_LIT_INT;
 
 
 atrib: var_vet '=' exp;
-atrib_vazio: atrib | ;
 var_vet: TK_IDENTIFICADOR | TK_IDENTIFICADOR '[' exp ']';
 
 retorno: TK_PR_RETURN exp;
@@ -107,7 +106,7 @@ exp: literal_num_bool | var_vet | fun_call | '(' exp ')' | exp_unitaria | exp_bi
 comando_controle_fluxo: comando_if | comando_for | comando_while;
 comando_if: TK_PR_IF '(' exp ')' bloco comando_else;
 comando_else: TK_PR_ELSE bloco | ;
-comando_for: TK_PR_FOR '(' atrib_vazio ':' exp ':' atrib_vazio ')' bloco;
+comando_for: TK_PR_FOR '(' atrib ':' exp ':' atrib ')' bloco;
 comando_while: TK_PR_WHILE '(' exp ')' TK_PR_DO bloco;
 
 op_unitario: '+'|'-'|'|'|'*'|'!'|'&'|'#'|'?';

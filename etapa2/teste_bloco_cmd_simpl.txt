@@ -1,0 +1,14 @@
+int f1 (int abc){
+	{};
+
+	{var =10;};
+	
+	if(true){
+	};
+	static const float aux <=10,n <=-12.3 , f1 <= +15, preco;
+	const int clientes <=+55, limite <=-100;
+	
+	static char vet[12];
+	const static string nome<= "Augusto E";
+	;
+}

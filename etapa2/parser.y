@@ -62,12 +62,12 @@ extern char *yytext;
 %left '+' '-'
 %left '*' '/'
 %nonassoc '?' ':'
-%right UMINUS
-%left AMINUS
+%right PREC_UNI
+%left PREC_BIN
 
 %%
 
-programa: programa decla | programa func | func  | decla;
+programa: programa decla | programa func | ;
 decla: tipo_stat lista_var ';';
 
 tipo_stat: TK_PR_STATIC tipo_nome | tipo_nome;
@@ -118,14 +118,15 @@ comando_for: TK_PR_FOR '(' atrib ':' exp ':' atrib ')' bloco;
 comando_while: TK_PR_WHILE '(' exp ')' TK_PR_DO bloco;
 
 op_unitario: '+'|'-'|'|'|'*'|'!'|'&'|'#'|'?';
-exp_unitaria: op_unitario exp %prec UMINUS;
+exp_unitaria: op_unitario exp %prec PREC_UNI;
 
 op_binario: '+' | '-' | '*' | '/' | '%' | '|' | '&' | '^' | TK_OC_LE | TK_OC_GE | TK_OC_EQ | TK_OC_NE | TK_OC_AND | TK_OC_OR | '<' | '>' ;
-exp_binaria: exp op_binario exp %prec AMINUS;
+exp_binaria: exp op_binario exp %prec PREC_BIN;
 
 
 exp_ternaria: exp '?' exp ':' exp;
 %%
+
 int yyerror(char const *s){
 	printf("%s at line %d UNEXPECTED token \"%s\" \n", s,get_line_number(), yytext);
 	return 1;

@@ -81,8 +81,9 @@ lista_var_loc: lista_var_loc ',' var_loc | var_loc;
 var_loc: TK_IDENTIFICADOR TK_OC_LE id_lit | TK_IDENTIFICADOR;
 id_lit: literal | TK_IDENTIFICADOR ;
 literal: literal_num_bool  | TK_LIT_CHAR | TK_LIT_STRING;
-literal_num_bool: TK_LIT_INT | TK_LIT_FLOAT | TK_LIT_FALSE | TK_LIT_TRUE;
+literal_num_bool: all_int | TK_LIT_FLOAT | TK_LIT_FALSE | TK_LIT_TRUE;
 pos_int: '+' TK_LIT_INT | TK_LIT_INT;
+all_int: '-' TK_LIT_INT | TK_LIT_INT | '+' TK_LIT_INT;
 
 
 atrib: var_vet '=' exp;

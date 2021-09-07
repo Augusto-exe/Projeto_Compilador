@@ -53,8 +53,13 @@ extern char *yytext;
 %token TOKEN_ERRO
 
 %start programa
-//%left
-//%right
+
+%left TK_OC_AND TK_OC_OR
+%left TK_OC_EQ TK_OC_NE
+%right '&' '#'
+%left '<' '>' TK_OC_LE TK_OC_GE 
+%left '+' '-'
+%left '*' '/'
 
 %%
 
@@ -73,17 +78,20 @@ func: tipo_stat TK_IDENTIFICADOR '(' lista_par ')' bloco;
 lista_par: lista_par ',' tipo_cons TK_IDENTIFICADOR | tipo_cons TK_IDENTIFICADOR; 
 bloco: '{' '}' | '{' seq_comando '}' ;
 
-seq_comando: seq_comando comando | comando;
-comando: bloco ';' | decla_loc ';' | atrib ';' | in_out ';' | shift_right ';' | shift_left ';'| ret_cont_break ';' | fun_call ';' | comando_if ';' | comando_for ';' | comando_while ';';
+
+seq_comando: seq_comando comando | comando ;
+comando: bloco ';' | decla_loc ';' | atrib ';' | in_out ';' | shift_right ';' | shift_left ';'| ret_cont_break ';' | fun_call ';' | comando_controle_fluxo ';' ;
+
 
 decla_loc: tipo_stat_cons lista_var_loc ;
 lista_var_loc: lista_var_loc ',' var_loc | var_loc;
 var_loc: TK_IDENTIFICADOR TK_OC_LE id_lit | TK_IDENTIFICADOR;
 id_lit: literal | TK_IDENTIFICADOR ;
-literal: literal_num_bool  | TK_LIT_CHAR | TK_LIT_STRING;
-literal_num_bool: all_int | TK_LIT_FLOAT | TK_LIT_FALSE | TK_LIT_TRUE;
+literal: all_int | all_float | TK_LIT_FALSE | TK_LIT_TRUE  | TK_LIT_CHAR | TK_LIT_STRING;
+literal_num_bool: TK_LIT_INT | TK_LIT_FLOAT | TK_LIT_FALSE | TK_LIT_TRUE;
 pos_int: '+' TK_LIT_INT | TK_LIT_INT;
 all_int: '-' TK_LIT_INT | TK_LIT_INT | '+' TK_LIT_INT;
+all_float: '-' TK_LIT_FLOAT | TK_LIT_FLOAT | '+' TK_LIT_FLOAT;
 
 
 atrib: var_vet '=' exp_plus;
@@ -110,8 +118,9 @@ comando_while: TK_PR_WHILE '(' exp_plus ')' TK_PR_DO bloco;
 op_unitario: '+'|'-'|'|'|'*'|'!'|'&'|'#'|'?';
 exp_unitaria: op_unitario exp_plus;
 
-op_binario: '+' | '-' | '*' | '/' | '%' | '|' | '&' | '^' | TK_OC_LE | TK_OC_GE | TK_OC_EQ | TK_OC_NE | TK_OC_AND | TK_OC_OR;
-exp_binaria: exp op_binario exp_plus;
+op_binario: '+' | '-' | '*' | '/' | '%' | '|' | '&' | '^' | TK_OC_LE | TK_OC_GE | TK_OC_EQ | TK_OC_NE | TK_OC_AND | TK_OC_OR | '<' | '>' ;
+exp_binaria: exp op_binario exp;
+
 
 exp_ternaria: exp_plus '?' exp_plus ':' exp_plus;
 %%

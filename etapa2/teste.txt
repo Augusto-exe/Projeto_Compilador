@@ -3,7 +3,7 @@ string abc;
 int nome_fun ( const string abc, int guto) {
     static const string pala <= "aaa", gu, new;
     const int a <= -11, b;
-    float b<= 7.5;
+    float b<= -7.5;
     bool minha_bool;
     minha_bool = true;   
     continue;
@@ -11,6 +11,7 @@ int nome_fun ( const string abc, int guto) {
     //a >> -2;
     //a << -1;
     a << 0;
+    if(true){ aux = 1+2;};
     if (minha_int()) {
         printf("alou");
         break;
@@ -20,14 +21,15 @@ int nome_fun ( const string abc, int guto) {
 
         abc(guto(),vitoria, "lei de lentz");
         u = 12.3 + guto - 12;
+	a = 12.3 *( var1 -15.23E5 +2);
         int a;
         return true;
     }
     while(minha_bool) do {
         for (x = a:minha_bool:x = x + 2) {
             abc(guto(),pala, "lei de lentz");
-        }
-    }
+        };
+    };
     return 3.5;
 }
 

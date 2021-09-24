@@ -112,8 +112,8 @@
 //Definição básica de um programa
 
 programa:  {$$ = NULL; arvore = $$;}
-| func programa  { $1->prox_irmao = $2; $$ = insere_nodo($1,NULL,NULL); arvore = $$;}
-| decla programa {$$ = insere_nodo(NULL,NULL,NULL); arvore = $$;};
+| programa func  { if ($1 == NULL){ $$ = $2; arvore = $2;} else{ $$ = insere_filho($1,$2); } }
+| programa decla {$$ = $1;};
 
 decla: tipo_stat lista_var ';';
 
@@ -140,14 +140,14 @@ lista_var: lista_var ',' var
 var: TK_IDENTIFICADOR'[' pos_int ']' 
 | TK_IDENTIFICADOR;
 
-func: tipo_stat TK_IDENTIFICADOR '(' lista_par ')' bloco {$$ = insere_nodo( NULL, $6,$2); }
-| tipo_stat TK_IDENTIFICADOR '('')' bloco {$$ = insere_nodo( NULL, NULL, NULL); }; 
+func: tipo_stat TK_IDENTIFICADOR '(' lista_par ')' bloco {$$ = insere_nodo( NULL,$2); }
+| tipo_stat TK_IDENTIFICADOR '('')' bloco {$$ = insere_nodo( NULL, NULL); }; 
 
 lista_par: lista_par ',' tipo_cons TK_IDENTIFICADOR 
 | tipo_cons TK_IDENTIFICADOR; 
 
-bloco: '{' '}'  { $$ = insere_nodo(NULL,NULL,NULL);}
-| '{' seq_comando '}' { $$ = insere_nodo(NULL,NULL,NULL);} ;
+bloco: '{' '}'  { $$ = insere_nodo(NULL,NULL);}
+| '{' seq_comando '}' { $$ = insere_nodo(NULL,NULL);} ;
 
 //Definição da sequencia de comandos e abaixo os diferentes tipos de comandos
 seq_comando: seq_comando comando 

@@ -12,7 +12,7 @@ a_nodo* insere_nodo(a_nodo* filho,lexic_val_type* valor_lexico)
 
 a_nodo* insere_filho(a_nodo* arvore, a_nodo* filho){
 	a_nodo* aux;
-	a_nodo* aux = arvore->filho;
+	aux = arvore->filho;
 	if(aux == NULL){
 		arvore->filho = filho;
 	}
@@ -27,8 +27,9 @@ a_nodo* insere_filho(a_nodo* arvore, a_nodo* filho){
 }
 
 a_nodo* insere_filho_prefix(a_nodo* arvore, a_nodo* filho){
-	a_nodo* aux, filho_atual;
-	a_nodo* filho_atual = arvore->filho;
+	a_nodo* aux;
+	a_nodo* filho_atual;
+	filho_atual = arvore->filho;
 	if(filho_atual == NULL){
 		arvore->filho = filho;
 	}
@@ -54,13 +55,15 @@ void exporta_label(a_nodo *arvore){
 		exporta_label(arvore->prox_irmao);
 	if(arvore->filho!=NULL)
 		exporta_label(arvore->filho);
-	printf("%p [label =]\n",arvore);//\"%s\"", arvore, arvore->valor_lexico->tk_value.vStr);
+	if( arvore->valor_lexico != NULL){
+		printf("%p [label =\"%s\"]\n", arvore, arvore->valor_lexico->tk_value.vStr);
+	}
+	else
+		printf("%p [label =\"NULL\"]\n", arvore);
 }
 void exporta_rela(a_nodo *arvore){
-	printf("a\n");
 	if(arvore != NULL)
 	{
-		printf("b\n");
 		a_nodo *aux;
 		aux = arvore->filho;
 		while(aux != NULL){

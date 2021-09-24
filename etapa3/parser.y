@@ -112,7 +112,7 @@
 //Definição básica de um programa
 
 programa:  {$$ = NULL; arvore = $$;}
-| programa func  { if ($1 == NULL){ $$ = $2; arvore = $2;} else{ $$ = insere_filho($1,$2); } }
+| programa func  { if ($1 == NULL){ $$ = $2; arvore = $2;} else{ insere_filho($1,$2); $$=$2; } }
 | programa decla {$$ = $1;};
 
 decla: tipo_stat lista_var ';';
@@ -141,7 +141,7 @@ var: TK_IDENTIFICADOR'[' pos_int ']'
 | TK_IDENTIFICADOR;
 
 func: tipo_stat TK_IDENTIFICADOR '(' lista_par ')' bloco {$$ = insere_nodo( NULL,$2); }
-| tipo_stat TK_IDENTIFICADOR '('')' bloco {$$ = insere_nodo( NULL, NULL); }; 
+| tipo_stat TK_IDENTIFICADOR '('')' bloco {$$ = insere_nodo( NULL, $2); }; 
 
 lista_par: lista_par ',' tipo_cons TK_IDENTIFICADOR 
 | tipo_cons TK_IDENTIFICADOR; 

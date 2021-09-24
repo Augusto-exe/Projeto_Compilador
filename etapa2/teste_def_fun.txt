@@ -10,11 +10,11 @@ char tr_2(const int abc,char new_c){
 
 
 };
-static bool tr(,int aux){
+static bool tr(int aux){
 
 
 }
-string tr_1(bool a1[12]){
+string tr_1(bool a1){
 
 
 }

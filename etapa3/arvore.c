@@ -48,6 +48,7 @@ a_nodo* insere_filho_prefix(a_nodo* arvore, a_nodo* filho){
 void exporta(void *arvore)
 {
 	exporta_rela((a_nodo*) arvore);
+	printf("\n\n");
 	exporta_label((a_nodo*) arvore);
 }
 void exporta_label(a_nodo *arvore){

@@ -4,6 +4,7 @@
 #include <string.h>
 
 
+
 #define TIPO_LIT		1
 #define TIPO_CHAR_ESP   2
 #define TIPO_OP_CMP     3
@@ -18,7 +19,6 @@
 
 
 struct lexic_val_type{
-
 int lineno;
 int type;
 union

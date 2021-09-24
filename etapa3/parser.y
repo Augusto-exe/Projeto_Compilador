@@ -6,15 +6,17 @@
 	int yyerror (char const *s);
 	extern int get_line_number (void);
 	extern char *yytext;
+	extern void *arvore;
 
 	#include <stdlib.h>
 	#include <stdio.h>
-	#include "common.h"
+	#include "arvore.h"
 		
 %}
 
 %union{
-	struct lexic_val_type* valor_lexico;	
+	struct lexic_val_type* valor_lexico;
+	struct arvore* nodo;	
 }
 
 %token TK_PR_INT
@@ -44,22 +46,53 @@
 %token TK_PR_PROTECTED
 %token TK_PR_END
 %token TK_PR_DEFAULT
-%token TK_OC_LE
-%token TK_OC_GE
-%token TK_OC_EQ
-%token TK_OC_NE
-%token TK_OC_AND
-%token TK_OC_OR
-%token TK_OC_SL
-%token TK_OC_SR
-%token TK_LIT_INT
-%token TK_LIT_FLOAT
-%token TK_LIT_FALSE
-%token TK_LIT_TRUE
-%token TK_LIT_CHAR
-%token TK_LIT_STRING
-%token TK_IDENTIFICADOR
+%token <valor_lexico> TK_OC_LE
+%token <valor_lexico> TK_OC_GE
+%token <valor_lexico> TK_OC_EQ
+%token <valor_lexico> TK_OC_NE
+%token <valor_lexico> TK_OC_AND
+%token <valor_lexico> TK_OC_OR
+%token <valor_lexico> TK_OC_SL
+%token <valor_lexico> TK_OC_SR
+%token <valor_lexico> TK_LIT_INT
+%token <valor_lexico> TK_LIT_FLOAT
+%token <valor_lexico> TK_LIT_FALSE
+%token <valor_lexico> TK_LIT_TRUE
+%token <valor_lexico> TK_LIT_CHAR
+%token <valor_lexico> TK_LIT_STRING
+%token <valor_lexico> TK_IDENTIFICADOR
 %token TOKEN_ERRO
+
+%token <valor_lexico> ','
+%token <valor_lexico> ';' 
+%token <valor_lexico>  ':'
+%token <valor_lexico> '('
+%token <valor_lexico> ')'
+%token <valor_lexico> '['
+%token <valor_lexico>  ']'
+%token <valor_lexico> '{'
+%token <valor_lexico> '}'
+%token <valor_lexico> '+'
+%token <valor_lexico> '-' 
+%token <valor_lexico> '|' 
+%token <valor_lexico> '*' 
+%token <valor_lexico> '/' 
+%token <valor_lexico> '<' 
+%token <valor_lexico> '>' 
+%token <valor_lexico> '=' 
+%token <valor_lexico> '!' 
+%token <valor_lexico> '&' 
+%token <valor_lexico> '%' 
+%token <valor_lexico> '#' 
+%token <valor_lexico> '$' 
+%token <valor_lexico> '^' 
+%token <valor_lexico> '.' 
+%token <valor_lexico> '?'
+
+%type <nodo> programa
+%type <nodo> func
+%type <nodo> bloco
+
 
 
 %start programa
@@ -78,9 +111,10 @@
 %%
 //Definição básica de um programa
 
-programa:  
-| programa func 
-| programa decla;
+programa:  {$$ = NULL; arvore = $$;}
+| func programa  { $1->prox_irmao = $2; $$ = insere_nodo($1,NULL,NULL); arvore = $$;}
+| decla programa {$$ = insere_nodo(NULL,NULL,NULL); arvore = $$;};
+
 decla: tipo_stat lista_var ';';
 
 //Definição dos tipos com indicadores prefixados ou não para declaracoes globais
@@ -106,14 +140,14 @@ lista_var: lista_var ',' var
 var: TK_IDENTIFICADOR'[' pos_int ']' 
 | TK_IDENTIFICADOR;
 
-func: tipo_stat TK_IDENTIFICADOR '(' lista_par ')' bloco 
-| tipo_stat TK_IDENTIFICADOR '('')' bloco;
+func: tipo_stat TK_IDENTIFICADOR '(' lista_par ')' bloco {$$ = insere_nodo( NULL, $6,$2); }
+| tipo_stat TK_IDENTIFICADOR '('')' bloco {$$ = insere_nodo( NULL, NULL, NULL); }; 
 
 lista_par: lista_par ',' tipo_cons TK_IDENTIFICADOR 
 | tipo_cons TK_IDENTIFICADOR; 
 
-bloco: '{' '}' 
-| '{' seq_comando '}' ;
+bloco: '{' '}'  { $$ = insere_nodo(NULL,NULL,NULL);}
+| '{' seq_comando '}' { $$ = insere_nodo(NULL,NULL,NULL);} ;
 
 //Definição da sequencia de comandos e abaixo os diferentes tipos de comandos
 seq_comando: seq_comando comando 

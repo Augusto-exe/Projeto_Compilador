@@ -1,13 +1,20 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include "common.h"
+
+
 struct arvore
 {
-	int dados;
+	lexic_val_type* valor_lexico;
 	struct arvore* filho;
 	struct arvore* prox_irmao;
 };
 
 typedef struct arvore a_nodo;
-a_nodo* insere_nodo(a_nodo* filho,a_nodo* irmao,int dados);
-void exporta (a_nodo *arvore);
+
+a_nodo* insere_nodo(a_nodo* filho, lexic_val_type* valor_lexico);
+a_nodo* insere_filho(a_nodo* arvore, a_nodo* filho);
+void exporta_label(a_nodo *arvore);
+void exporta_rela(a_nodo *arvore);
+void exporta (void *arvore);
 void libera (a_nodo *arvore);

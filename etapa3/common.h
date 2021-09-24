@@ -21,9 +21,9 @@
 struct lexic_val_type{
 int lineno;
 int type;
+int value_type;
 union
 	{
-		int value_type;
 		int vInt;
 		float vFloat;
 		char* vStr;
@@ -34,4 +34,5 @@ union
 typedef struct lexic_val_type lexic_val_type;
 
 struct lexic_val_type* geraVal(int tipo_token, int tipo_lit, int lineno, char* yytext);
+lexic_val_type* inverte_sinal( lexic_val_type* valor_lexico);
 

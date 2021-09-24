@@ -1,18 +1,17 @@
 #include "common.h"
 
 lexic_val_type* geraVal(int tipo_token, int tipo_lit, int lineno, char* yytext){
-	
 	lexic_val_type* ret_lex_val;
 	ret_lex_val = malloc(sizeof(lexic_val_type));
 	int n,j;
 	ret_lex_val->lineno = lineno;
 	ret_lex_val->type = tipo_token;
-	ret_lex_val->tk_value.value_type = tipo_lit;
+	ret_lex_val->value_type = tipo_lit;
 	if(tipo_lit == NOT_LIT){
 		ret_lex_val->tk_value.vStr=strdup(yytext);
 	}
 	else{
-		ret_lex_val->tk_value.value_type = tipo_lit;
+		ret_lex_val->value_type = tipo_lit;
 		switch(tipo_lit){
 			case LIT_TIPO_INT:
 				ret_lex_val->tk_value.vInt = atoi(yytext);
@@ -46,4 +45,20 @@ lexic_val_type* geraVal(int tipo_token, int tipo_lit, int lineno, char* yytext){
 		}
 	}
 	return ret_lex_val;
+}
+
+lexic_val_type* inverte_sinal( lexic_val_type* valor_lexico)
+{
+	switch(valor_lexico->value_type)
+	{
+		case(LIT_TIPO_INT):
+			valor_lexico->tk_value.vInt = - valor_lexico->tk_value.vInt; 
+			break;
+		case(LIT_TIPO_FLOAT):
+			valor_lexico->tk_value.vFloat = - valor_lexico->tk_value.vFloat ;
+			break;
+		default:
+			break;
+	}
+	return valor_lexico;
 }

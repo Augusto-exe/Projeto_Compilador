@@ -57,7 +57,8 @@ void exporta_label(a_nodo *arvore){
 	if(arvore->filho!=NULL)
 		exporta_label(arvore->filho);
 	if( arvore->valor_lexico != NULL){
-		printf("%p [label =\"%s\"]\n", arvore, arvore->valor_lexico->tk_value.vStr);
+		printf("%p [label =\"",arvore);//%s\"]\n", arvore, arvore->valor_lexico->tk_value.vStr);
+		printa_label(arvore->valor_lexico);
 	}
 	else
 		printf("%p [label =\"NULL\"]\n", arvore);
@@ -88,5 +89,44 @@ void libera (a_nodo *arvore){
 	if(arvore != NULL)
 		free(arvore);
 
+}
+void printa_label(lexic_val_type* valor_lexico){
+	switch(valor_lexico->type)
+	{
+		case (TIPO_LIT):
+			switch(valor_lexico->value_type)
+			{
+				case(LIT_TIPO_INT):
+					printf("%d\"]\n",valor_lexico->tk_value.vInt);
+					break;
+				case(LIT_TIPO_FLOAT):
+					printf("%f\"]\n",valor_lexico->tk_value.vFloat);
+					break;
+				case(LIT_TIPO_BOOL):
+					if(valor_lexico->tk_value.vBool){
+						printf("true\"]\n");
+					}
+					else{
+						printf("false\"]\n");
+					}
+					break;
+				case(LIT_TIPO_STRING):
+					printf("%s\"]\n",valor_lexico->tk_value.vStr);
+					break;
+				case(LIT_TIPO_CHAR):
+					printf("%s\"]\n",valor_lexico->tk_value.vChar);
+					break;
+				default:
+					printf("%s\"]\n",valor_lexico->tk_value.vStr);
+					break;
+			}
+			break;
+	    case (TIPO_CHAR_ESP):
+	    case (TIPO_OP_CMP):
+		case (TIPO_ID):
+		default:
+			printf("%s\"]\n",valor_lexico->tk_value.vStr);
+			break;
+	}
 }
 

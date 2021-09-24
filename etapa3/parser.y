@@ -106,6 +106,11 @@
 %type <nodo> var_loc
 %type <nodo> id_lit
 %type <nodo> literal
+%type <nodo> pos_int
+%type <nodo> all_int
+%type <nodo> all_float
+%type <nodo> literal_num_bool
+
 
 
 
@@ -191,28 +196,28 @@ var_loc: TK_IDENTIFICADOR TK_OC_LE id_lit { $$ = insere_nodo(NULL,$2); $$= inser
 id_lit: literal {$$ = $1;}
 | TK_IDENTIFICADOR {$$ = insere_nodo(NULL,$1);};
 
-literal: all_int 
-| all_float 
-| TK_LIT_FALSE 
-| TK_LIT_TRUE  
-| TK_LIT_CHAR 
-| TK_LIT_STRING;
+literal: all_int {$$ = $1;}
+| all_float {$$ = $1;}
+| TK_LIT_FALSE {$$ = insere_nodo(NULL,$1);}
+| TK_LIT_TRUE  {$$ = insere_nodo(NULL,$1);}
+| TK_LIT_CHAR {$$ = insere_nodo(NULL,$1);}
+| TK_LIT_STRING {$$ = insere_nodo(NULL,$1);};
 
-literal_num_bool: TK_LIT_INT 
-| TK_LIT_FLOAT 
-| TK_LIT_FALSE 
-| TK_LIT_TRUE;
+literal_num_bool: TK_LIT_INT {$$ = insere_nodo(NULL,$1);}
+| TK_LIT_FLOAT {$$ = insere_nodo(NULL,$1);}
+| TK_LIT_FALSE {$$ = insere_nodo(NULL,$1);}
+| TK_LIT_TRUE {$$ = insere_nodo(NULL,$1);};
 
-pos_int: '+' TK_LIT_INT 
-| TK_LIT_INT;
+pos_int: '+' TK_LIT_INT {$$ = insere_nodo(NULL,$2); free($1);}
+| TK_LIT_INT {$$ = insere_nodo(NULL,$1);};
 
-all_int: '-' TK_LIT_INT 
-| TK_LIT_INT 
-| '+' TK_LIT_INT;
+all_int: '-' TK_LIT_INT { $$ = insere_nodo(NULL,inverte_sinal($2));}
+| TK_LIT_INT {$$ = insere_nodo(NULL,$1);}
+| '+' TK_LIT_INT {$$ = insere_nodo(NULL,$2); free($1);};
 
-all_float: '-' TK_LIT_FLOAT 
-| TK_LIT_FLOAT 
-| '+' TK_LIT_FLOAT;
+all_float: '-' TK_LIT_FLOAT { $$ = insere_nodo(NULL,inverte_sinal($2));}
+| TK_LIT_FLOAT {$$ = insere_nodo(NULL,$1);}
+| '+' TK_LIT_FLOAT {$$ = insere_nodo(NULL,$2); free($1);};
 
 atrib: var_vet '=' exp;
 

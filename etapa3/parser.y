@@ -162,32 +162,32 @@ lista_var: lista_var ',' var
 var: TK_IDENTIFICADOR'[' pos_int ']' 
 | TK_IDENTIFICADOR;
 
-func: tipo_stat TK_IDENTIFICADOR '(' lista_par ')' bloco {$$ = insere_nodo( $6,$2); free($3); free($5); }
-| tipo_stat TK_IDENTIFICADOR '('')' bloco {$$ = insere_nodo( $5, $2); free($3); free($4); }; 
+func: tipo_stat TK_IDENTIFICADOR '(' lista_par ')' bloco {$$ = insere_nodo( $6,$2); libera_val($3); libera_val($5); }
+| tipo_stat TK_IDENTIFICADOR '('')' bloco {$$ = insere_nodo( $5, $2); libera_val($3); libera_val($4); }; 
 
 lista_par: lista_par ',' tipo_cons TK_IDENTIFICADOR 
 | tipo_cons TK_IDENTIFICADOR; 
 
-bloco: '{' '}'  { $$ =NULL; free($1); free($2);}
-| '{' seq_comando '}' { $$ = $2; free($1);free($3);} ;
+bloco: '{' '}'  { $$ =NULL; libera_val($1); libera_val($2);}
+| '{' seq_comando '}' { $$ = $2; libera_val($1);libera_val($3);} ;
 
 //Definição da sequencia de comandos e abaixo os diferentes tipos de comandos
 seq_comando: seq_comando comando { $$ = insere_filho($1,$2); }
 | comando { $$ = $1; };
 
-comando: bloco ';' {$$ = NULL; free($2);} 
-| decla_loc ';' {$$ = $1; free($2);}
-| atrib ';' {$$ = $1; free($2);}
-| in_out ';' {$$ = $1; free($2);}
-| shift_right ';' {$$ = $1; free($2);}
-| shift_left ';'{$$ = $1; free($2);}
-| ret_cont_break ';' {$$ = $1; free($2);}
-| fun_call ';' {$$ = $1; free($2);}
-| comando_controle_fluxo ';' {$$ = $1; free($2);} ; 
+comando: bloco ';' {$$ = NULL; libera_val($2);} 
+| decla_loc ';' {$$ = $1; libera_val($2);}
+| atrib ';' {$$ = $1; libera_val($2);}
+| in_out ';' {$$ = $1; libera_val($2);}
+| shift_right ';' {$$ = $1; libera_val($2);}
+| shift_left ';'{$$ = $1; libera_val($2);}
+| ret_cont_break ';' {$$ = $1; libera_val($2);}
+| fun_call ';' {$$ = $1; libera_val($2);}
+| comando_controle_fluxo ';' {$$ = $1; libera_val($2);} ; 
 
 decla_loc: tipo_stat_cons lista_var_loc { $$ = $2;};
 
-lista_var_loc: lista_var_loc ',' var_loc {free($2);}
+lista_var_loc: lista_var_loc ',' var_loc {libera_val($2);}
 | var_loc { $$ = $1; };
 
 var_loc: TK_IDENTIFICADOR TK_OC_LE id_lit { $$ = insere_nodo(NULL,$2); $$= insere_filho($$,insere_nodo(NULL,$1));$$= insere_filho($$,$3);}
@@ -208,16 +208,16 @@ literal_num_bool: TK_LIT_INT {$$ = insere_nodo(NULL,$1);}
 | TK_LIT_FALSE {$$ = insere_nodo(NULL,$1);}
 | TK_LIT_TRUE {$$ = insere_nodo(NULL,$1);};
 
-pos_int: '+' TK_LIT_INT {$$ = insere_nodo(NULL,$2); free($1);}
+pos_int: '+' TK_LIT_INT {$$ = insere_nodo(NULL,$2); libera_val($1);}
 | TK_LIT_INT {$$ = insere_nodo(NULL,$1);};
 
 all_int: '-' TK_LIT_INT { $$ = insere_nodo(NULL,inverte_sinal($2));}
 | TK_LIT_INT {$$ = insere_nodo(NULL,$1);}
-| '+' TK_LIT_INT {$$ = insere_nodo(NULL,$2); free($1);};
+| '+' TK_LIT_INT {$$ = insere_nodo(NULL,$2); libera_val($1);};
 
 all_float: '-' TK_LIT_FLOAT { $$ = insere_nodo(NULL,inverte_sinal($2));}
 | TK_LIT_FLOAT {$$ = insere_nodo(NULL,$1);}
-| '+' TK_LIT_FLOAT {$$ = insere_nodo(NULL,$2); free($1);};
+| '+' TK_LIT_FLOAT {$$ = insere_nodo(NULL,$2); libera_val($1);};
 
 atrib: var_vet '=' exp;
 

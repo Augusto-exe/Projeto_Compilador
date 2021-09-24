@@ -19,3 +19,4 @@ void exporta_label(a_nodo *arvore);
 void exporta_rela(a_nodo *arvore);
 void exporta (void *arvore);
 void libera (a_nodo *arvore);
+void libera_val(lexic_val_type* valor_lexico);

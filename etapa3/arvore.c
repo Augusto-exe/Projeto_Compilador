@@ -47,9 +47,13 @@ a_nodo* insere_filho_prefix(a_nodo* arvore, a_nodo* filho){
 
 void exporta(void *arvore)
 {
-	exporta_rela((a_nodo*) arvore);
-	printf("\n\n");
-	exporta_label((a_nodo*) arvore);
+	if(arvore !=NULL)
+	{
+		exporta_rela((a_nodo*) arvore);
+		printf("\n\n");
+		exporta_label((a_nodo*) arvore);
+	}
+
 }
 void exporta_label(a_nodo *arvore){
 	if(arvore->prox_irmao != NULL)
@@ -80,15 +84,17 @@ void exporta_rela(a_nodo *arvore){
 
 }
 void libera (a_nodo *arvore){
-	if(arvore->prox_irmao != NULL)
-		libera(arvore->prox_irmao);
-	if(arvore->filho!=NULL)
-		libera(arvore->filho);
-	if(arvore->valor_lexico !=NULL)
-		free(arvore->valor_lexico);
-	if(arvore != NULL)
-		free(arvore);
-
+	if(arvore != NULL){
+		if(arvore->prox_irmao != NULL)
+			libera(arvore->prox_irmao);
+		if(arvore->filho!=NULL)
+			libera(arvore->filho);
+		if(arvore->valor_lexico !=NULL){
+			libera_val(arvore->valor_lexico);
+		}
+		if(arvore != NULL)
+			free(arvore);	
+	}
 }
 void printa_label(lexic_val_type* valor_lexico){
 	switch(valor_lexico->type)
@@ -130,3 +136,21 @@ void printa_label(lexic_val_type* valor_lexico){
 	}
 }
 
+void libera_val(lexic_val_type* valor_lexico){
+	if(valor_lexico != NULL){
+		switch(valor_lexico->value_type)
+		{
+			case(LIT_TIPO_STRING):
+				free(valor_lexico->tk_value.vStr);
+				break;
+			case(LIT_TIPO_CHAR):
+				free(valor_lexico->tk_value.vChar);
+				break;
+			case (NOT_LIT):
+				free(valor_lexico->tk_value.vStr);
+			default:
+				break;
+		}
+		free(valor_lexico);
+	}
+}

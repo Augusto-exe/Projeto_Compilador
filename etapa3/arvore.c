@@ -27,6 +27,31 @@ a_nodo* insere_filho(a_nodo* arvore, a_nodo* filho){
 	return arvore;
 }
 
+a_nodo* insere_filho_fim(a_nodo* arvore, a_nodo* filho){
+	a_nodo* aux;
+	aux = arvore->filho;
+
+	if(aux == NULL){
+		arvore->filho = filho;
+	}
+	else{
+		do{
+			while(aux->prox_irmao != NULL)
+			{
+				aux = aux->prox_irmao;
+			}
+			if(aux->filho != NULL)
+				aux = aux->filho;
+		}while(aux->filho != NULL);
+		while(aux->prox_irmao != NULL)
+		{
+			aux = aux->prox_irmao;
+		}
+		aux->prox_irmao = filho;
+	}
+	return arvore;
+}
+
 a_nodo* insere_filho_prefix(a_nodo* arvore, a_nodo* filho){
 	a_nodo* aux;
 	a_nodo* filho_atual;

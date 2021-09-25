@@ -173,7 +173,7 @@ bloco: '{' '}'  { $$ =NULL; libera_val($1); libera_val($2);}
 | '{' seq_comando '}' { $$ = $2; libera_val($1);libera_val($3);} ;
 
 //Definição da sequencia de comandos e abaixo os diferentes tipos de comandos
-seq_comando: seq_comando comando { $$ = insere_filho($1,$2); }
+seq_comando: seq_comando comando { $$ = insere_filho_fim($1,$2); }
 | comando { $$ = $1; };
 
 comando: bloco ';' {$$ = NULL; libera_val($2);} 
@@ -188,7 +188,7 @@ comando: bloco ';' {$$ = NULL; libera_val($2);}
 
 decla_loc: tipo_stat_cons lista_var_loc { $$ = $2;};
 
-lista_var_loc: lista_var_loc ',' var_loc {libera_val($2); $$ = insere_filho($1,$3);}
+lista_var_loc: lista_var_loc ',' var_loc {libera_val($2); $$ = insere_filho_fim($1,$3);}
 | var_loc { $$ = $1; };
 
 var_loc: TK_IDENTIFICADOR TK_OC_LE id_lit { $$ = insere_nodo(NULL,$2); $$= insere_filho($$,insere_nodo(NULL,$1));$$= insere_filho($$,$3);}

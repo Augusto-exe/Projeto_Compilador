@@ -1,0 +1,22 @@
+static bool f1(int aux){
+
+
+}
+string f2(){
+
+
+}
+char f3(const int abc,char new_c){
+	int var <= var1, abc <= 7;
+	int var2 <= -4;
+	float nova <= 12.45;
+
+}
+static bool f4(int aux){
+
+
+}
+string f5(bool a1){
+
+
+}

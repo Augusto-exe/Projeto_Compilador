@@ -188,7 +188,7 @@ comando: bloco ';' {$$ = NULL; libera_val($2);}
 
 decla_loc: tipo_stat_cons lista_var_loc { $$ = $2;};
 
-lista_var_loc: lista_var_loc ',' var_loc {libera_val($2);}
+lista_var_loc: lista_var_loc ',' var_loc {libera_val($2); $$ = insere_filho($1,$3);}
 | var_loc { $$ = $1; };
 
 var_loc: TK_IDENTIFICADOR TK_OC_LE id_lit { $$ = insere_nodo(NULL,$2); $$= insere_filho($$,insere_nodo(NULL,$1));$$= insere_filho($$,$3);}

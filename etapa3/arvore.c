@@ -51,7 +51,6 @@ void exporta(void *arvore)
 	if(arvore !=NULL)
 	{
 		exporta_rela((a_nodo*) arvore);
-		printf("\n\n");
 		exporta_label((a_nodo*) arvore);
 	}
 

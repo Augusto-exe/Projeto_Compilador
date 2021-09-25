@@ -93,6 +93,7 @@
 %type <nodo> func
 %type <nodo> bloco
 %type <nodo> seq_comando
+%type <nodo> lista_par
 %type <nodo> comando
 %type <nodo> decla_loc
 %type <nodo> atrib
@@ -165,8 +166,8 @@ var: TK_IDENTIFICADOR'[' pos_int ']'
 func: tipo_stat TK_IDENTIFICADOR '(' lista_par ')' bloco {$$ = insere_nodo( $6,$2); libera_val($3); libera_val($5); }
 | tipo_stat TK_IDENTIFICADOR '('')' bloco {$$ = insere_nodo( $5, $2); libera_val($3); libera_val($4); }; 
 
-lista_par: lista_par ',' tipo_cons TK_IDENTIFICADOR 
-| tipo_cons TK_IDENTIFICADOR; 
+lista_par: lista_par ',' tipo_cons TK_IDENTIFICADOR {libera_val($2); libera_val($4); }
+| tipo_cons TK_IDENTIFICADOR {libera_val($2);}; 
 
 bloco: '{' '}'  { $$ =NULL; libera_val($1); libera_val($2);}
 | '{' seq_comando '}' { $$ = $2; libera_val($1);libera_val($3);} ;
@@ -211,11 +212,11 @@ literal_num_bool: TK_LIT_INT {$$ = insere_nodo(NULL,$1);}
 pos_int: '+' TK_LIT_INT {$$ = insere_nodo(NULL,$2); libera_val($1);}
 | TK_LIT_INT {$$ = insere_nodo(NULL,$1);};
 
-all_int: '-' TK_LIT_INT { $$ = insere_nodo(NULL,inverte_sinal($2));}
+all_int: '-' TK_LIT_INT { $$ = insere_nodo(NULL,inverte_sinal($2)); libera_val($1);}
 | TK_LIT_INT {$$ = insere_nodo(NULL,$1);}
 | '+' TK_LIT_INT {$$ = insere_nodo(NULL,$2); libera_val($1);};
 
-all_float: '-' TK_LIT_FLOAT { $$ = insere_nodo(NULL,inverte_sinal($2));}
+all_float: '-' TK_LIT_FLOAT { $$ = insere_nodo(NULL,inverte_sinal($2));libera_val($1);}
 | TK_LIT_FLOAT {$$ = insere_nodo(NULL,$1);}
 | '+' TK_LIT_FLOAT {$$ = insere_nodo(NULL,$2); libera_val($1);};
 

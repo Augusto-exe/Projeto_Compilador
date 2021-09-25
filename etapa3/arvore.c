@@ -6,13 +6,14 @@ a_nodo* insere_nodo(a_nodo* filho,lexic_val_type* valor_lexico)
 	nodo = malloc(sizeof(a_nodo));
 	nodo->filho = filho;
 	nodo->prox_irmao = NULL;
-	nodo->valor_lexico = valor_lexico;
+	nodo->valor_lexico = valor_lexico;	
 	return nodo;
 }
 
 a_nodo* insere_filho(a_nodo* arvore, a_nodo* filho){
 	a_nodo* aux;
 	aux = arvore->filho;
+
 	if(aux == NULL){
 		arvore->filho = filho;
 	}
@@ -61,11 +62,9 @@ void exporta_label(a_nodo *arvore){
 	if(arvore->filho!=NULL)
 		exporta_label(arvore->filho);
 	if( arvore->valor_lexico != NULL){
-		printf("%p [label =\"",arvore);//%s\"]\n", arvore, arvore->valor_lexico->tk_value.vStr);
+		printf("%p [label =\"",arvore);
 		printa_label(arvore->valor_lexico);
 	}
-	else
-		printf("%p [label =\"NULL\"]\n", arvore);
 }
 void exporta_rela(a_nodo *arvore){
 	if(arvore != NULL)
@@ -92,8 +91,7 @@ void libera (a_nodo *arvore){
 		if(arvore->valor_lexico !=NULL){
 			libera_val(arvore->valor_lexico);
 		}
-		if(arvore != NULL)
-			free(arvore);	
+		free(arvore);	
 	}
 }
 void printa_label(lexic_val_type* valor_lexico){
@@ -153,4 +151,5 @@ void libera_val(lexic_val_type* valor_lexico){
 		}
 		free(valor_lexico);
 	}
+
 }

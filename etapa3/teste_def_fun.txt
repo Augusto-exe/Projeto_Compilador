@@ -18,6 +18,8 @@ char f3(const int abc,char new_c){
 	f2();
 	f1(12, abcd, vet[12]);
 	a << 2;
+
+	return vet[a];
 }
 static bool f4(int aux){
 

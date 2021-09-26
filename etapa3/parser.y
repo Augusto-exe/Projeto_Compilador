@@ -118,7 +118,9 @@
 %type <nodo> lista_arg
 %type <nodo> fun_input
 %type <nodo> id_lit_exp
-
+%type <nodo> comando_if
+%type <nodo> comando_for
+%type <nodo> comando_while
 
 
 
@@ -234,9 +236,9 @@ var_vet: TK_IDENTIFICADOR { $$= insere_nodo(NULL,$1);}
 | TK_IDENTIFICADOR '[' exp ']' { libera_val($2);libera_val($4);
 $$ = insere_nodo(NULL,geraVal(TIPO_VET,NOT_LIT,get_line_number(),"[]")); insere_filho($$,insere_nodo(NULL,$1)); insere_filho($$,$3);};
 
-ret_cont_break: TK_PR_RETURN exp 
-| TK_PR_BREAK 
-| TK_PR_CONTINUE;
+ret_cont_break: TK_PR_RETURN exp {$$ = insere_nodo($2,geraVal(TIPO_RSV_WRD,NOT_LIT,get_line_number(),"return"));}
+| TK_PR_BREAK  {$$ = insere_nodo(NULL,geraVal(TIPO_RSV_WRD,NOT_LIT,get_line_number(),"break"));}
+| TK_PR_CONTINUE  {$$ = insere_nodo(NULL,geraVal(TIPO_RSV_WRD,NOT_LIT,get_line_number(),"continue"));};
 
 in_out: TK_PR_INPUT TK_IDENTIFICADOR {$$ = insere_nodo(insere_nodo(NULL,$2),geraVal(TIPO_RSV_WRD,NOT_LIT,get_line_number(),"input"));}
 | TK_PR_OUTPUT id_lit {$$ = insere_nodo($2,geraVal(TIPO_RSV_WRD,NOT_LIT,get_line_number(),"output"));};

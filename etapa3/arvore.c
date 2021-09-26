@@ -14,18 +14,25 @@ a_nodo* insere_nodo(a_nodo* filho,lexic_val_type* valor_lexico)
 
 a_nodo* insere_filho(a_nodo* arvore, a_nodo* filho){
 	a_nodo* aux;
-	aux = arvore->filho;
+	if(arvore != NULL)
+	{
+		aux = arvore->filho;
 
-	if(aux == NULL){
-		arvore->filho = filho;
-	}
-	else{
-		while(aux->prox_irmao != NULL)
-		{
-			aux = aux->prox_irmao;
+		if(aux == NULL){
+			arvore->filho = filho;
 		}
-		aux->prox_irmao = filho;
+		else{
+			while(aux->prox_irmao != NULL)
+			{
+				aux = aux->prox_irmao;
+			}
+			aux->prox_irmao = filho;
+		}
+	}else
+	{
+		arvore=filho;
 	}
+
 	return arvore;
 }
 

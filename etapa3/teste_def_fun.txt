@@ -2,16 +2,24 @@ static bool f1(int aux){
 
 
 }
-string f2(){
 
-
+int f()
+{
+  //int a;
+  //int b;
+  int c;
+  a = 2*c+a/b;
 }
+
 char f3(const int abc,char new_c){
 	int var <= var1; //, abc <= 7;
 	int var2 <= -4;
 	float nova <= 12.45;
 	nova = a + 2;
 	a = !nova;
+
+	a = 2*c+a/b;
+
 	if (a == b) {
 		a = !nova;
 	} else {
@@ -31,6 +39,8 @@ char f3(const int abc,char new_c){
 	{
 		output aux;
 	};
+
+
 
 }
 static bool f4(int aux){

@@ -196,7 +196,7 @@ lista_var_loc: lista_var_loc ',' var_loc {libera_val($2); $$ = insere_filho($1,$
 | var_loc { $$ = $1; };
 
 var_loc: TK_IDENTIFICADOR TK_OC_LE id_lit { $$ = insere_nodo(NULL,$2); $$= insere_filho($$,insere_nodo(NULL,$1));$$= insere_filho($$,$3);}
-| TK_IDENTIFICADOR { $$ = NULL;};
+| TK_IDENTIFICADOR { $$ = NULL; libera_val($1);};
 
 id_lit: literal {$$ = $1;}
 | TK_IDENTIFICADOR {$$ = insere_nodo(NULL,$1);};
@@ -276,14 +276,14 @@ exp: literal_num_bool {$$ = $1;}
 | exp TK_OC_OR exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);}
 | exp '<' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);}
 | exp '>' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);}
-| exp '?' exp ':' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3); insere_filho($$,$5);};
+| exp '?' exp ':' exp { $$ = insere_nodo(NULL,geraVal(TIPO_CHAR_ESP,NOT_LIT,get_line_number(),"?:")); insere_filho($$,$1); insere_filho($$,$3); insere_filho($$,$5);libera_val($2);libera_val($4);};
 
 comando_controle_fluxo: comando_if {$$ = $1;}
 | comando_for {$$ = $1;}
 | comando_while {$$ = $1;};
 
 comando_if: TK_PR_IF '(' exp ')' bloco  { $$ = insere_nodo_tipo(NULL,geraVal(TIPO_RSV_WRD,NOT_LIT,get_line_number(),"if"),NO_IF); $$= insere_filho($$,$3); $$= insere_filho($$,$5); libera_val($2); libera_val($4);}
-| TK_PR_IF '(' exp ')' bloco TK_PR_ELSE bloco { $$ = insere_nodo_tipo(NULL,geraVal(TIPO_RSV_WRD,NOT_LIT,get_line_number(),"if"),NO_IF); $$ = insere_filho($$,$3); $$ = insere_filho($$,$5); insere_filho($$,insere_nodo_tipo($7,geraVal(TIPO_RSV_WRD,NOT_LIT,get_line_number(),"else"),NO_ELSE)); libera_val($2); libera_val($4);};
+| TK_PR_IF '(' exp ')' bloco TK_PR_ELSE bloco { $$ = insere_nodo_tipo(NULL,geraVal(TIPO_RSV_WRD,NOT_LIT,get_line_number(),"if"),NO_IF); $$ = insere_filho($$,$3); $$ = insere_filho($$,$5); insere_filho($$,$7); libera_val($2); libera_val($4);};
 
 comando_for: TK_PR_FOR '(' atrib ':' exp ':' atrib ')' bloco { $$ = insere_nodo_tipo(NULL,geraVal(TIPO_RSV_WRD,NOT_LIT,get_line_number(),"for"),NO_FOR); $$ = insere_filho($$,$3); $$ = insere_filho($$,$5); $$ = insere_filho($$,$7); $$ = insere_filho($$,$9); libera_val($6); libera_val($4); libera_val ($2);libera_val($8);};
 

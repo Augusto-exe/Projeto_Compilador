@@ -24,10 +24,10 @@
 %token TK_PR_BOOL
 %token TK_PR_CHAR
 %token TK_PR_STRING
-%token TK_PR_IF
+%token <valor_lexico> TK_PR_IF
 %token TK_PR_THEN
 %token TK_PR_ELSE
-%token TK_PR_WHILE
+%token <valor_lexico> TK_PR_WHILE
 %token TK_PR_DO
 %token TK_PR_INPUT
 %token TK_PR_OUTPUT
@@ -35,7 +35,7 @@
 %token TK_PR_CONST
 %token TK_PR_STATIC
 %token TK_PR_FOREACH
-%token TK_PR_FOR
+%token <valor_lexico> TK_PR_FOR
 %token TK_PR_SWITCH
 %token TK_PR_CASE
 %token TK_PR_BREAK
@@ -278,16 +278,16 @@ exp: literal_num_bool {$$ = $1;}
 | exp '>' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);}
 | exp '?' exp ':' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3); insere_filho($$,$5);};
 
-comando_controle_fluxo: comando_if 
-| comando_for 
-| comando_while;
+comando_controle_fluxo: comando_if {$$ = $1;}
+| comando_for {$$ = $1;}
+| comando_while {$$ = $1;};
 
-comando_if: TK_PR_IF '(' exp ')' bloco 
-| TK_PR_IF '(' exp ')' bloco TK_PR_ELSE bloco;
+comando_if: TK_PR_IF '(' exp ')' bloco  { $$ = insere_nodo_tipo(NULL,$1,NO_IF); $$= insere_filho($$,$3); $$= insere_filho($$,$5); libera_val($2); libera_val($4);}
+| TK_PR_IF '(' exp ')' bloco TK_PR_ELSE bloco { $$ = insere_nodo_tipo(NULL,$1,NO_IF); $$ = insere_filho($$,$3); $$ = insere_filho($$,$5); $$ = insere_filho($$,$7); libera_val($2); libera_val($4);};
 
-comando_for: TK_PR_FOR '(' atrib ':' exp ':' atrib ')' bloco;
+comando_for: TK_PR_FOR '(' atrib ':' exp ':' atrib ')' bloco { $$ = insere_nodo_tipo(NULL,$1,NO_FOR); $$ = insere_filho($$,$3); $$ = insere_filho($$,$5); $$ = insere_filho($$,$7); $$ = insere_filho($$,$9); libera_val($6); libera_val($4); libera_val($8);};
 
-comando_while: TK_PR_WHILE '(' exp ')' TK_PR_DO bloco;
+comando_while: TK_PR_WHILE '(' exp ')' TK_PR_DO bloco { $$ =  insere_nodo_tipo(NULL,$1,NO_WHILE); $$ = insere_filho($$,$3); $$ = insere_filho($$,$6); libera_val($2); libera_val($4);}; 
 
 op_unitario: '+' { $$ = insere_nodo(NULL,$1);}
 |'-' { $$ = insere_nodo(NULL,$1);}

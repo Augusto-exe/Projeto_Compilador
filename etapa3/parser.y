@@ -122,6 +122,7 @@
 %type <nodo> comando_for
 %type <nodo> comando_while
 
+
 %start programa
 
 %right '?' ':'
@@ -142,7 +143,7 @@ programa:  {$$ = NULL; arvore = $$;}
 | programa func  { if ($1 == NULL){ $$ = $2; arvore = $2;} else{ insere_filho($1,$2); $$=$2; } }
 | programa decla {$$ = $1;};
 
-decla: tipo_stat lista_var ';';
+decla: tipo_stat lista_var ';' { libera_val($3);};
 
 //Definição dos tipos com indicadores prefixados ou não para declaracoes globais
 
@@ -163,9 +164,9 @@ tipo_stat_cons: TK_PR_STATIC TK_PR_CONST tipo_nome
 | tipo_nome;
 
 lista_var: lista_var ',' var 
-| var;
-var: TK_IDENTIFICADOR'[' pos_int ']' 
-| TK_IDENTIFICADOR;
+| var ;
+var: TK_IDENTIFICADOR'[' pos_int ']' {libera_val($1); libera_val($2); libera($3);libera_val($4);}
+| TK_IDENTIFICADOR {libera_val($1);};
 
 func: tipo_stat TK_IDENTIFICADOR '(' lista_par ')' bloco {$$ = insere_nodo( $6,$2); libera_val($3); libera_val($5); }
 | tipo_stat TK_IDENTIFICADOR '('')' bloco {$$ = insere_nodo( $5, $2); libera_val($3); libera_val($4); }; 

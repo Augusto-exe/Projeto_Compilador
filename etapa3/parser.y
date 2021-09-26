@@ -24,28 +24,25 @@
 %token TK_PR_BOOL
 %token TK_PR_CHAR
 %token TK_PR_STRING
-%token TK_PR_IF
 %token TK_PR_THEN
 %token TK_PR_ELSE
-%token TK_PR_WHILE
-%token TK_PR_DO
-%token TK_PR_INPUT
-%token TK_PR_OUTPUT
-%token TK_PR_RETURN
+%token <valor_lexico> TK_PR_WHILE
+%token <valor_lexico> TK_PR_DO
+%token <valor_lexico> TK_PR_INPUT
+%token <valor_lexico> TK_PR_OUTPUT
 %token TK_PR_CONST
 %token TK_PR_STATIC
 %token TK_PR_FOREACH
-%token TK_PR_FOR
+%token <valor_lexico> TK_PR_FOR
 %token TK_PR_SWITCH
 %token TK_PR_CASE
-%token TK_PR_BREAK
-%token TK_PR_CONTINUE
 %token TK_PR_CLASS
 %token TK_PR_PRIVATE
 %token TK_PR_PUBLIC
 %token TK_PR_PROTECTED
 %token TK_PR_END
 %token TK_PR_DEFAULT
+%token <valor_lexico> TK_PR_IF
 %token <valor_lexico> TK_OC_LE
 %token <valor_lexico> TK_OC_GE
 %token <valor_lexico> TK_OC_EQ
@@ -61,6 +58,9 @@
 %token <valor_lexico> TK_LIT_CHAR
 %token <valor_lexico> TK_LIT_STRING
 %token <valor_lexico> TK_IDENTIFICADOR
+%token <valor_lexico> TK_PR_RETURN
+%token <valor_lexico> TK_PR_BREAK
+%token <valor_lexico> TK_PR_CONTINUE
 %token TOKEN_ERRO
 
 %token <valor_lexico> ','
@@ -101,7 +101,7 @@
 %type <nodo> in_out
 %type <nodo> shift_right
 %type <nodo> shift_left
-%type <nodo> ret_cont_break;
+%type <nodo> ret_cont_break
 %type <nodo> comando_controle_fluxo
 %type <nodo> lista_var_loc
 %type <nodo> var_loc
@@ -111,12 +111,16 @@
 %type <nodo> all_int
 %type <nodo> all_float
 %type <nodo> literal_num_bool
-
-
-
-
-
-
+%type <nodo> var_vet
+%type <nodo> exp
+%type <nodo> exp_unitaria
+%type <nodo> comando_if
+%type <nodo> comando_for
+%type <nodo> comando_while
+%type <nodo> op_unitario
+%type <nodo> fun_input
+%type <nodo> lista_arg
+%type <nodo> id_lit_exp
 
 %start programa
 
@@ -169,14 +173,14 @@ func: tipo_stat TK_IDENTIFICADOR '(' lista_par ')' bloco {$$ = insere_nodo( $6,$
 lista_par: lista_par ',' tipo_cons TK_IDENTIFICADOR {libera_val($2); libera_val($4); }
 | tipo_cons TK_IDENTIFICADOR {libera_val($2);}; 
 
-bloco: '{' '}'  { $$ =NULL; libera_val($1); libera_val($2);}
+bloco: '{' '}'  { $$ = NULL; libera_val($1); libera_val($2);}
 | '{' seq_comando '}' { $$ = $2; libera_val($1);libera_val($3);} ;
 
 //Definição da sequencia de comandos e abaixo os diferentes tipos de comandos
 seq_comando: seq_comando comando { $$ = insere_filho_fim($1,$2); }
 | comando { $$ = $1; };
 
-comando: bloco ';' {$$ = NULL; libera_val($2);} 
+comando: bloco ';' {$$ = $1; libera_val($2);} 
 | decla_loc ';' {$$ = $1; libera_val($2);}
 | atrib ';' {$$ = $1; libera_val($2);}
 | in_out ';' {$$ = $1; libera_val($2);}
@@ -220,72 +224,79 @@ all_float: '-' TK_LIT_FLOAT { $$ = insere_nodo(NULL,inverte_sinal($2));libera_va
 | TK_LIT_FLOAT {$$ = insere_nodo(NULL,$1);}
 | '+' TK_LIT_FLOAT {$$ = insere_nodo(NULL,$2); libera_val($1);};
 
-atrib: var_vet '=' exp;
+atrib: var_vet '=' exp {$$ = insere_nodo(NULL, $2); insere_filho($$, $1); insere_filho($$, $3);};
 
-var_vet: TK_IDENTIFICADOR 
-| TK_IDENTIFICADOR '[' exp ']';
+var_vet: TK_IDENTIFICADOR { $$ = insere_nodo(NULL,$1); }
+| TK_IDENTIFICADOR '[' exp ']' { $$ = insere_nodo(NULL,$1); insere_filho($$,$3); libera_val($2);libera_val($4);};
 
-ret_cont_break: TK_PR_RETURN exp 
-| TK_PR_BREAK 
-| TK_PR_CONTINUE;
+ret_cont_break: TK_PR_RETURN exp { $$ = insere_nodo(NULL,$1); insere_filho($$,$2);}
+| TK_PR_BREAK { $$ = insere_nodo(NULL,$1);} 
+| TK_PR_CONTINUE { $$ = insere_nodo(NULL,$1);};
 
-in_out: TK_PR_INPUT TK_IDENTIFICADOR 
-| TK_PR_OUTPUT id_lit;
+in_out: TK_PR_INPUT TK_IDENTIFICADOR { $$ = insere_nodo(NULL, $1); insere_filho($$,insere_nodo(NULL,$2));}
+| TK_PR_OUTPUT id_lit {$$ = insere_nodo(NULL, $1); insere_filho($$, $2);};
 
-shift_right:  var_vet TK_OC_SR pos_int;
+shift_right:  var_vet TK_OC_SR pos_int { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);};
 
-shift_left: var_vet TK_OC_SL pos_int;
+shift_left: var_vet TK_OC_SL pos_int { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);};
 
-fun_call: TK_IDENTIFICADOR '(' fun_input ')' ;
+fun_call: TK_IDENTIFICADOR '(' fun_input ')' { $$ = insere_nodo(NULL,$1); insere_filho($$,$3); libera_val($2); libera_val($4);};
 
-lista_arg: lista_arg ',' id_lit_exp 
-| id_lit_exp;
+lista_arg: lista_arg ',' id_lit_exp {$$ = $1; insere_filho($$,$3); libera_val($2);}
+| id_lit_exp {$$ = $1;};
 
-fun_input: 
-|lista_arg ;
+fun_input: {$$ = NULL;}
+| lista_arg {$$ = $1;};
 
-id_lit_exp: TK_LIT_CHAR 
-| TK_LIT_STRING 
-| exp;
+id_lit_exp: TK_LIT_CHAR {$$ = insere_nodo(NULL, $1);}
+| TK_LIT_STRING {$$ = insere_nodo(NULL, $1);}
+| exp {$$ = $1;};
 
 //Definição das expressões
 
-exp: literal_num_bool 
-| var_vet 
-| fun_call 
-| '(' exp ')' 
-| exp_unitaria 
-| exp '+' exp 
-| exp '-' exp 
-| exp '*' exp 
-| exp '/' exp 
-| exp '%' exp 
-| exp '|' exp 
-| exp '&' exp 
-| exp '^' exp 
-| exp TK_OC_LE exp 
-| exp TK_OC_GE exp 
-| exp TK_OC_EQ exp 
-| exp TK_OC_NE exp 
-| exp TK_OC_AND exp 
-| exp TK_OC_OR exp 
-| exp '<' exp 
-| exp '>' exp 
-| exp '?' exp ':' exp;
+exp: literal_num_bool {$$ = $1;} 
+| var_vet {$$ = $1;}
+| fun_call {$$ = $1;} 
+| '(' exp ')' {$$ = $2; libera_val($1); libera_val($3);} 
+| exp_unitaria {$$ = $1;} 
+| exp '+' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);}
+| exp '-' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);}
+| exp '*' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);}
+| exp '/' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);}
+| exp '%' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);}
+| exp '|' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);}
+| exp '&' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);}
+| exp '^' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);}
+| exp TK_OC_LE exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);}
+| exp TK_OC_GE exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);}
+| exp TK_OC_EQ exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);}
+| exp TK_OC_NE exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);}
+| exp TK_OC_AND exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);}
+| exp TK_OC_OR exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);}
+| exp '<' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);}
+| exp '>' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);}
+| exp '?' exp ':' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3); insere_filho($$,$5);};
 
-comando_controle_fluxo: comando_if 
+comando_controle_fluxo: comando_if
 | comando_for 
 | comando_while;
 
-comando_if: TK_PR_IF '(' exp ')' bloco 
-| TK_PR_IF '(' exp ')' bloco TK_PR_ELSE bloco;
+comando_if: TK_PR_IF '(' exp ')' bloco  { $$ = insere_nodo(NULL,$1); $$= insere_filho($$,$3); $$= insere_filho($$,$5); libera_val($2); libera_val($4);}
+| TK_PR_IF '(' exp ')' bloco TK_PR_ELSE bloco { $$ = insere_nodo(NULL,$1); insere_filho($$,$3); insere_filho($$,$7); libera_val($2); libera_val($4);};
 
-comando_for: TK_PR_FOR '(' atrib ':' exp ':' atrib ')' bloco;
+comando_for: TK_PR_FOR '(' atrib ':' exp ':' atrib ')' bloco { $$ = insere_nodo(NULL,$1); insere_filho($$,$3); insere_filho($$,$5); insere_filho($$,$7); insere_filho($$,$9); libera_val($2); libera_val($4); libera_val($6); libera_val($8);};
 
-comando_while: TK_PR_WHILE '(' exp ')' TK_PR_DO bloco;
+comando_while: TK_PR_WHILE '(' exp ')' TK_PR_DO bloco { $$ = insere_nodo(NULL,$1); insere_filho($$,$3); insere_filho($$,$6); libera_val($2); libera_val($4);}; 
 
-op_unitario: '+'|'-'|'|'|'*'|'!'|'&'|'#'|'?';
-exp_unitaria: op_unitario exp %prec PREC_UNA; 						//redefinindo a precedencia para operadores unários
+op_unitario: '+' { $$ = insere_nodo(NULL,$1);}
+|'-' { $$ = insere_nodo(NULL,$1);}
+|'|' { $$ = insere_nodo(NULL,$1);}
+|'*' { $$ = insere_nodo(NULL,$1);}
+|'!' { $$ = insere_nodo(NULL,$1);}
+|'&' { $$ = insere_nodo(NULL,$1);}
+|'#' { $$ = insere_nodo(NULL,$1);}
+|'?' { $$ = insere_nodo(NULL,$1);};
+exp_unitaria: op_unitario exp { $$ = $1; insere_filho($$,$2);} %prec PREC_UNA; 						//redefinindo a precedencia para operadores unários
 
 %%
 

@@ -10,7 +10,9 @@ char f3(const int abc,char new_c){
 	int var <= var1, abc <= 7;
 	int var2 <= -4;
 	float nova <= 12.45;
-
+	nova = a + a * 2;
+	nova = a * 2 + a;
+	bool alo <= !nova;
 }
 static bool f4(int aux){
 

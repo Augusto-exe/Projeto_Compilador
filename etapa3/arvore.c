@@ -100,6 +100,8 @@ void exporta_label(a_nodo *arvore){
 		exporta_label(arvore->filho);
 	if( arvore->valor_lexico != NULL){
 		printf("%p [label =\"",arvore);
+		if(arvore->tipo_no == NO_FUN_CALL)
+			printf("call ");
 		printa_label(arvore->valor_lexico);
 	}
 }

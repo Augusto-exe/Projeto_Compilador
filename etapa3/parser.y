@@ -228,7 +228,8 @@ all_float: '-' TK_LIT_FLOAT { $$ = insere_nodo(NULL,inverte_sinal($2));libera_va
 atrib: var_vet '=' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);};
 
 var_vet: TK_IDENTIFICADOR { $$= insere_nodo(NULL,$1);}
-| TK_IDENTIFICADOR '[' exp ']';
+| TK_IDENTIFICADOR '[' exp ']' { libera_val($2);libera_val($4);
+$$ = insere_nodo(NULL,geraVal(TIPO_VET,NOT_LIT,get_line_number(),"[]")); insere_filho($$,insere_nodo(NULL,$1)); insere_filho($$,$3);};
 
 ret_cont_break: TK_PR_RETURN exp 
 | TK_PR_BREAK 
@@ -237,9 +238,9 @@ ret_cont_break: TK_PR_RETURN exp
 in_out: TK_PR_INPUT TK_IDENTIFICADOR {$$ = insere_nodo(insere_nodo(NULL,$2),geraVal(TIPO_RSV_WRD,NOT_LIT,get_line_number(),"input"));}
 | TK_PR_OUTPUT id_lit {$$ = insere_nodo($2,geraVal(TIPO_RSV_WRD,NOT_LIT,get_line_number(),"output"));};
 
-shift_right:  var_vet TK_OC_SR pos_int;
+shift_right:  var_vet TK_OC_SR pos_int { $$ = insere_nodo($1,$2); insere_filho($$,$3); };
 
-shift_left: var_vet TK_OC_SL pos_int;
+shift_left: var_vet TK_OC_SL pos_int { $$ = insere_nodo($1,$2); insere_filho($$,$3); };
 
 fun_call: TK_IDENTIFICADOR '(' fun_input ')' { libera_val($2); libera_val($4); $$ = insere_nodo_tipo($3,$1,NO_FUN_CALL);} ;
 

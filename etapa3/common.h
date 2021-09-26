@@ -10,6 +10,7 @@
 #define TIPO_OP_CMP     3
 #define TIPO_ID         4
 #define TIPO_RSV_WRD    5
+#define TIPO_VET		6
 
 #define NOT_LIT	 	 		0
 #define LIT_TIPO_INT 		1

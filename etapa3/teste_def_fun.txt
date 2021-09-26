@@ -7,11 +7,17 @@ string f2(){
 
 }
 char f3(const int abc,char new_c){
-	int var <= var1, abc <= 7;
+	int var <= var1; //, abc <= 7;
 	int var2 <= -4;
 	float nova <= 12.45;
 	nova = a + 2;
 	!nova;
+
+	input alpha;
+	output intaa;
+	f2();
+	f1(12, abcd, vet[12]);
+	a << 2;
 }
 static bool f4(int aux){
 

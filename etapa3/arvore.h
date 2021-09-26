@@ -5,6 +5,7 @@
 
 struct arvore
 {
+	int tipo_no;
 	lexic_val_type* valor_lexico;
 	struct arvore* filho;
 	struct arvore* prox_irmao;
@@ -21,3 +22,4 @@ void exporta (void *arvore);
 void libera (a_nodo *arvore);
 void libera_val(lexic_val_type* valor_lexico);
 a_nodo* insere_filho_fim(a_nodo* arvore, a_nodo* filho);
+a_nodo* insere_nodo_tipo( a_nodo* filho,lexic_val_type* valor_lexico, int tipo_nodo);

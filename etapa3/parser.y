@@ -177,7 +177,7 @@ bloco: '{' '}'  { $$ = NULL; libera_val($1); libera_val($2);}
 | '{' seq_comando '}' { $$ = $2; libera_val($1);libera_val($3);} ;
 
 //Definição da sequencia de comandos e abaixo os diferentes tipos de comandos
-seq_comando: seq_comando comando { $$ = insere_filho_fim($1,$2); }
+seq_comando: comando seq_comando { $$ = insere_filho($1,$2); }
 | comando { $$ = $1; };
 
 comando: bloco ';' {$$ = $1; libera_val($2);} 
@@ -192,7 +192,7 @@ comando: bloco ';' {$$ = $1; libera_val($2);}
 
 decla_loc: tipo_stat_cons lista_var_loc { $$ = $2;};
 
-lista_var_loc: lista_var_loc ',' var_loc {libera_val($2); $$ = insere_filho_fim($1,$3);}
+lista_var_loc: lista_var_loc ',' var_loc {libera_val($2); $$ = insere_filho($1,$3);}
 | var_loc { $$ = $1; };
 
 var_loc: TK_IDENTIFICADOR TK_OC_LE id_lit { $$ = insere_nodo(NULL,$2); $$= insere_filho($$,insere_nodo(NULL,$1));$$= insere_filho($$,$3);}
@@ -233,16 +233,16 @@ ret_cont_break: TK_PR_RETURN exp { $$ = insere_nodo(NULL,$1); insere_filho($$,$2
 | TK_PR_BREAK { $$ = insere_nodo(NULL,$1);} 
 | TK_PR_CONTINUE { $$ = insere_nodo(NULL,$1);};
 
-in_out: TK_PR_INPUT TK_IDENTIFICADOR { $$ = insere_nodo(NULL, $1); insere_filho($$,insere_nodo(NULL,$2));}
-| TK_PR_OUTPUT id_lit {$$ = insere_nodo(NULL, $1); insere_filho($$, $2);};
+in_out: TK_PR_INPUT TK_IDENTIFICADOR {$$ = insere_nodo(insere_nodo(NULL,$2),geraVal(TIPO_RSV_WRD,NOT_LIT,get_line_number(),"input"));}
+| TK_PR_OUTPUT id_lit {$$ = insere_nodo($2,geraVal(TIPO_RSV_WRD,NOT_LIT,get_line_number(),"output"));};
 
 shift_right:  var_vet TK_OC_SR pos_int { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);};
 
 shift_left: var_vet TK_OC_SL pos_int { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);};
 
-fun_call: TK_IDENTIFICADOR '(' fun_input ')' { $$ = insere_nodo(NULL,$1); insere_filho($$,$3); libera_val($2); libera_val($4);};
+fun_call: TK_IDENTIFICADOR '(' fun_input ')' { libera_val($2); libera_val($4); $$ = insere_nodo_tipo($3,$1,NO_FUN_CALL);} ;
 
-lista_arg: lista_arg ',' id_lit_exp {$$ = $1; insere_filho($$,$3); libera_val($2);}
+lista_arg: id_lit_exp ',' lista_arg { libera_val($2); $$ = insere_filho($1,$3); }
 | id_lit_exp {$$ = $1;};
 
 fun_input: {$$ = NULL;}
@@ -277,7 +277,9 @@ exp: literal_num_bool {$$ = $1;}
 | exp '>' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);}
 | exp '?' exp ':' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3); insere_filho($$,$5);};
 
-comando_controle_fluxo: comando_if
+//Definição das expressões
+
+comando_controle_fluxo: comando_if 
 | comando_for 
 | comando_while;
 

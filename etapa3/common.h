@@ -25,6 +25,8 @@
 #define NO_IN_OUT		3
 #define NO_FOR			4
 #define NO_IF			5
+#define NO_ELSE			6
+
 
 
 struct lexic_val_type{

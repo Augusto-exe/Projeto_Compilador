@@ -23,6 +23,15 @@ char f3(const int abc,char new_c){
 	for (a=0 : a<33 : a=a+2) {
 		b = a + a;
 	};
+	if( a>b)
+	{
+		output aux;
+	}
+	else
+	{
+		output aux;
+	};
+
 }
 static bool f4(int aux){
 

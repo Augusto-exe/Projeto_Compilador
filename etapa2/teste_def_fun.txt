@@ -3,7 +3,11 @@ static bool tr(int aux){
 
 }
 string tr_1(){
-
+	int var <= var1; //, abc <= 7;
+	int var2 <= -4;
+	float nova <= 12.45;
+	nova = a + 2;
+	!nova
 
 }
 char tr_2(const int abc,char new_c){

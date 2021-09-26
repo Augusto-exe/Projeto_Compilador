@@ -111,8 +111,10 @@
 %type <nodo> all_int
 %type <nodo> all_float
 %type <nodo> literal_num_bool
-
-
+%type <nodo> exp
+%type <nodo> exp_unitaria
+%type <nodo> var_vet
+%type <nodo> op_unitario
 
 
 
@@ -184,7 +186,8 @@ comando: bloco ';' {$$ = NULL; libera_val($2);}
 | shift_left ';'{$$ = $1; libera_val($2);}
 | ret_cont_break ';' {$$ = $1; libera_val($2);}
 | fun_call ';' {$$ = $1; libera_val($2);}
-| comando_controle_fluxo ';' {$$ = $1; libera_val($2);} ; 
+| comando_controle_fluxo ';' {$$ = $1; libera_val($2);}
+| exp ';' {$$ = $1; libera_val($2);}; 
 
 decla_loc: tipo_stat_cons lista_var_loc { $$ = $2;};
 
@@ -220,10 +223,10 @@ all_float: '-' TK_LIT_FLOAT { $$ = insere_nodo(NULL,inverte_sinal($2));libera_va
 | TK_LIT_FLOAT {$$ = insere_nodo(NULL,$1);}
 | '+' TK_LIT_FLOAT {$$ = insere_nodo(NULL,$2); libera_val($1);};
 
-atrib: var_vet '=' exp;
+atrib: var_vet '=' exp {$$ = insere_nodo(NULL,$2); $$ = insere_filho($$, $1), $$ = insere_filho($$, $3);};
 
-var_vet: TK_IDENTIFICADOR 
-| TK_IDENTIFICADOR '[' exp ']';
+var_vet: TK_IDENTIFICADOR {$$ = insere_nodo(NULL,$1);}
+| TK_IDENTIFICADOR '[' exp ']' {$$ = insere_filho($3,insere_nodo(NULL,$1)); libera_val($2); libera_val($4);};
 
 ret_cont_break: TK_PR_RETURN exp 
 | TK_PR_BREAK 
@@ -250,28 +253,28 @@ id_lit_exp: TK_LIT_CHAR
 
 //Definição das expressões
 
-exp: literal_num_bool 
-| var_vet 
-| fun_call 
-| '(' exp ')' 
-| exp_unitaria 
-| exp '+' exp 
-| exp '-' exp 
-| exp '*' exp 
-| exp '/' exp 
-| exp '%' exp 
-| exp '|' exp 
-| exp '&' exp 
-| exp '^' exp 
-| exp TK_OC_LE exp 
-| exp TK_OC_GE exp 
-| exp TK_OC_EQ exp 
-| exp TK_OC_NE exp 
-| exp TK_OC_AND exp 
-| exp TK_OC_OR exp 
-| exp '<' exp 
-| exp '>' exp 
-| exp '?' exp ':' exp;
+exp: literal_num_bool {$$ = $1;} 
+| var_vet {$$ = $1;}
+| fun_call {$$ = $1;} 
+| '(' exp ')' {$$ = $2; libera_val($1); libera_val($3);} 
+| exp_unitaria {$$ = $1;} 
+| exp '+' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);}
+| exp '-' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);}
+| exp '*' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);}
+| exp '/' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);}
+| exp '%' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);}
+| exp '|' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);}
+| exp '&' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);}
+| exp '^' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);}
+| exp TK_OC_LE exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);}
+| exp TK_OC_GE exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);}
+| exp TK_OC_EQ exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);}
+| exp TK_OC_NE exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);}
+| exp TK_OC_AND exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);}
+| exp TK_OC_OR exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);}
+| exp '<' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);}
+| exp '>' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);}
+| exp '?' exp ':' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3); insere_filho($$,$5);};
 
 comando_controle_fluxo: comando_if 
 | comando_for 
@@ -284,9 +287,15 @@ comando_for: TK_PR_FOR '(' atrib ':' exp ':' atrib ')' bloco;
 
 comando_while: TK_PR_WHILE '(' exp ')' TK_PR_DO bloco;
 
-op_unitario: '+'|'-'|'|'|'*'|'!'|'&'|'#'|'?';
-exp_unitaria: op_unitario exp %prec PREC_UNA; 						//redefinindo a precedencia para operadores unários
-
+op_unitario: '+' { $$ = insere_nodo(NULL,$1);}
+|'-' { $$ = insere_nodo(NULL,$1);}
+|'|' { $$ = insere_nodo(NULL,$1);}
+|'*' { $$ = insere_nodo(NULL,$1);}
+|'!' { $$ = insere_nodo(NULL,$1);}
+|'&' { $$ = insere_nodo(NULL,$1);}
+|'#' { $$ = insere_nodo(NULL,$1);}
+|'?' { $$ = insere_nodo(NULL,$1);};
+exp_unitaria: op_unitario exp { $$ = $1; insere_filho($$,$2);} %prec PREC_UNA; 	
 %%
 
 int yyerror(char const *s){

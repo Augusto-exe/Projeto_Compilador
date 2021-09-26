@@ -6,4 +6,4 @@ all:
 	gcc -c lex.yy.c parser.tab.c main.c
 	gcc -o etapa3 arvore.c common.c lex.yy.o main.o parser.tab.o -lfl
 clean:
-	rm main.o lex.yy.o lex.yy.c etapa2 parser.tab.o parser.tab.c parser.tab.h parser.output
+	rm main.o lex.yy.o lex.yy.c etapa3 parser.tab.o parser.tab.c parser.tab.h 

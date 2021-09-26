@@ -1,3 +1,5 @@
+/* Grupo C -Augusto Exenberger Becker e Vitória Lentz */
+
 #include <stdlib.h>
 #include <stdio.h>
 #include "common.h"

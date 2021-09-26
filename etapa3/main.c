@@ -1,3 +1,4 @@
+/* Grupo C -Augusto Exenberger Becker e Vitória Lentz */
 /*
   Função principal para realização da E3.
   Não modifique este arquivo.

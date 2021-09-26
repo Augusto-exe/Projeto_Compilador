@@ -1,3 +1,5 @@
+/* Grupo C -Augusto Exenberger Becker e Vitória Lentz */
+
 #include "arvore.h"
 
 a_nodo* insere_nodo(a_nodo* filho,lexic_val_type* valor_lexico)

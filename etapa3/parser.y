@@ -122,11 +122,6 @@
 %type <nodo> comando_for
 %type <nodo> comando_while
 
-
-
-
-
-
 %start programa
 
 %right '?' ':'
@@ -182,7 +177,7 @@ bloco: '{' '}'  { $$ =NULL; libera_val($1); libera_val($2);}
 | '{' seq_comando '}' { $$ = $2; libera_val($1);libera_val($3);} ;
 
 //Definição da sequencia de comandos e abaixo os diferentes tipos de comandos
-seq_comando: comando seq_comando { $$ = insere_filho($1,$2); }
+seq_comando: comando seq_comando { $$ = $1; $$ = insere_filho($$,$2); }
 | comando { $$ = $1; };
 
 comando: bloco ';' {$$ = NULL; libera_val($2);} 
@@ -194,7 +189,6 @@ comando: bloco ';' {$$ = NULL; libera_val($2);}
 | ret_cont_break ';' {$$ = $1; libera_val($2);}
 | fun_call ';' {$$ = $1; libera_val($2);}
 | comando_controle_fluxo ';' {$$ = $1; libera_val($2);}
-| exp ';' {$$ = $1; libera_val($2);}; 
 
 decla_loc: tipo_stat_cons lista_var_loc { $$ = $2;};
 

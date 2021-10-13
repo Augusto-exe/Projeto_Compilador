@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "pilhacontexto.hpp": "c"
+    },
+    "C_Cpp.errorSquiggles": "Disabled"
+}

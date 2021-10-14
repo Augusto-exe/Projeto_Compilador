@@ -28,7 +28,7 @@ void tabelaSimbolos::exportaTabela()
 	}
 }
 
-
+/*
 int main()
 {
 	tabelaSimbolos tabela;
@@ -41,4 +41,4 @@ int main()
 	tabela.insereSimbolo("terceiro",novoDado);
 	tabela.exportaTabela();
 
-}
+}*/

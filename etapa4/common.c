@@ -4,7 +4,7 @@
 
 lexic_val_type* geraVal(int tipo_token, int tipo_lit, int lineno, char* yytext){
 	lexic_val_type* ret_lex_val;
-	ret_lex_val = malloc(sizeof(lexic_val_type));
+	ret_lex_val = (lexic_val_type*)malloc(sizeof(lexic_val_type));
 	int n,j;
 	ret_lex_val->lineno = lineno;
 	ret_lex_val->type = tipo_token;

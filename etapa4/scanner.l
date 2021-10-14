@@ -7,6 +7,11 @@
 	#include  <string.h>
 
 	int get_line_number();
+	extern "C"
+	{
+    int yylex(void);
+    int yylex_destroy(void);
+	}
 %}
 
 

@@ -6,7 +6,7 @@ a_nodo* insere_nodo(a_nodo* filho,lexic_val_type* valor_lexico)
 {
 	
 	a_nodo* nodo;
-	nodo = malloc(sizeof(a_nodo));
+	nodo = (a_nodo*)malloc(sizeof(a_nodo));
 	nodo->tipo_no = NO_LEX;
 	nodo->filho = filho;
 	nodo->prox_irmao = NULL;
@@ -65,7 +65,7 @@ a_nodo* insere_filho_fim(a_nodo* arvore, a_nodo* filho){
 a_nodo* insere_nodo_tipo( a_nodo* filho,lexic_val_type* valor_lexico, int tipo_nodo)
 {
 	a_nodo* nodo;
-	nodo = malloc(sizeof(a_nodo));
+	nodo = (a_nodo*)malloc(sizeof(a_nodo));
 	nodo->tipo_no = tipo_nodo;
 	nodo->filho = filho;
 	nodo->prox_irmao = NULL;

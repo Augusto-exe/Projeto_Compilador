@@ -1,8 +1,9 @@
 #include "pilhaContexto.hpp"
 
-
-
-
+PilhaContexto::PilhaContexto()
+{
+	this->insereContexto();
+}
 
 void PilhaContexto::insereContexto()
 {
@@ -41,6 +42,9 @@ void PilhaContexto::insereSimboloNonVet(int line, int natureza, lexic_val_type *
 		case LIT_TIPO_STRING:
 
 			break;
+		case INDEF:
+
+			break;
 		default:
 
 			break;
@@ -48,7 +52,7 @@ void PilhaContexto::insereSimboloNonVet(int line, int natureza, lexic_val_type *
 	} 
 
 	
-	novoSimbolo.valorLexico = valorLex;
+	novoSimbolo.valorLexico = *valorLex;
 	novoSimbolo.parametros = parametros;
 
 	this->insereSimboloContextoAtual(nomeChave, novoSimbolo);
@@ -78,6 +82,9 @@ void PilhaContexto::insereSimboloVet(int line, int natureza, lexic_val_type *val
 		case LIT_TIPO_STRING:
 
 			break;
+		case INDEF:
+
+			break;
 		default:
 		
 			break;
@@ -85,10 +92,29 @@ void PilhaContexto::insereSimboloVet(int line, int natureza, lexic_val_type *val
 	}
 
 	
-	novoSimbolo.valorLexico = valorLex;
+	novoSimbolo.valorLexico = *valorLex;
 	novoSimbolo.parametros = parametros;
 
 	this->insereSimboloContextoAtual(nomeChave,novoSimbolo);
+}
+
+int getTamanhoTipo(int)
+{
+	return 0;
+}
+
+void PilhaContexto::atualizaTipoTamanho(int tipo)
+{
+	MapaSimbolos::iterator itMapa;
+	for(itMapa = this->contextos.back().begin(); itMapa != this->contextos.back().end();++itMapa)
+	{
+		if((*itMapa).second.tipo == INDEF)
+		{
+			(*itMapa).second.tipo = tipo;
+			(*itMapa).second.tamanho = (*itMapa).second.tamanho*getTamanhoTipo(tipo);
+		}
+			
+	}
 }
 
 void PilhaContexto::adicionaParametro(string nome,string nome_par)
@@ -97,7 +123,7 @@ void PilhaContexto::adicionaParametro(string nome,string nome_par)
 }
 void PilhaContexto::insereSimboloContextoAtual(string nome, DadoTabelaSimbolos novoSimbolo)
 {
-
+	this->contextos.back()[nome] = novoSimbolo;
 }
 bool PilhaContexto::existeSimboloContextos(string nome)
 {

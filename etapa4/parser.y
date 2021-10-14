@@ -1,31 +1,41 @@
 /* Grupo C - Augusto Exenberger Becker e Vitória Lentz */
 
 %{
+	#include <stdlib.h>
+	#include <stdio.h>
+	#include <string>
+	
+	#include "pilhaContexto.hpp"
+	using namespace std;
 
-	int yylex(void);
+	extern "C" {
+		int yyparse(void);
+		int yylex(void);  
+		int yywrap() {
+			return 1;
+		}
+	}
 	int yyerror (char const *s);
 	extern int get_line_number (void);
 	extern char *yytext;
 	extern void *arvore;
 	extern PilhaContexto tabelas;
 
-	#include <stdlib.h>
-	#include <stdio.h>
-	#include "arvore.h"
-	#include "pilhaContexto.hpp"
+
 		
 %}
 
 %union{
 	struct lexic_val_type* valor_lexico;
-	struct arvore* nodo;	
+	struct arvore* nodo;
+	int tipo;	
 }
 
-%token TK_PR_INT
-%token TK_PR_FLOAT
-%token TK_PR_BOOL
-%token TK_PR_CHAR
-%token TK_PR_STRING
+%token  TK_PR_INT
+%token  TK_PR_FLOAT
+%token  TK_PR_BOOL
+%token  TK_PR_CHAR
+%token  TK_PR_STRING
 %token <valor_lexico> TK_PR_IF
 %token TK_PR_THEN
 %token TK_PR_ELSE
@@ -123,7 +133,10 @@
 %type <nodo> comando_if
 %type <nodo> comando_for
 %type <nodo> comando_while
-
+%type <tipo> tipo_stat_cons
+%type <tipo> tipo_cons
+%type <tipo> tipo_stat
+%type <tipo> tipo_nome
 
 %start programa
 
@@ -145,30 +158,30 @@ programa:  {$$ = NULL; arvore = $$;}
 | programa func  { if ($1 == NULL){ $$ = $2; arvore = $2;} else{ insere_filho($1,$2); $$=$2; } }
 | programa decla {$$ = $1;};
 
-decla: tipo_stat lista_var ';' { libera_val($3);};
+decla: tipo_stat lista_var ';' { libera_val($3);tabelas.atualizaTipoTamanho($1);};
 
 //Definição dos tipos com indicadores prefixados ou não para declaracoes globais
 
-tipo_stat: TK_PR_STATIC tipo_nome 
-| tipo_nome;
-tipo_cons: TK_PR_CONST tipo_nome 
-| tipo_nome;
+tipo_stat: TK_PR_STATIC tipo_nome {$$ = $2;}
+| tipo_nome{$$ = $1;};
+tipo_cons: TK_PR_CONST tipo_nome{$$ =$2;} 
+| tipo_nome {$$ =$1;};
 
-tipo_nome: TK_PR_INT 
-| TK_PR_FLOAT 
-| TK_PR_CHAR 
-| TK_PR_BOOL 
-| TK_PR_STRING;
+tipo_nome: TK_PR_INT {$$ = ID_INT;}
+| TK_PR_FLOAT {$$ = ID_FLOAT;}
+| TK_PR_CHAR {$$ = ID_CHAR;}
+| TK_PR_BOOL {$$ = ID_BOOL;}
+| TK_PR_STRING{$$ = ID_STRING;};
 
-tipo_stat_cons: TK_PR_STATIC TK_PR_CONST tipo_nome 
-| TK_PR_CONST tipo_nome 
-| TK_PR_STATIC tipo_nome 
-| tipo_nome;
+tipo_stat_cons: TK_PR_STATIC TK_PR_CONST tipo_nome {$$ = $3;}
+| TK_PR_CONST tipo_nome {$$ = $2;}
+| TK_PR_STATIC tipo_nome {$$ = $2;} 
+| tipo_nome {$$ = $1;};
 
 lista_var: lista_var ',' var 
 | var ;
-var: TK_IDENTIFICADOR'[' pos_int ']' {libera_val($1); libera_val($2); libera($3);libera_val($4);}
-| TK_IDENTIFICADOR {libera_val($1);};
+var: TK_IDENTIFICADOR'[' pos_int ']' {tabelas.insereSimboloVet(get_line_number(),NAT_VET,$1,$3->valor_lexico->tk_value.vInt);libera_val($1); libera_val($2); libera($3);libera_val($4);}
+| TK_IDENTIFICADOR {tabelas.insereSimboloNonVet(get_line_number(),NAT_VAR,$1);libera_val($1);};
 
 func: tipo_stat TK_IDENTIFICADOR '(' lista_par ')' bloco {$$ = insere_nodo( $6,$2); libera_val($3); libera_val($5); }
 | tipo_stat TK_IDENTIFICADOR '('')' bloco {$$ = insere_nodo( $5, $2); libera_val($3); libera_val($4); }; 
@@ -231,14 +244,14 @@ atrib: var_vet '=' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_
 
 var_vet: TK_IDENTIFICADOR { $$= insere_nodo(NULL,$1);}
 | TK_IDENTIFICADOR '[' exp ']' { libera_val($2);libera_val($4);
-$$ = insere_nodo(NULL,geraVal(TIPO_VET,NOT_LIT,get_line_number(),"[]")); insere_filho($$,insere_nodo(NULL,$1)); insere_filho($$,$3);};
+$$ = insere_nodo(NULL,geraVal(TIPO_VET,NOT_LIT,get_line_number(),(char*)"[]")); insere_filho($$,insere_nodo(NULL,$1)); insere_filho($$,$3);};
 
-ret_cont_break: TK_PR_RETURN exp {$$ = insere_nodo($2,geraVal(TIPO_RSV_WRD,NOT_LIT,get_line_number(),"return"));}
-| TK_PR_BREAK  {$$ = insere_nodo(NULL,geraVal(TIPO_RSV_WRD,NOT_LIT,get_line_number(),"break"));}
-| TK_PR_CONTINUE  {$$ = insere_nodo(NULL,geraVal(TIPO_RSV_WRD,NOT_LIT,get_line_number(),"continue"));};
+ret_cont_break: TK_PR_RETURN exp {$$ = insere_nodo($2,geraVal(TIPO_RSV_WRD,NOT_LIT,get_line_number(),(char*)"return"));}
+| TK_PR_BREAK  {$$ = insere_nodo(NULL,geraVal(TIPO_RSV_WRD,NOT_LIT,get_line_number(),(char*)"break"));}
+| TK_PR_CONTINUE  {$$ = insere_nodo(NULL,geraVal(TIPO_RSV_WRD,NOT_LIT,get_line_number(),(char*)"continue"));};
 
-in_out: TK_PR_INPUT TK_IDENTIFICADOR {$$ = insere_nodo(insere_nodo(NULL,$2),geraVal(TIPO_RSV_WRD,NOT_LIT,get_line_number(),"input"));}
-| TK_PR_OUTPUT id_lit {$$ = insere_nodo($2,geraVal(TIPO_RSV_WRD,NOT_LIT,get_line_number(),"output"));};
+in_out: TK_PR_INPUT TK_IDENTIFICADOR {$$ = insere_nodo(insere_nodo(NULL,$2),geraVal(TIPO_RSV_WRD,NOT_LIT,get_line_number(),(char*)"input"));}
+| TK_PR_OUTPUT id_lit {$$ = insere_nodo($2,geraVal(TIPO_RSV_WRD,NOT_LIT,get_line_number(),(char*)"output"));};
 
 shift_right:  var_vet TK_OC_SR pos_int { $$ = insere_nodo($1,$2); insere_filho($$,$3); };
 
@@ -279,18 +292,18 @@ exp: literal_num_bool {$$ = $1;}
 | exp TK_OC_OR exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);}
 | exp '<' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);}
 | exp '>' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);}
-| exp '?' exp ':' exp { $$ = insere_nodo(NULL,geraVal(TIPO_CHAR_ESP,NOT_LIT,get_line_number(),"?:")); insere_filho($$,$1); insere_filho($$,$3); insere_filho($$,$5);libera_val($2);libera_val($4);};
+| exp '?' exp ':' exp { $$ = insere_nodo(NULL,geraVal(TIPO_CHAR_ESP,NOT_LIT,get_line_number(),(char*)"?:")); insere_filho($$,$1); insere_filho($$,$3); insere_filho($$,$5);libera_val($2);libera_val($4);};
 
 comando_controle_fluxo: comando_if {$$ = $1;}
 | comando_for {$$ = $1;}
 | comando_while {$$ = $1;};
 
-comando_if: TK_PR_IF '(' exp ')' bloco  { $$ = insere_nodo_tipo(NULL,geraVal(TIPO_RSV_WRD,NOT_LIT,get_line_number(),"if"),NO_IF); $$= insere_filho($$,$3); $$= insere_filho($$,$5); libera_val($2); libera_val($4);}
-| TK_PR_IF '(' exp ')' bloco TK_PR_ELSE bloco { $$ = insere_nodo_tipo(NULL,geraVal(TIPO_RSV_WRD,NOT_LIT,get_line_number(),"if"),NO_IF); $$ = insere_filho($$,$3); $$ = insere_filho($$,$5); insere_filho($$,$7); libera_val($2); libera_val($4);};
+comando_if: TK_PR_IF '(' exp ')' bloco  { $$ = insere_nodo_tipo(NULL,geraVal(TIPO_RSV_WRD,NOT_LIT,get_line_number(),(char*)"if"),NO_IF); $$= insere_filho($$,$3); $$= insere_filho($$,$5); libera_val($2); libera_val($4);}
+| TK_PR_IF '(' exp ')' bloco TK_PR_ELSE bloco { $$ = insere_nodo_tipo(NULL,geraVal(TIPO_RSV_WRD,NOT_LIT,get_line_number(),(char*)"if"),NO_IF); $$ = insere_filho($$,$3); $$ = insere_filho($$,$5); insere_filho($$,$7); libera_val($2); libera_val($4);};
 
-comando_for: TK_PR_FOR '(' atrib ':' exp ':' atrib ')' bloco { $$ = insere_nodo_tipo(NULL,geraVal(TIPO_RSV_WRD,NOT_LIT,get_line_number(),"for"),NO_FOR); $$ = insere_filho($$,$3); $$ = insere_filho($$,$5); $$ = insere_filho($$,$7); $$ = insere_filho($$,$9); libera_val($6); libera_val($4); libera_val ($2);libera_val($8);};
+comando_for: TK_PR_FOR '(' atrib ':' exp ':' atrib ')' bloco { $$ = insere_nodo_tipo(NULL,geraVal(TIPO_RSV_WRD,NOT_LIT,get_line_number(),(char*)"for"),NO_FOR); $$ = insere_filho($$,$3); $$ = insere_filho($$,$5); $$ = insere_filho($$,$7); $$ = insere_filho($$,$9); libera_val($6); libera_val($4); libera_val ($2);libera_val($8);};
 
-comando_while: TK_PR_WHILE '(' exp ')' TK_PR_DO bloco { $$ =  insere_nodo_tipo(NULL,geraVal(TIPO_RSV_WRD,NOT_LIT,get_line_number(),"while"),NO_WHILE); $$ = insere_filho($$,$3); $$ = insere_filho($$,$6); libera_val($2); libera_val($4);}; 
+comando_while: TK_PR_WHILE '(' exp ')' TK_PR_DO bloco { $$ =  insere_nodo_tipo(NULL,geraVal(TIPO_RSV_WRD,NOT_LIT,get_line_number(),(char*)"while"),NO_WHILE); $$ = insere_filho($$,$3); $$ = insere_filho($$,$6); libera_val($2); libera_val($4);}; 
 
 op_unitario: '+' { $$ = insere_nodo(NULL,$1);}
 |'-' { $$ = insere_nodo(NULL,$1);}

@@ -4,10 +4,10 @@
   Não modifique este arquivo.
 */
 #include <stdio.h>
-#include "arvore.h"
+
 #include "pilhaContexto.hpp"
-extern int yyparse(void);
-extern int yylex_destroy(void);
+extern "C" int yyparse(void);
+extern "C" int yylex_destroy(void);
 
 void *arvore = NULL;
 PilhaContexto tabelas;
@@ -15,8 +15,8 @@ PilhaContexto tabelas;
 int main (int argc, char **argv)
 {
   int ret = yyparse(); 
-  exporta (arvore);
-  libera(arvore);
+  exporta ((a_nodo*)arvore);
+  libera((a_nodo*)arvore);
   arvore = NULL;
   yylex_destroy();
   return ret;

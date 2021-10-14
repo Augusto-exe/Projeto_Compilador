@@ -4,6 +4,7 @@
   Não modifique este arquivo.
 */
 #include <stdio.h>
+#include <iostream>
 
 #include "pilhaContexto.hpp"
 extern "C" int yyparse(void);
@@ -19,5 +20,7 @@ int main (int argc, char **argv)
   libera((a_nodo*)arvore);
   arvore = NULL;
   yylex_destroy();
+  cout << "exportando tabelas" << endl;
+  tabelas.exportaTabelas();
   return ret;
 }

@@ -1608,13 +1608,13 @@ yyreduce:
 
   case 21:
 #line 183 "parser.y" /* yacc.c:1646  */
-    {tabelas.insereSimboloVet(get_line_number(),NAT_VET,(yyvsp[-3].valor_lexico),(yyvsp[-1].nodo)->valor_lexico->tk_value.vInt);libera_val((yyvsp[-3].valor_lexico)); libera_val((yyvsp[-2].valor_lexico)); libera((yyvsp[-1].nodo));libera_val((yyvsp[0].valor_lexico));}
+    {tabelas.insereSimboloVet(get_line_number(),NAT_VET,(yyvsp[-3].valor_lexico),INDEF,(yyvsp[-1].nodo)->valor_lexico->tk_value.vInt);libera_val((yyvsp[-3].valor_lexico)); libera_val((yyvsp[-2].valor_lexico)); libera((yyvsp[-1].nodo));libera_val((yyvsp[0].valor_lexico));}
 #line 1613 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 22:
 #line 184 "parser.y" /* yacc.c:1646  */
-    {tabelas.insereSimboloNonVet(get_line_number(),NAT_VAR,(yyvsp[0].valor_lexico));libera_val((yyvsp[0].valor_lexico));}
+    {tabelas.insereSimboloNonVet(get_line_number(),NAT_VAR,(yyvsp[0].valor_lexico),INDEF);libera_val((yyvsp[0].valor_lexico));}
 #line 1619 "parser.tab.c" /* yacc.c:1646  */
     break;
 

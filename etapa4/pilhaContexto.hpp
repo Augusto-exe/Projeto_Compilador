@@ -4,7 +4,7 @@
 #include "errors.h"
 
 
-typedef list<MapaSimbolos> PilhaMapas;
+typedef list<tabelaSimbolos> PilhaMapas;
 
 
 class PilhaContexto
@@ -13,14 +13,15 @@ class PilhaContexto
 	public:
 		PilhaContexto();
 		void insereContexto();
-		MapaSimbolos popContexto();
-		void insereSimboloNonVet(int line, int natureza, lexic_val_type *valorLex);
-		void insereSimboloVet(int line, int natureza, lexic_val_type *valorLex,int tamanho);
+		tabelaSimbolos popContexto();
+		void insereSimboloNonVet(int line, int natureza, lexic_val_type *valorLex,int tipo);
+		void insereSimboloVet(int line, int natureza, lexic_val_type *valorLex,int tipo,int tamanho);
 		void atualizaTipoTamanho(int tipo);
 		void adicionaParametro(string nome,string nome_par);
 		void insereSimboloContextoAtual(string nome, DadoTabelaSimbolos novoSimbolo);
 		bool existeSimboloContextos(string nome);
 		DadoTabelaSimbolos retornaSimbolo(string nome);
+		void exportaTabelas();
 		void emitirErro(int tipoErro);
 
 	private:

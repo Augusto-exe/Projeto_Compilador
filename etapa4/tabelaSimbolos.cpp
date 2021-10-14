@@ -27,6 +27,16 @@ void tabelaSimbolos::exportaTabela()
 		cout << "nome: " << itTab.first << " - tipo: " << itTab.second.tipo << endl;
 	}
 }
+void tabelaSimbolos::setTipoTamanhoPorNome(string nome,int tipo, int tamanho)
+{
+	this->tabSimbolos[nome].tipo = tipo;
+	this->tabSimbolos[nome].tamanho = tamanho;
+}
+MapaSimbolos tabelaSimbolos::getTabela()
+{
+	return this->tabSimbolos;
+}
+
 
 /*
 int main()

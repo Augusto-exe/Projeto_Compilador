@@ -20,9 +20,11 @@ typedef map<string,DadoTabelaSimbolos> MapaSimbolos;
 class tabelaSimbolos{
 	public:
 		void insereSimbolo(string nome, DadoTabelaSimbolos dado );
+		MapaSimbolos getTabela();
 		void insereTipoSimbolo(string nome, int tipo);
 		bool existeSimbolo(string nome);
-		void exportaTabela();		
+		void exportaTabela();
+		void setTipoTamanhoPorNome(string nome,int tipo,int tamanho);		
 	private:
 		MapaSimbolos tabSimbolos;
 };

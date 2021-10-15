@@ -62,6 +62,11 @@ a_nodo* insere_filho_fim(a_nodo* arvore, a_nodo* filho){
 	}
 	return arvore;
 }
+
+void atualiza_tipo_semantico(a_nodo* nodo, int tipo_semantico)
+{
+	nodo->tipo_valor_semantico = tipo_semantico;
+}
 a_nodo* insere_nodo_tipo( a_nodo* filho,lexic_val_type* valor_lexico, int tipo_nodo)
 {
 	a_nodo* nodo;

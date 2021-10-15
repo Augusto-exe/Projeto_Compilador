@@ -23,7 +23,7 @@ class PilhaContexto
 		bool existeSimboloContextoAtual(string nome);
 		DadoTabelaSimbolos retornaSimbolo(string nome);
 		void exportaTabelas();
-		void emitirErro(int tipoErro, int linha, string nome);
+		void emitirErro(int tipoErro, int linha, string nome,string nomeChave);
 
 	private:
 		PilhaMapas contextos;

@@ -36,7 +36,15 @@ MapaSimbolos tabelaSimbolos::getTabela()
 {
 	return this->tabSimbolos;
 }
-
+void tabelaSimbolos::empilhaParametro(DadoTabelaSimbolos dado)
+{
+	this->parametrosPendentes.push_front(dado);
+}
+void tabelaSimbolos::adicionaParametrosParaFunc(string nomeFunc)
+{
+	this->tabSimbolos[nomeFunc].parametros = this->parametrosPendentes;
+	this->parametrosPendentes.clear();
+}
 
 /*
 int main()

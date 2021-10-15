@@ -24,7 +24,10 @@ class tabelaSimbolos{
 		void insereTipoSimbolo(string nome, int tipo);
 		bool existeSimbolo(string nome);
 		void exportaTabela();
-		void setTipoTamanhoPorNome(string nome,int tipo,int tamanho);		
+		void setTipoTamanhoPorNome(string nome,int tipo,int tamanho);
+		void empilhaParametro(DadoTabelaSimbolos dado);
+		void adicionaParametrosParaFunc(string nomeFunc);
 	private:
 		MapaSimbolos tabSimbolos;
+		list<struct dadoTabelaSimbolos> parametrosPendentes;
 };

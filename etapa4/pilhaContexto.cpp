@@ -116,10 +116,47 @@ void PilhaContexto::insereSimboloVet(int line, int natureza, lexic_val_type *val
 	this->insereSimboloContextoAtual(nomeChave,novoSimbolo);
 }
 
+void PilhaContexto::insereFun(int line, lexic_val_type *valorLex )
+{
+	DadoTabelaSimbolos novoSimbolo;
+	list<DadoTabelaSimbolos> parametros;
+	string nome = string(valorLex->tk_value.vStr);
+	novoSimbolo.natureza = NAT_FUN;
+	novoSimbolo.tipo = INDEF;
+	novoSimbolo.parametros = parametros;
+	novoSimbolo.valorLexico = *valorLex;
+	novoSimbolo.tamanho = 1;
+	if(this->existeSimboloContextoAtual(nome))
+		this->emitirErro(ERR_DECLARED,line,nome,nome);
+	
+	this->contextos.front().insereSimbolo(nome,novoSimbolo);
+
+	cout << "exporantdo apos inserir funcao" << endl;
+	this->exportaTabelas();
+
+}
+
+void PilhaContexto::empilhaParametro(lexic_val_type *valorLex)
+{
+	string nome = string(valorLex->tk_value.vStr);
+	DadoTabelaSimbolos dado = this->retornaSimbolo(nome);
+	this->parametrosPendentes.push_front(dado);
+}
+
+
 int getTamanhoTipo(int)
 {
 	return 0;
 }
+
+void PilhaContexto::atualizaFunTipoPar(lexic_val_type *valorLex,int tipo)
+{
+	string nomeChave = string(valorLex->tk_value.vStr);
+	this->contextos.front().adicionaParametrosParaFunc(nomeChave,this->parametrosPendentes);
+	this->contextos.front().setTipoTamanhoPorNome(nomeChave,tipo,getTamanhoTipo(tipo));
+	this->parametrosPendentes.clear();
+}
+
 
 bool PilhaContexto::existeSimboloContextoAtual(string nome)
 {
@@ -150,11 +187,6 @@ void PilhaContexto::atualizaTipoTamanho(int tipo)
 		}
 			
 	}
-}
-
-void PilhaContexto::adicionaParametro(string nome,string nome_par)
-{
-
 }
 void PilhaContexto::insereSimboloContextoAtual(string nome, DadoTabelaSimbolos novoSimbolo)
 {

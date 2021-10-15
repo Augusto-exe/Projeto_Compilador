@@ -24,7 +24,9 @@ void tabelaSimbolos::exportaTabela()
 {
 	for(auto itTab : this->tabSimbolos)
 	{
-		cout << "nome: " << itTab.first << " - tipo: " << itTab.second.tipo << endl;
+
+			cout << itTab.second.natureza << " nome: " << itTab.first << " - tipo: " << itTab.second.tipo << " - nro param: " << itTab.second.parametros.size() << endl;
+
 	}
 }
 void tabelaSimbolos::setTipoTamanhoPorNome(string nome,int tipo, int tamanho)
@@ -36,15 +38,14 @@ MapaSimbolos tabelaSimbolos::getTabela()
 {
 	return this->tabSimbolos;
 }
-void tabelaSimbolos::empilhaParametro(DadoTabelaSimbolos dado)
+
+void tabelaSimbolos::adicionaParametrosParaFunc(string nomeFunc,list<struct dadoTabelaSimbolos> listaParam)
 {
-	this->parametrosPendentes.push_front(dado);
+	this->tabSimbolos[nomeFunc].parametros =listaParam;
 }
-void tabelaSimbolos::adicionaParametrosParaFunc(string nomeFunc)
-{
-	this->tabSimbolos[nomeFunc].parametros = this->parametrosPendentes;
-	this->parametrosPendentes.clear();
-}
+
+
+
 
 /*
 int main()

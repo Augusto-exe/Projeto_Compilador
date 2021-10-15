@@ -103,6 +103,8 @@
 
 %type <nodo> programa
 %type <nodo> func
+%type <nodo> func_header
+
 %type <nodo> bloco
 %type <nodo> bloco_fun
 %type <nodo> seq_comando
@@ -189,12 +191,14 @@ bloco_fun: '{' fim_bloco { $$ =NULL; }
 
 lista_par_begin: '(' {tabelas.insereContexto(); libera_val($1);};
 lista_par_end: ')'{libera_val($1);};
-func: tipo_stat TK_IDENTIFICADOR lista_par_begin lista_par lista_par_end bloco_fun { $$ = insere_nodo( $6,$2); }
-| tipo_stat TK_IDENTIFICADOR '('')' bloco {$$ = insere_nodo( $5, $2); libera_val($3); libera_val($4); };
+
+func_header:  tipo_stat  TK_IDENTIFICADOR lista_par_begin lista_par lista_par_end{tabelas.insereFun(get_line_number(),$2);$$ = insere_nodo(NULL,$2);tabelas.atualizaFunTipoPar($2,$1); atualiza_tipo_semantico($$,$1);};
+func: func_header bloco_fun { $$ = insere_filho( $1,$2); }
+| tipo_stat TK_IDENTIFICADOR '('')' bloco {$$ = insere_nodo( $5, $2); libera_val($3); libera_val($4);atualiza_tipo_semantico($$,$1); };
 
 
-lista_par: lista_par ',' tipo_cons TK_IDENTIFICADOR {tabelas.insereSimboloNonVet(get_line_number(),NAT_VAR,$4,$3);libera_val($2); libera_val($4); }
-| tipo_cons TK_IDENTIFICADOR {tabelas.insereSimboloNonVet(get_line_number(),NAT_VAR,$2,$1);libera_val($2);}; 
+lista_par: lista_par ',' tipo_cons TK_IDENTIFICADOR {tabelas.insereSimboloNonVet(get_line_number(),NAT_VAR,$4,$3);tabelas.empilhaParametro($4);libera_val($2); libera_val($4); }
+| tipo_cons TK_IDENTIFICADOR {tabelas.insereSimboloNonVet(get_line_number(),NAT_VAR,$2,$1); tabelas.empilhaParametro($2);libera_val($2);}; 
 
 com_bloco: '{' {tabelas.insereContexto();libera_val($1);};
 fim_bloco: '}' {libera_val($1);tabelas.popContexto();};

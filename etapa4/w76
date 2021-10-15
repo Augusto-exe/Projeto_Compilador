@@ -1,7 +1,7 @@
 int v1, x, y;
 int f1 (float k, int l) 
 {
-  int a, l;
+  int a;
   int v1, b;
 
 }

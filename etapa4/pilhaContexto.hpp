@@ -24,8 +24,12 @@ class PilhaContexto
 		DadoTabelaSimbolos retornaSimbolo(string nome);
 		void exportaTabelas();
 		void emitirErro(int tipoErro, int linha, string nome,string nomeChave);
+		void insereFun(int line, lexic_val_type *valorLex );
+		void atualizaFunTipoPar(lexic_val_type *valorLex,int tipo );
+		void empilhaParametro(lexic_val_type *valorLex);
 
 	private:
 		PilhaMapas contextos;
+		list<struct dadoTabelaSimbolos> parametrosPendentes;
 
 };

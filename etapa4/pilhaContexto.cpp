@@ -144,9 +144,31 @@ void PilhaContexto::empilhaParametro(lexic_val_type *valorLex)
 }
 
 
-int getTamanhoTipo(int)
+int getTamanhoTipo(int tipo)
 {
-	return 0;
+	int ret
+	switch (tipo)
+	{
+	case ID_INT:
+		ret=4;
+		break;
+	case ID_FLOAT:
+		ret=8;
+		break;
+	case ID_BOOL:
+		ret=1;
+		break;
+	case ID_CHAR:
+		ret=1;
+		break;
+	case ID_STRING:
+		ret =0;
+		break;
+	default:
+		ret = 0;
+		break;
+	}
+	return ret;
 }
 
 void PilhaContexto::atualizaFunTipoPar(lexic_val_type *valorLex,int tipo)

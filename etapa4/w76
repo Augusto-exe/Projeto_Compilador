@@ -1,7 +1,9 @@
 int v1, x, y;
 int f1 (float k, int l) 
 {
-  int a;
+  int a, b;
+  int v1, b;
+
 }
 int v2[100];
 char v3;

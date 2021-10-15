@@ -1,4 +1,7 @@
 #include "pilhaContexto.hpp"
+#include <iostream>
+using namespace std;
+
 
 PilhaContexto::PilhaContexto()
 {
@@ -21,7 +24,7 @@ void PilhaContexto::insereSimboloNonVet(int line, int natureza, lexic_val_type *
 {
 	DadoTabelaSimbolos novoSimbolo;
 	list<DadoTabelaSimbolos> parametros;
-	string nomeChave;
+	string nomeChave,nomeOrg;
 	novoSimbolo.linha = line;
 	novoSimbolo.natureza = natureza;
 	novoSimbolo.tipo = tipo;
@@ -49,11 +52,15 @@ void PilhaContexto::insereSimboloNonVet(int line, int natureza, lexic_val_type *
 			nomeChave = string(valorLex->tk_value.vStr);
 			break;
 
-	} 
+	}
+
+	nomeOrg = nomeChave; 
 	if(natureza == NAT_LIT)
 		nomeChave.append("LIT");
 	if(natureza == NAT_VAR)
 		nomeChave.append("VAR");
+	if(this->existeSimboloContextoAtual(nomeChave))
+		this->emitirErro(ERR_DECLARED,line,nomeOrg);
 	novoSimbolo.valorLexico = *valorLex;
 	novoSimbolo.parametros = parametros;
 
@@ -63,7 +70,7 @@ void PilhaContexto::insereSimboloVet(int line, int natureza, lexic_val_type *val
 {
 	DadoTabelaSimbolos novoSimbolo;
 	list<DadoTabelaSimbolos> parametros;
-	string nomeChave;
+	string nomeChave,nomeOrg;
 	novoSimbolo.linha = line;
 	novoSimbolo.natureza = natureza;
 	novoSimbolo.tipo = tipo;
@@ -91,13 +98,15 @@ void PilhaContexto::insereSimboloVet(int line, int natureza, lexic_val_type *val
 			nomeChave = string(valorLex->tk_value.vStr);
 			break;
 
-	} 
+	}
+	nomeOrg = nomeChave; 
 	nomeChave.append("VAR");
 
 
 	novoSimbolo.valorLexico = *valorLex;
 	novoSimbolo.parametros = parametros;
-
+	if(this->existeSimboloContextoAtual(nomeChave))
+		this->emitirErro(ERR_DECLARED,line,nomeOrg);
 	this->insereSimboloContextoAtual(nomeChave,novoSimbolo);
 }
 
@@ -106,10 +115,19 @@ int getTamanhoTipo(int)
 	return 0;
 }
 
+bool PilhaContexto::existeSimboloContextoAtual(string nome)
+{
+	return this->contextos.back().existeSimbolo(nome);
+}
+
 void PilhaContexto::exportaTabelas()
 {
 	for(auto contexto : this->contextos)
+	{
+		cout << "nova tabela : "<< endl;
 		contexto.exportaTabela();
+	}
+		
 }
 
 void PilhaContexto::atualizaTipoTamanho(int tipo)
@@ -138,14 +156,28 @@ void PilhaContexto::insereSimboloContextoAtual(string nome, DadoTabelaSimbolos n
 }
 bool PilhaContexto::existeSimboloContextos(string nome)
 {
-
+	for(auto contexto: this->contextos)
+	{
+		if(contexto.existeSimbolo(nome))
+			return true;
+	}
+	return false;
 }
 DadoTabelaSimbolos PilhaContexto::retornaSimbolo(string nome)
 {
 
 }
-void PilhaContexto::emitirErro(int tipoErro)
+void PilhaContexto::emitirErro(int tipoErro,int linha, string nome)
 {
+	switch (tipoErro)
+	{
+	case ERR_DECLARED:
+		cout << "New declaration of variable " << nome << " in line " << linha << endl;
+		break;
+	default:
+		break;
+	}
 
+	exit(tipoErro);
 }
 

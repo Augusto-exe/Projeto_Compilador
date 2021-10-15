@@ -20,9 +20,10 @@ class PilhaContexto
 		void adicionaParametro(string nome,string nome_par);
 		void insereSimboloContextoAtual(string nome, DadoTabelaSimbolos novoSimbolo);
 		bool existeSimboloContextos(string nome);
+		bool existeSimboloContextoAtual(string nome);
 		DadoTabelaSimbolos retornaSimbolo(string nome);
 		void exportaTabelas();
-		void emitirErro(int tipoErro);
+		void emitirErro(int tipoErro, int linha, string nome);
 
 	private:
 		PilhaMapas contextos;

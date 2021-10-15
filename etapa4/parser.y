@@ -189,8 +189,10 @@ func: tipo_stat TK_IDENTIFICADOR '(' lista_par ')' bloco {$$ = insere_nodo( $6,$
 lista_par: lista_par ',' tipo_cons TK_IDENTIFICADOR {libera_val($2); libera_val($4); }
 | tipo_cons TK_IDENTIFICADOR {libera_val($2);}; 
 
-bloco: '{' '}'  { $$ =NULL; libera_val($1); libera_val($2);}
-| '{' seq_comando '}' { $$ = $2; libera_val($1);libera_val($3);} ;
+com_bloco: '{' {tabelas.insereContexto();libera_val($1);};
+fim_bloco: '}' {libera_val($1);tabelas.popContexto();};
+bloco: com_bloco fim_bloco   { $$ =NULL; }
+| com_bloco seq_comando fim_bloco { $$ = $2;} ;
 
 //Definição da sequencia de comandos e abaixo os diferentes tipos de comandos
 seq_comando: comando seq_comando { $$ = $1; $$ = insere_filho($$,$2); }
@@ -206,13 +208,13 @@ comando: bloco ';' {$$ = NULL; libera_val($2);}
 | fun_call ';' {$$ = $1; libera_val($2);}
 | comando_controle_fluxo ';' {$$ = $1; libera_val($2);}
 
-decla_loc: tipo_stat_cons lista_var_loc { $$ = $2;};
+decla_loc: tipo_stat_cons lista_var_loc { $$ = $2;tabelas.atualizaTipoTamanho($1);};
 
 lista_var_loc: lista_var_loc ',' var_loc {libera_val($2); $$ = insere_filho($1,$3);}
 | var_loc { $$ = $1; };
 
-var_loc: TK_IDENTIFICADOR TK_OC_LE id_lit { $$ = insere_nodo(NULL,$2); $$= insere_filho($$,insere_nodo(NULL,$1));$$= insere_filho($$,$3);}
-| TK_IDENTIFICADOR { $$ = NULL; libera_val($1);};
+var_loc: TK_IDENTIFICADOR TK_OC_LE id_lit { $$ = insere_nodo(NULL,$2); $$= insere_filho($$,insere_nodo(NULL,$1));$$= insere_filho($$,$3);tabelas.insereSimboloNonVet(get_line_number(),NAT_VAR,$1,INDEF);}
+| TK_IDENTIFICADOR { $$ = NULL;tabelas.insereSimboloNonVet(get_line_number(),NAT_VAR,$1,INDEF); libera_val($1);};
 
 id_lit: literal {$$ = $1;}
 | TK_IDENTIFICADOR {$$ = insere_nodo(NULL,$1);};

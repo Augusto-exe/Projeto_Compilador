@@ -187,7 +187,6 @@ bool PilhaContexto::comparaParams(list<DadoTabelaSimbolos> listParam,a_nodo* nod
 				nodo = NULL;
 		}
 	}
-	cout << "tamanho lista arg = "<< inputSize << endl;
 	if(inputSize > listParam.size())
 	{
 		string msg = "Expected "+ to_string(listParam.size()) +" received " + to_string(inputSize)+".";
@@ -222,7 +221,6 @@ void PilhaContexto::verificaFuncao(lexic_val_type *valorLex, a_nodo* nodo,int li
 			this->emitirErro(ERR_VECTOR,valorLex->lineno,nomeFunc,"Function");
 
 	}
-	cout << "verificando func "<< nomeFunc << " " ;
 	this->comparaParams(dadoFunc.parametros,nodo,linha,nomeFunc);
 }
 
@@ -335,7 +333,7 @@ void PilhaContexto::emitirErro(int tipoErro,int linha, string nome,string aux=""
 	switch (tipoErro)
 	{
 	case ERR_DECLARED:
-		cout << "Variable " << nome << " in line " << linha << " was already declared - "; 
+		cout << "Identifier " << nome << " in line " << linha << " was already declared - "; 
 		declaAnterior = retornaSimboloBack(aux);
 		cout << "Previous declaration was at line " << declaAnterior.linha << "." << endl;
 		break;
@@ -354,6 +352,8 @@ void PilhaContexto::emitirErro(int tipoErro,int linha, string nome,string aux=""
 	case ERR_MISSING_ARGS:
 		cout << "Missing arguments to function call " << nome <<" in line "<< linha <<". " <<aux << endl;
 		break;
+	case ERR_UNDECLARED:
+		cout << "Identifier " << nome << " in line " << linha << " was not declared before use" << endl; 
 	default:
 		break;
 	}

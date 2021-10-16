@@ -4,7 +4,7 @@ int f1 (float k, int l)
 {
   int a;
   int v1;
-  f1(3+4);
+  f(3+4);
   a = 4 - 4.4;
   return 1;
 }

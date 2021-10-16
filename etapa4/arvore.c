@@ -113,10 +113,12 @@ void exporta_label(a_nodo *arvore){
 	if(arvore->filho!=NULL)
 		exporta_label(arvore->filho);
 	if( arvore->valor_lexico != NULL){
+		printf("tipo_semantico: %d -> ", arvore->tipo_valor_semantico);
 		printf("%p [label =\"",arvore);
 		if(arvore->tipo_no == NO_FUN_CALL)
 			printf("call ");
 		printa_label(arvore->valor_lexico);
+
 	}
 }
 void exporta_rela(a_nodo *arvore){

@@ -26,6 +26,7 @@ class tabelaSimbolos{
 		void exportaTabela();
 		void setTipoTamanhoPorNome(string nome,int tipo,int tamanho);
 		void adicionaParametrosParaFunc(string nomeFunc,list<struct dadoTabelaSimbolos> listaParam);
+		int getTipoPeloNome(string nomeChave);
 	private:
 		MapaSimbolos tabSimbolos;
 };

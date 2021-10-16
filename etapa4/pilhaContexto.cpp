@@ -131,9 +131,6 @@ void PilhaContexto::insereFun(int line, lexic_val_type *valorLex )
 	
 	this->contextos.front().insereSimbolo(nome,novoSimbolo);
 
-	cout << "exporantdo apos inserir funcao" << endl;
-	this->exportaTabelas();
-
 }
 
 void PilhaContexto::empilhaParametro(lexic_val_type *valorLex)
@@ -143,10 +140,44 @@ void PilhaContexto::empilhaParametro(lexic_val_type *valorLex)
 	this->parametrosPendentes.push_front(dado);
 }
 
+int PilhaContexto::infereTipo(a_nodo* nodoEsq,a_nodo* nodoDir)
+{
+	int tipoEsq = nodoEsq->tipo_valor_semantico;
+	int tipoDir = nodoDir->tipo_valor_semantico;
+
+	if(tipoDir == INDEF ||tipoEsq == INDEF || tipoDir == ID_STRING || tipoEsq == ID_STRING )
+		return INDEF;
+	if((tipoEsq == ID_INT && tipoDir == ID_INT)||(tipoEsq == ID_INT && tipoDir == ID_BOOL)|| (tipoEsq == ID_BOOL && tipoDir == ID_INT))
+		return ID_INT;
+	if(tipoEsq == ID_FLOAT || tipoDir == ID_FLOAT)
+		return ID_FLOAT;
+	
+	return ID_BOOL;
+}
+
+int PilhaContexto::infereTipoTern(a_nodo* nodoEsq,a_nodo* nodoMeio,a_nodo* nodoDir)
+{
+	int tipo_temp;
+	a_nodo* nodo_temp;
+	nodo_temp = (a_nodo*)malloc(sizeof(a_nodo));
+
+	tipo_temp = this->infereTipo(nodoEsq,nodoMeio);
+	nodo_temp->tipo_valor_semantico= tipo_temp;
+	tipo_temp = this->infereTipo(nodo_temp,nodoDir);
+
+	free(nodo_temp);
+
+	return tipo_temp;
+}
+
+void PilhaContexto::verificaFuncao(lexic_val_type *valorLex, a_nodo* nodo)
+{
+	string nomeFunc = string(valorLex->tk_value.vStr);
+}
 
 int getTamanhoTipo(int tipo)
 {
-	int ret
+	int ret;
 	switch (tipo)
 	{
 	case ID_INT:

@@ -230,28 +230,28 @@ var_loc: TK_IDENTIFICADOR TK_OC_LE id_lit { $$ = insere_nodo(NULL,$2); $$= inser
 id_lit: literal {$$ = $1;}
 | TK_IDENTIFICADOR {$$ = insere_nodo(NULL,$1);};
 
-literal: all_int {$$ = $1;}
-| all_float {$$ = $1;}
-| TK_LIT_FALSE {$$ = insere_nodo(NULL,$1);}
-| TK_LIT_TRUE  {$$ = insere_nodo(NULL,$1);}
-| TK_LIT_CHAR {$$ = insere_nodo(NULL,$1);}
-| TK_LIT_STRING {$$ = insere_nodo(NULL,$1);};
+literal: all_int {$$ = $1;atualiza_tipo_semantico($$,ID_INT);}
+| all_float {$$ = $1;atualiza_tipo_semantico($$,ID_FLOAT);}
+| TK_LIT_FALSE {$$ = insere_nodo(NULL,$1);atualiza_tipo_semantico($$,ID_BOOL);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$1,ID_BOOL);}
+| TK_LIT_TRUE  {$$ = insere_nodo(NULL,$1);atualiza_tipo_semantico($$,ID_BOOL);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$1,ID_BOOL);}
+| TK_LIT_CHAR {$$ = insere_nodo(NULL,$1);atualiza_tipo_semantico($$,ID_CHAR);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$1,ID_CHAR);}
+| TK_LIT_STRING {$$ = insere_nodo(NULL,$1);atualiza_tipo_semantico($$,ID_STRING);tabelas.insereSimboloNonVet(get_line_number(),NAT_VAR,$1,ID_STRING);};
 
-literal_num_bool: TK_LIT_INT {$$ = insere_nodo(NULL,$1);}
-| TK_LIT_FLOAT {$$ = insere_nodo(NULL,$1);}
-| TK_LIT_FALSE {$$ = insere_nodo(NULL,$1);}
-| TK_LIT_TRUE {$$ = insere_nodo(NULL,$1);};
+literal_num_bool: TK_LIT_INT {$$ = insere_nodo(NULL,$1);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$1,ID_INT);atualiza_tipo_semantico($$,ID_INT);}
+| TK_LIT_FLOAT {$$ = insere_nodo(NULL,$1);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$1,ID_FLOAT);atualiza_tipo_semantico($$,ID_FLOAT);}
+| TK_LIT_FALSE {$$ = insere_nodo(NULL,$1);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$1,ID_BOOL);atualiza_tipo_semantico($$,ID_BOOL);}
+| TK_LIT_TRUE {$$ = insere_nodo(NULL,$1);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$1,ID_BOOL);atualiza_tipo_semantico($$,ID_BOOL);};
 
-pos_int: '+' TK_LIT_INT {$$ = insere_nodo(NULL,$2); libera_val($1);}
-| TK_LIT_INT {$$ = insere_nodo(NULL,$1);};
+pos_int: '+' TK_LIT_INT {$$ = insere_nodo(NULL,$2); libera_val($1);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$2,ID_INT);atualiza_tipo_semantico($$,ID_INT);}
+| TK_LIT_INT {$$ = insere_nodo(NULL,$1);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$1,ID_INT);atualiza_tipo_semantico($$,ID_INT);};
 
-all_int: '-' TK_LIT_INT { $$ = insere_nodo(NULL,inverte_sinal($2)); libera_val($1);}
-| TK_LIT_INT {$$ = insere_nodo(NULL,$1);}
-| '+' TK_LIT_INT {$$ = insere_nodo(NULL,$2); libera_val($1);};
+all_int: '-' TK_LIT_INT { $$ = insere_nodo(NULL,inverte_sinal($2)); libera_val($1);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,inverte_sinal($2),ID_INT);atualiza_tipo_semantico($$,ID_INT);}
+| TK_LIT_INT {$$ = insere_nodo(NULL,$1);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$1,ID_INT);atualiza_tipo_semantico($$,ID_INT);}
+| '+' TK_LIT_INT {$$ = insere_nodo(NULL,$2); libera_val($1);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$2,ID_INT);atualiza_tipo_semantico($$,ID_INT);};
 
-all_float: '-' TK_LIT_FLOAT { $$ = insere_nodo(NULL,inverte_sinal($2));libera_val($1);}
-| TK_LIT_FLOAT {$$ = insere_nodo(NULL,$1);}
-| '+' TK_LIT_FLOAT {$$ = insere_nodo(NULL,$2); libera_val($1);};
+all_float: '-' TK_LIT_FLOAT { $$ = insere_nodo(NULL,inverte_sinal($2));libera_val($1);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,inverte_sinal($2),ID_FLOAT);atualiza_tipo_semantico($$,ID_FLOAT);}
+| TK_LIT_FLOAT {$$ = insere_nodo(NULL,$1);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$1,ID_FLOAT);atualiza_tipo_semantico($$,ID_FLOAT);}
+| '+' TK_LIT_FLOAT {$$ = insere_nodo(NULL,$2); libera_val($1);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$2,ID_FLOAT);atualiza_tipo_semantico($$,ID_FLOAT);};
 
 atrib: var_vet '=' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);};
 
@@ -270,7 +270,7 @@ shift_right:  var_vet TK_OC_SR pos_int { $$ = insere_nodo($1,$2); insere_filho($
 
 shift_left: var_vet TK_OC_SL pos_int { $$ = insere_nodo($1,$2); insere_filho($$,$3); };
 
-fun_call: TK_IDENTIFICADOR '(' fun_input ')' { libera_val($2); libera_val($4); $$ = insere_nodo_tipo($3,$1,NO_FUN_CALL);} ;
+fun_call: TK_IDENTIFICADOR '(' fun_input ')' { libera_val($2); libera_val($4); $$ = insere_nodo_tipo($3,$1,NO_FUN_CALL);tabelas.verificaFuncao($1,$3);} ;
 
 lista_arg: id_lit_exp ',' lista_arg { libera_val($2); $$ = insere_filho($1,$3); }
 | id_lit_exp {$$ = $1;};
@@ -289,23 +289,23 @@ exp: literal_num_bool {$$ = $1;}
 | fun_call {$$ = $1;} 
 | '(' exp ')' {$$ = $2; libera_val($1); libera_val($3);} 
 | exp_unitaria {$$ = $1;} 
-| exp '+' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);}
-| exp '-' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);}
-| exp '*' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);}
-| exp '/' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);}
-| exp '%' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);}
-| exp '|' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);}
-| exp '&' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);}
-| exp '^' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);}
-| exp TK_OC_LE exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);}
-| exp TK_OC_GE exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);}
-| exp TK_OC_EQ exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);}
-| exp TK_OC_NE exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);}
-| exp TK_OC_AND exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);}
-| exp TK_OC_OR exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);}
-| exp '<' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);}
-| exp '>' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);}
-| exp '?' exp ':' exp { $$ = insere_nodo(NULL,geraVal(TIPO_CHAR_ESP,NOT_LIT,get_line_number(),(char*)"?:")); insere_filho($$,$1); insere_filho($$,$3); insere_filho($$,$5);libera_val($2);libera_val($4);};
+| exp '+' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,tabelas.infereTipo($1,$3));}
+| exp '-' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,tabelas.infereTipo($1,$3));}
+| exp '*' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,tabelas.infereTipo($1,$3));}
+| exp '/' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,tabelas.infereTipo($1,$3));}
+| exp '%' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,tabelas.infereTipo($1,$3));}
+| exp '|' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,tabelas.infereTipo($1,$3));}
+| exp '&' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,tabelas.infereTipo($1,$3));}
+| exp '^' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,tabelas.infereTipo($1,$3));}
+| exp TK_OC_LE exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,tabelas.infereTipo($1,$3));}
+| exp TK_OC_GE exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,tabelas.infereTipo($1,$3));}
+| exp TK_OC_EQ exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,tabelas.infereTipo($1,$3));}
+| exp TK_OC_NE exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,tabelas.infereTipo($1,$3));}
+| exp TK_OC_AND exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,tabelas.infereTipo($1,$3));}
+| exp TK_OC_OR exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,tabelas.infereTipo($1,$3));}
+| exp '<' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,tabelas.infereTipo($1,$3));}
+| exp '>' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,tabelas.infereTipo($1,$3));}
+| exp '?' exp ':' exp { $$ = insere_nodo(NULL,geraVal(TIPO_CHAR_ESP,NOT_LIT,get_line_number(),(char*)"?:")); insere_filho($$,$1); insere_filho($$,$3); insere_filho($$,$5);libera_val($2);libera_val($4);atualiza_tipo_semantico($$,tabelas.infereTipoTern($1,$3,$5));};
 
 comando_controle_fluxo: comando_if {$$ = $1;}
 | comando_for {$$ = $1;}
@@ -326,7 +326,7 @@ op_unitario: '+' { $$ = insere_nodo(NULL,$1);}
 |'&' { $$ = insere_nodo(NULL,$1);}
 |'#' { $$ = insere_nodo(NULL,$1);}
 |'?' { $$ = insere_nodo(NULL,$1);};
-exp_unitaria: op_unitario exp { $$ = $1; insere_filho($$,$2);} %prec PREC_UNA; 	
+exp_unitaria: op_unitario exp { $$ = $1; insere_filho($$,$2);atualiza_tipo_semantico($$,$2->tipo_valor_semantico);} %prec PREC_UNA; 	
 %%
 
 int yyerror(char const *s){

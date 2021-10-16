@@ -27,6 +27,9 @@ class PilhaContexto
 		void insereFun(int line, lexic_val_type *valorLex );
 		void atualizaFunTipoPar(lexic_val_type *valorLex,int tipo );
 		void empilhaParametro(lexic_val_type *valorLex);
+		int infereTipo(a_nodo* nodoEsq,a_nodo* nodoDir);
+		void verificaFuncao(lexic_val_type *valorLex, a_nodo * nodo);
+		int infereTipoTern(a_nodo* nodoEsq,a_nodo* nodoMeio,a_nodo* nodoDir);
 
 	private:
 		PilhaMapas contextos;

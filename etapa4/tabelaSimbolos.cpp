@@ -44,6 +44,11 @@ void tabelaSimbolos::adicionaParametrosParaFunc(string nomeFunc,list<struct dado
 	this->tabSimbolos[nomeFunc].parametros =listaParam;
 }
 
+int tabelaSimbolos::getTipoPeloNome(string nomeChave)
+{
+	return this->tabSimbolos[nomeChave].tipo;
+}
+
 
 
 

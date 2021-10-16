@@ -4,6 +4,8 @@ int f1 (float k, int l)
   int a;
   int v1, b;
 
+  a = 4 - 4.4;
+
 }
 int v2[100];
 char v3;

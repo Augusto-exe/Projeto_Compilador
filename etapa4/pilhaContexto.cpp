@@ -136,7 +136,7 @@ void PilhaContexto::insereFun(int line, lexic_val_type *valorLex )
 void PilhaContexto::empilhaParametro(lexic_val_type *valorLex)
 {
 	string nome = string(valorLex->tk_value.vStr);
-	DadoTabelaSimbolos dado = this->retornaSimbolo(nome);
+	DadoTabelaSimbolos dado = this->retornaSimboloBack(nome);
 	this->parametrosPendentes.push_front(dado);
 }
 
@@ -170,9 +170,60 @@ int PilhaContexto::infereTipoTern(a_nodo* nodoEsq,a_nodo* nodoMeio,a_nodo* nodoD
 	return tipo_temp;
 }
 
-void PilhaContexto::verificaFuncao(lexic_val_type *valorLex, a_nodo* nodo)
+bool PilhaContexto::comparaParams(list<DadoTabelaSimbolos> listParam,a_nodo* nodo,int linha, string nomeFunc )
+{
+	int inputSize = 0;
+	list<int> inputTipeList;
+	while(nodo !=NULL)
+	{
+		inputSize++;
+		inputTipeList.push_back(nodo->tipo_valor_semantico);
+		nodo = nodo->filho;
+		if(nodo!=NULL)
+		{
+			while(nodo->prox_irmao != NULL)
+				nodo = nodo->prox_irmao;
+			if(nodo->is_arg == false)
+				nodo = NULL;
+		}
+	}
+	cout << "tamanho lista arg = "<< inputSize << endl;
+	if(inputSize > listParam.size())
+	{
+		string msg = "Expected "+ to_string(listParam.size()) +" received " + to_string(inputSize)+".";
+		this->emitirErro(ERR_EXCESS_ARGS,linha,nomeFunc,msg);
+	}
+	if(inputSize < listParam.size())
+	{
+		string msg = "Expected "+ to_string(listParam.size()) +" received " + to_string(inputSize)+".";
+		this->emitirErro(ERR_MISSING_ARGS,linha,nomeFunc,msg);
+	}
+		
+
+}
+
+void PilhaContexto::verificaFuncao(lexic_val_type *valorLex, a_nodo* nodo,int linha)
 {
 	string nomeFunc = string(valorLex->tk_value.vStr);
+	bool existe = this->existeSimboloContextos(nomeFunc);
+	DadoTabelaSimbolos dadoFunc;
+	if(!existe)
+	{
+		emitirErro(ERR_UNDECLARED,valorLex->lineno,nomeFunc,nomeFunc);
+	}
+	dadoFunc = this->retornaSimbolo(nomeFunc);
+
+	if(dadoFunc.natureza == NAT_VAR || dadoFunc.natureza == NAT_VET)
+	{
+
+		if(dadoFunc.natureza == NAT_VAR)
+			this->emitirErro(ERR_VARIABLE,valorLex->lineno,nomeFunc,"Function");
+		else
+			this->emitirErro(ERR_VECTOR,valorLex->lineno,nomeFunc,"Function");
+
+	}
+	cout << "verificando func "<< nomeFunc << " " ;
+	this->comparaParams(dadoFunc.parametros,nodo,linha,nomeFunc);
 }
 
 int getTamanhoTipo(int tipo)
@@ -247,27 +298,61 @@ void PilhaContexto::insereSimboloContextoAtual(string nome, DadoTabelaSimbolos n
 }
 bool PilhaContexto::existeSimboloContextos(string nome)
 {
-	for(auto contexto: this->contextos)
+	for(PilhaMapas::reverse_iterator contexto = this->contextos.rbegin();contexto !=this->contextos.rend();++contexto )
 	{
-		if(contexto.existeSimbolo(nome))
+		if((*contexto).existeSimbolo(nome))
 			return true;
 	}
 	return false;
 }
 DadoTabelaSimbolos PilhaContexto::retornaSimbolo(string nome)
 {
+	bool exitste = false;
+	DadoTabelaSimbolos dadoRet;
+
+	for(PilhaMapas::reverse_iterator contexto = this->contextos.rbegin();contexto !=this->contextos.rend();++contexto )
+	{
+		if((*contexto).existeSimbolo(nome))
+		{
+			exitste = true;
+			dadoRet = (*contexto).getTabela()[nome];
+			break;
+		}
+			
+	}
+
+	return dadoRet;
+}
+
+DadoTabelaSimbolos PilhaContexto::retornaSimboloBack(string nome)
+{
 	MapaSimbolos mapa = this->contextos.back().getTabela();
 	return mapa[nome];
 }
-void PilhaContexto::emitirErro(int tipoErro,int linha, string nome,string nomeChave)
+void PilhaContexto::emitirErro(int tipoErro,int linha, string nome,string aux="")
 {
 	DadoTabelaSimbolos declaAnterior;
 	switch (tipoErro)
 	{
 	case ERR_DECLARED:
 		cout << "Variable " << nome << " in line " << linha << " was already declared - "; 
-		declaAnterior = retornaSimbolo(nomeChave);
+		declaAnterior = retornaSimboloBack(aux);
 		cout << "Previous declaration was at line " << declaAnterior.linha << "." << endl;
+		break;
+	case ERR_FUNCTION:
+		cout << "Function " << nome << " was used as " << aux << " in line " << linha << "."<<endl;
+		break;
+	case ERR_VECTOR:
+		cout << "Vector " << nome << " was used as " << aux << " in line " << linha << "." << endl;
+		break;
+	case ERR_VARIABLE:
+		cout << "Variable " << nome << " was used as " << aux << " in line " << linha << "."<<endl;
+		break;
+	case ERR_EXCESS_ARGS:
+		cout << "Excedded number of arguments to function call " << nome <<" in line "<< linha <<". " << aux << endl;
+		break;
+	case ERR_MISSING_ARGS:
+		cout << "Missing arguments to function call " << nome <<" in line "<< linha <<". " <<aux << endl;
 		break;
 	default:
 		break;

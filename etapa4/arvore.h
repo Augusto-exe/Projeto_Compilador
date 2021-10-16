@@ -8,6 +8,7 @@
 struct arvore
 {
 	int tipo_no;
+	bool is_arg;
 	int tipo_valor_semantico; 
 	lexic_val_type* valor_lexico;
 	struct arvore* filho;

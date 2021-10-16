@@ -270,10 +270,10 @@ shift_right:  var_vet TK_OC_SR pos_int { $$ = insere_nodo($1,$2); insere_filho($
 
 shift_left: var_vet TK_OC_SL pos_int { $$ = insere_nodo($1,$2); insere_filho($$,$3); };
 
-fun_call: TK_IDENTIFICADOR '(' fun_input ')' { libera_val($2); libera_val($4); $$ = insere_nodo_tipo($3,$1,NO_FUN_CALL);tabelas.verificaFuncao($1,$3);} ;
+fun_call: TK_IDENTIFICADOR '(' fun_input ')' { libera_val($2); libera_val($4); $$ = insere_nodo_tipo($3,$1,NO_FUN_CALL);tabelas.verificaFuncao($1,$3,get_line_number());} ;
 
-lista_arg: id_lit_exp ',' lista_arg { libera_val($2); $$ = insere_filho($1,$3); }
-| id_lit_exp {$$ = $1;};
+lista_arg: id_lit_exp ',' lista_arg { libera_val($2); $$ = insere_filho($1,$3); $1->is_arg = true; }
+| id_lit_exp {$$ = $1; $$->is_arg =true;};
 
 fun_input: {$$=NULL;}
 |lista_arg {$$=$1;};

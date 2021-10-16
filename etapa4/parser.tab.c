@@ -1973,19 +1973,19 @@ yyreduce:
 
   case 82:
 #line 273 "parser.y" /* yacc.c:1646  */
-    { libera_val((yyvsp[-2].valor_lexico)); libera_val((yyvsp[0].valor_lexico)); (yyval.nodo) = insere_nodo_tipo((yyvsp[-1].nodo),(yyvsp[-3].valor_lexico),NO_FUN_CALL);tabelas.verificaFuncao((yyvsp[-3].valor_lexico),(yyvsp[-1].nodo));}
+    { libera_val((yyvsp[-2].valor_lexico)); libera_val((yyvsp[0].valor_lexico)); (yyval.nodo) = insere_nodo_tipo((yyvsp[-1].nodo),(yyvsp[-3].valor_lexico),NO_FUN_CALL);tabelas.verificaFuncao((yyvsp[-3].valor_lexico),(yyvsp[-1].nodo),get_line_number());}
 #line 1978 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 83:
 #line 275 "parser.y" /* yacc.c:1646  */
-    { libera_val((yyvsp[-1].valor_lexico)); (yyval.nodo) = insere_filho((yyvsp[-2].nodo),(yyvsp[0].nodo)); }
+    { libera_val((yyvsp[-1].valor_lexico)); (yyval.nodo) = insere_filho((yyvsp[-2].nodo),(yyvsp[0].nodo)); (yyvsp[-2].nodo)->is_arg = true; }
 #line 1984 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 84:
 #line 276 "parser.y" /* yacc.c:1646  */
-    {(yyval.nodo) = (yyvsp[0].nodo);}
+    {(yyval.nodo) = (yyvsp[0].nodo); (yyval.nodo)->is_arg =true;}
 #line 1990 "parser.tab.c" /* yacc.c:1646  */
     break;
 

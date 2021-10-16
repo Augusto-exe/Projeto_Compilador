@@ -1,6 +1,14 @@
 {
     "files.associations": {
-        "pilhacontexto.hpp": "c"
+        "pilhacontexto.hpp": "c",
+        "list": "cpp",
+        "array": "cpp",
+        "deque": "cpp",
+        "string": "cpp",
+        "vector": "cpp",
+        "string_view": "cpp",
+        "iostream": "cpp",
+        "ostream": "cpp"
     },
     "C_Cpp.errorSquiggles": "Disabled"
 }

@@ -137,7 +137,7 @@ void PilhaContexto::empilhaParametro(lexic_val_type *valorLex)
 {
 	string nome = string(valorLex->tk_value.vStr);
 	DadoTabelaSimbolos dado = this->retornaSimboloBack(nome);
-	this->parametrosPendentes.push_front(dado);
+	this->parametrosPendentes.push_back(dado);
 }
 
 int PilhaContexto::infereTipo(a_nodo* nodoEsq,a_nodo* nodoDir)
@@ -169,6 +169,17 @@ int PilhaContexto::infereTipoTern(a_nodo* nodoEsq,a_nodo* nodoMeio,a_nodo* nodoD
 
 	return tipo_temp;
 }
+bool checaConversaoImplicita(int tipoOrig,int tipoDst)
+{
+	bool ret = false;
+	if(tipoOrig == ID_BOOL &&(tipoDst == ID_INT || tipoDst == ID_FLOAT ))
+		ret = true;
+	if(tipoOrig == ID_INT &&(tipoDst == ID_BOOL || tipoDst == ID_FLOAT ))
+		ret = true;
+	if(tipoOrig == ID_FLOAT &&(tipoDst == ID_INT || tipoDst == ID_BOOL ))
+		ret = true;
+	return ret;
+}
 
 bool PilhaContexto::comparaParams(list<DadoTabelaSimbolos> listParam,a_nodo* nodo,int linha, string nomeFunc )
 {
@@ -197,11 +208,34 @@ bool PilhaContexto::comparaParams(list<DadoTabelaSimbolos> listParam,a_nodo* nod
 		string msg = "Expected "+ to_string(listParam.size()) +" received " + to_string(inputSize)+".";
 		this->emitirErro(ERR_MISSING_ARGS,linha,nomeFunc,msg);
 	}
+
+	int iteration = 0;
+	list<int>::iterator it1 = inputTipeList.begin();
+	list<DadoTabelaSimbolos>::iterator it2 =listParam.begin();
+	for(; it1 != inputTipeList.end() && it2 != listParam.end(); ++it1, ++it2)
+	{
+
+		iteration++;
+		if((*it1)==ID_STRING)
+		{
+			string msg;
+			msg= "receveid parameter of illegal type STRING.";
+			this->emitirErro(ERR_FUNCTION_STRING,linha,nomeFunc,msg);
+		}
 		
+		if((*it1)!=(*it2).tipo && !(checaConversaoImplicita((*it1),(*it2).tipo)))
+		{
+			string msg;
+			msg= "recevied argument number " + to_string(iteration) +" with incopatible type.";
+			this->emitirErro(ERR_WRONG_TYPE_ARGS,linha,nomeFunc,msg);
+		}
+
+	}
+	return true;
 
 }
-
-void PilhaContexto::verificaFuncao(lexic_val_type *valorLex, a_nodo* nodo,int linha)
+//retornar o tipo da função
+int PilhaContexto::verificaFuncao(lexic_val_type *valorLex, a_nodo* nodo,int linha)
 {
 	string nomeFunc = string(valorLex->tk_value.vStr);
 	bool existe = this->existeSimboloContextos(nomeFunc);
@@ -222,6 +256,8 @@ void PilhaContexto::verificaFuncao(lexic_val_type *valorLex, a_nodo* nodo,int li
 
 	}
 	this->comparaParams(dadoFunc.parametros,nodo,linha,nomeFunc);
+
+	return dadoFunc.tipo;
 }
 
 int getTamanhoTipo(int tipo)
@@ -254,6 +290,21 @@ int getTamanhoTipo(int tipo)
 void PilhaContexto::atualizaFunTipoPar(lexic_val_type *valorLex,int tipo)
 {
 	string nomeChave = string(valorLex->tk_value.vStr);
+	if(tipo == ID_STRING)
+	{
+		string msg;
+		msg= "receveid illegal return type STRING.";
+		this->emitirErro(ERR_FUNCTION_STRING,valorLex->lineno,nomeChave,msg);
+	}
+	for(auto parametro:this->parametrosPendentes)
+	{
+		if(parametro.tipo == ID_STRING)
+		{
+			string msg;
+			msg= "receveid a parameter with illegal type STRING.";
+			this->emitirErro(ERR_FUNCTION_STRING,valorLex->lineno,nomeChave,msg);
+		}
+	}
 	this->contextos.front().adicionaParametrosParaFunc(nomeChave,this->parametrosPendentes);
 	this->contextos.front().setTipoTamanhoPorNome(nomeChave,tipo,getTamanhoTipo(tipo));
 	this->parametrosPendentes.clear();
@@ -347,10 +398,16 @@ void PilhaContexto::emitirErro(int tipoErro,int linha, string nome,string aux=""
 		cout << "Variable " << nome << " was used as " << aux << " in line " << linha << "."<<endl;
 		break;
 	case ERR_EXCESS_ARGS:
-		cout << "Excedded number of arguments to function call " << nome <<" in line "<< linha <<". " << aux << endl;
+		cout << "Exceeded number of arguments to function call " << nome <<" in line "<< linha <<". " << aux << endl;
 		break;
 	case ERR_MISSING_ARGS:
 		cout << "Missing arguments to function call " << nome <<" in line "<< linha <<". " <<aux << endl;
+		break;
+	case ERR_WRONG_TYPE_ARGS:
+		cout << "Function " << nome <<" in line " << linha<< " " << aux << endl;
+		break;
+	case ERR_FUNCTION_STRING:
+		cout << "Function " << nome <<" in line " << linha << " " << aux << endl;
 		break;
 	case ERR_UNDECLARED:
 		cout << "Identifier " << nome << " in line " << linha << " was not declared before use" << endl; 

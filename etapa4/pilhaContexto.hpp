@@ -28,11 +28,11 @@ class PilhaContexto
 		void atualizaFunTipoPar(lexic_val_type *valorLex,int tipo );
 		void empilhaParametro(lexic_val_type *valorLex);
 		int infereTipo(a_nodo* nodoEsq,a_nodo* nodoDir);
-		void verificaFuncao(lexic_val_type *valorLex, a_nodo * nodo,int linha);
+		int verificaFuncao(lexic_val_type *valorLex, a_nodo * nodo,int linha);
 		int infereTipoTern(a_nodo* nodoEsq,a_nodo* nodoMeio,a_nodo* nodoDir);
 		DadoTabelaSimbolos retornaSimbolo(string nome);
 		bool comparaParams(list<DadoTabelaSimbolos> listParam,a_nodo* nodo, int linha,string nomeFunc );
-		//Implementar get tipo funcao
+		
 	private:
 		PilhaMapas contextos;
 		list<struct dadoTabelaSimbolos> parametrosPendentes;

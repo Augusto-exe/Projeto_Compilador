@@ -265,6 +265,56 @@ int PilhaContexto::verificaFuncao(lexic_val_type *valorLex, a_nodo* nodo,int lin
 	return dadoFunc.tipo;
 }
 
+//retornar o tipo da função
+int PilhaContexto::verificaVetor(lexic_val_type *valorLex)
+{
+	string nomeVet = string(valorLex->tk_value.vStr);
+	bool existe = this->existeSimboloContextos(nomeVet);
+	DadoTabelaSimbolos dadoVet;
+	if(!existe)
+	{
+		emitirErro(ERR_UNDECLARED,valorLex->lineno,nomeVet,nomeVet);
+	}
+	dadoVet = this->retornaSimbolo(nomeVet);
+
+	if(dadoVet.natureza == NAT_FUN || dadoVet.natureza == NAT_VAR)
+	{
+
+		if(dadoVet.natureza == NAT_VAR)
+			this->emitirErro(ERR_VARIABLE,valorLex->lineno,nomeVet,"Array");
+		else
+			this->emitirErro(ERR_FUNCTION,valorLex->lineno,nomeVet,"Array");
+
+	}
+
+	return dadoVet.tipo;
+}
+
+//retornar o tipo da função
+int PilhaContexto::verificaVar(lexic_val_type *valorLex)
+{
+	string nomeVar = string(valorLex->tk_value.vStr);
+	bool existe = this->existeSimboloContextos(nomeVar);
+	DadoTabelaSimbolos dadoVar;
+	if(!existe)
+	{
+		emitirErro(ERR_UNDECLARED,valorLex->lineno,nomeVar,nomeVar);
+	}
+	dadoVar = this->retornaSimbolo(nomeVar);
+
+	if(dadoVar.natureza == NAT_FUN || dadoVar.natureza == NAT_VET)
+	{
+
+		if(dadoVar.natureza == NAT_FUN)
+			this->emitirErro(ERR_FUNCTION,valorLex->lineno,nomeVar,"Variable");
+		else
+			this->emitirErro(ERR_VECTOR,valorLex->lineno,nomeVar,"Variable");
+
+	}
+
+	return dadoVar.tipo;
+}
+
 int getTamanhoTipo(int tipo)
 {
 	int ret;

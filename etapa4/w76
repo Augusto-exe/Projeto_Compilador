@@ -1,11 +1,11 @@
 //float v1, x, y;
 //int v2[100];
-char f1 (char k, int l,float j) 
+int f1 (char k, int l,float j) 
 {
   //v2[1] = 2;
   {
 
-};
+	};
 
   int a;
   char a4;
@@ -16,6 +16,7 @@ char f1 (char k, int l,float j)
   input a;
   //output v1;
   output a;
+  a =2;
 
   string str3_ <="123", str1 <="4",str3 <="123",str7 <="1234567";
 

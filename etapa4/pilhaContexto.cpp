@@ -23,6 +23,39 @@ tabelaSimbolos PilhaContexto::popContexto()
 
 	return mapaRet;
 }
+string getNomeValorLexico(lexic_val_type* valorLex)
+{
+	string nomeChave;
+	if(valorLex->type == TIPO_LIT)
+	{
+		switch (valorLex->value_type)
+		{
+		case LIT_TIPO_INT:
+			nomeChave = string(to_string(valorLex->tk_value.vInt));
+			break;
+		case LIT_TIPO_BOOL:
+			nomeChave = string(to_string(valorLex->tk_value.vBool));
+			break;
+		case LIT_TIPO_CHAR:
+			nomeChave = string(valorLex->tk_value.vChar);
+			break;
+		case LIT_TIPO_FLOAT:
+			nomeChave = string(to_string(valorLex->tk_value.vFloat));
+			break;
+		case LIT_TIPO_STRING:
+			nomeChave = string(valorLex->tk_value.vStr);
+			break;
+		default:
+			nomeChave = string(valorLex->tk_value.vStr);
+			break;
+		}
+	}
+	else
+	{
+		nomeChave = string(valorLex->tk_value.vStr);
+	}
+	return nomeChave;
+}
 
 int getTamanhoTipo(int tipo)
 {
@@ -234,6 +267,14 @@ int PilhaContexto::infereTipo(a_nodo* nodoEsq,a_nodo* nodoDir)
 	int tipoEsq = nodoEsq->tipo_valor_semantico;
 	int tipoDir = nodoDir->tipo_valor_semantico;
 
+	if((tipoDir != tipoEsq) &&(tipoEsq == ID_STRING || tipoDir == ID_STRING))
+	{
+		emitirErro(ERR_STRING_TO_X,nodoEsq->valor_lexico->lineno,"","");
+	}
+	if((tipoDir != tipoEsq) &&(tipoEsq == ID_CHAR || tipoDir == ID_CHAR))
+	{
+		emitirErro(ERR_STRING_TO_X,nodoEsq->valor_lexico->lineno,"","");
+	}
 	if(tipoDir == INDEF ||tipoEsq == INDEF || tipoDir == ID_STRING || tipoEsq == ID_STRING || tipoDir == ID_CHAR || tipoEsq ==ID_CHAR )
 		return INDEF;
 	if((tipoEsq == ID_INT && tipoDir == ID_INT)||(tipoEsq == ID_INT && tipoDir == ID_BOOL)|| (tipoEsq == ID_BOOL && tipoDir == ID_INT))
@@ -442,7 +483,7 @@ void PilhaContexto::exportaTabelas()
 
 int PilhaContexto::getTipoPorValorLex(lexic_val_type *valorLex)
 {
-	string nomeChave = string(valorLex->tk_value.vStr);
+	string nomeChave ;
 	if(valorLex->type == TIPO_LIT)
 	{
 		switch (valorLex->value_type)
@@ -467,6 +508,9 @@ int PilhaContexto::getTipoPorValorLex(lexic_val_type *valorLex)
 			break;
 		}
 		nomeChave.append("LIT");
+	}
+	else{
+		nomeChave = string(valorLex->tk_value.vStr);
 	}
 	DadoTabelaSimbolos dado = retornaSimbolo(nomeChave);
 	return dado.tipo;
@@ -614,23 +658,25 @@ void PilhaContexto::verificaAtrib(a_nodo* nodoDst,a_nodo* nodoOrig)
 	if(nodoOrig->tipo_valor_semantico == ID_CHAR && nodoDst->tipo_valor_semantico != ID_CHAR )
 	{
 		string msg = nome;
-		nome = string(nodoOrig->valor_lexico->tk_value.vStr);
+		nome = getNomeValorLexico(nodoOrig->valor_lexico);
 		this->emitirErro(ERR_CHAR_TO_X,linha,nome,msg);
 	}
+
 	if(nodoOrig->tipo_valor_semantico == ID_STRING && nodoDst->tipo_valor_semantico != ID_STRING )
 	{
 		string msg;
 		msg = nome;
-		nome = string(nodoOrig->valor_lexico->tk_value.vStr);
+		nome = getNomeValorLexico(nodoOrig->valor_lexico);
 		this->emitirErro(ERR_STRING_TO_X,linha,nome,msg);
 	}
 
 	if(nodoDst->tipo_valor_semantico!=nodoOrig->tipo_valor_semantico && !(checaConversaoImplicita(nodoOrig->tipo_valor_semantico,nodoDst->tipo_valor_semantico)))
 	{
 		string msg;
-		msg= string(nodoOrig->valor_lexico->tk_value.vStr);
+		msg= getNomeValorLexico(nodoOrig->valor_lexico);
 		this->emitirErro(ERR_WRONG_TYPE,linha,nome,msg);
 	}
+
 	if(nodoDst->tipo_valor_semantico == ID_STRING && nodoOrig->tipo_valor_semantico == ID_STRING )
 	{
 		DadoTabelaSimbolos dadoDst,dadoOrig;

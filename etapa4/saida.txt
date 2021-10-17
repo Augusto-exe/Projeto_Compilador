@@ -1,0 +1,1 @@
+Function g in line 2 received illegal return type STRING.

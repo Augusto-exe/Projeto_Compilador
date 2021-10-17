@@ -2,6 +2,9 @@ float v1, x, y;
 int v2[100];
 int f1 (char k, int l,float j) 
 {
+  v2[1] = 2;
+  
+
   int a;
   char a4;
   string b,d;
@@ -11,7 +14,8 @@ int f1 (char k, int l,float j)
   input a;
   output v1;
   output a;
-
+  v2[a] = 3;
+  v2 = 3;
   return 1;
   a >> 1;
   b << 12;

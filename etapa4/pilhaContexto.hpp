@@ -29,7 +29,7 @@ class PilhaContexto
 		void empilhaParametro(lexic_val_type *valorLex);
 		int infereTipo(a_nodo* nodoEsq,a_nodo* nodoDir);
 		int verificaFuncao(lexic_val_type *valorLex, a_nodo * nodo,int linha);
-		int verificaVetor(lexic_val_type *valorLex);
+		int verificaVetor(lexic_val_type *valorLex, a_nodo * vetIndex);
 		int verificaVar(lexic_val_type *valorLex);
 		int infereTipoTern(a_nodo* nodoEsq,a_nodo* nodoMeio,a_nodo* nodoDir);
 		DadoTabelaSimbolos retornaSimbolo(string nome);

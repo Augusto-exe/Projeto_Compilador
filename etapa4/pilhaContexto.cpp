@@ -219,14 +219,14 @@ bool PilhaContexto::comparaParams(list<DadoTabelaSimbolos> listParam,a_nodo* nod
 		if((*it1)==ID_STRING)
 		{
 			string msg;
-			msg= "receveid parameter of illegal type STRING.";
+			msg= "received parameter of illegal type STRING.";
 			this->emitirErro(ERR_FUNCTION_STRING,linha,nomeFunc,msg);
 		}
 		
 		if((*it1)!=(*it2).tipo && !(checaConversaoImplicita((*it1),(*it2).tipo)))
 		{
 			string msg;
-			msg= "recevied argument number " + to_string(iteration) +" with incopatible type.";
+			msg= "received argument number " + to_string(iteration) +" with incopatible type.";
 			this->emitirErro(ERR_WRONG_TYPE_ARGS,linha,nomeFunc,msg);
 		}
 
@@ -293,7 +293,7 @@ void PilhaContexto::atualizaFunTipoPar(lexic_val_type *valorLex,int tipo)
 	if(tipo == ID_STRING)
 	{
 		string msg;
-		msg= "receveid illegal return type STRING.";
+		msg= "received illegal return type STRING.";
 		this->emitirErro(ERR_FUNCTION_STRING,valorLex->lineno,nomeChave,msg);
 	}
 	for(auto parametro:this->parametrosPendentes)
@@ -301,7 +301,7 @@ void PilhaContexto::atualizaFunTipoPar(lexic_val_type *valorLex,int tipo)
 		if(parametro.tipo == ID_STRING)
 		{
 			string msg;
-			msg= "receveid a parameter with illegal type STRING.";
+			msg= "received a parameter with illegal type STRING.";
 			this->emitirErro(ERR_FUNCTION_STRING,valorLex->lineno,nomeChave,msg);
 		}
 	}
@@ -324,6 +324,63 @@ void PilhaContexto::exportaTabelas()
 		contexto.exportaTabela();
 	}
 		
+}
+
+int PilhaContexto::getTipoPorValorLex(lexic_val_type *valorLex)
+{
+	string nomeChave = string(valorLex->tk_value.vStr);
+	if(valorLex->type == TIPO_LIT)
+	{
+		switch (valorLex->value_type)
+		{
+		case LIT_TIPO_INT:
+			nomeChave = string(to_string(valorLex->tk_value.vInt));
+			break;
+		case LIT_TIPO_BOOL:
+			nomeChave = string(to_string(valorLex->tk_value.vBool));
+			break;
+		case LIT_TIPO_CHAR:
+			nomeChave = string(valorLex->tk_value.vChar);
+			break;
+		case LIT_TIPO_FLOAT:
+			nomeChave = string(to_string(valorLex->tk_value.vFloat));
+			break;
+		case LIT_TIPO_STRING:
+			nomeChave = string(valorLex->tk_value.vStr);
+			break;
+		default:
+			nomeChave = string(valorLex->tk_value.vStr);
+			break;
+		}
+		nomeChave.append("LIT");
+	}
+	DadoTabelaSimbolos dado = retornaSimbolo(nomeChave);
+	return dado.tipo;
+}
+
+//retorna o tipo encontrado da input
+int PilhaContexto::avaliaInput(lexic_val_type *valorLex)
+{
+	int tipo = this->getTipoPorValorLex(valorLex);
+	if(tipo != ID_INT && tipo != ID_FLOAT )
+	{
+		string msg = "";
+		string nome = "";
+		this->emitirErro(ERR_WRONG_PAR_INPUT,valorLex->lineno,nome,msg);
+	}
+	return tipo;
+}
+int PilhaContexto::avaliaOutput(lexic_val_type *valorLex)
+{
+
+	int tipo = this->getTipoPorValorLex(valorLex);
+	if(tipo != ID_INT && tipo != ID_FLOAT )
+	{
+		string msg = "";
+		string nome = "";
+		this->emitirErro(ERR_WRONG_PAR_OUTPUT,valorLex->lineno,nome,msg);
+	}
+	return tipo;
 }
 
 void PilhaContexto::atualizaTipoTamanho(int tipo)
@@ -373,12 +430,51 @@ DadoTabelaSimbolos PilhaContexto::retornaSimbolo(string nome)
 	return dadoRet;
 }
 
+void PilhaContexto::verificaAtrib(a_nodo* nodoDst,a_nodo* nodoOrig)
+{
+	string nome = string(nodoDst->valor_lexico->tk_value.vStr);
+	int linha = nodoDst->valor_lexico->lineno;
+
+	if(nodoOrig->tipo_valor_semantico == ID_CHAR && nodoDst->tipo_valor_semantico != ID_CHAR )
+	{
+		string msg = nome;
+		nome = string(nodoOrig->valor_lexico->tk_value.vStr);
+		this->emitirErro(ERR_CHAR_TO_X,linha,nome,msg);
+	}
+	if(nodoOrig->tipo_valor_semantico == ID_STRING && nodoDst->tipo_valor_semantico != ID_STRING )
+	{
+		string msg;
+		msg = nome;
+		nome = string(nodoOrig->valor_lexico->tk_value.vStr);
+		this->emitirErro(ERR_STRING_TO_X,linha,nome,msg);
+	}
+
+	if(nodoDst->tipo_valor_semantico!=nodoOrig->tipo_valor_semantico && !(checaConversaoImplicita(nodoOrig->tipo_valor_semantico,nodoDst->tipo_valor_semantico)))
+	{
+		string msg;
+		msg= string(nodoOrig->valor_lexico->tk_value.vStr);
+		this->emitirErro(ERR_WRONG_TYPE,linha,nome,msg);
+	}
+	if(nodoDst->tipo_valor_semantico == ID_STRING && nodoOrig->tipo_valor_semantico == ID_STRING )
+	{
+		DadoTabelaSimbolos dadoDst,dadoOrig;
+		dadoDst = this->retornaSimbolo(string(nodoDst->valor_lexico->tk_value.vStr));
+		dadoOrig = this->retornaSimbolo(string(nodoOrig->valor_lexico->tk_value.vStr));
+		if(dadoOrig.tamanho > dadoDst.tamanho)
+		{
+			string msg;
+			msg= "exceeded maximum size of "+ to_string(dadoDst.tamanho) + " received value with size " +to_string(dadoOrig.tamanho)+".";
+			this->emitirErro(ERR_STRING_MAX,linha,nome,msg);
+		}
+	}
+}
+
 DadoTabelaSimbolos PilhaContexto::retornaSimboloBack(string nome)
 {
 	MapaSimbolos mapa = this->contextos.back().getTabela();
 	return mapa[nome];
 }
-void PilhaContexto::emitirErro(int tipoErro,int linha, string nome,string aux="")
+void PilhaContexto::emitirErro(int tipoErro,int linha, string nome,string aux)
 {
 	DadoTabelaSimbolos declaAnterior;
 	switch (tipoErro)
@@ -411,6 +507,24 @@ void PilhaContexto::emitirErro(int tipoErro,int linha, string nome,string aux=""
 		break;
 	case ERR_UNDECLARED:
 		cout << "Identifier " << nome << " in line " << linha << " was not declared before use" << endl; 
+	case ERR_STRING_TO_X:
+		cout << "Tried to make illegal conversion of string " << nome << " to symbol " << aux<<" in line "<< linha  << "." << endl;
+		break;
+	case ERR_CHAR_TO_X:
+		cout << "Tried to make illegal conversion of char " << nome << " to symbol " << aux <<" in line "<< linha <<"." << endl;
+		break;
+	case ERR_WRONG_TYPE:
+		cout << "Tried to make illegal conversion of " << nome << " to symbol "<< aux <<" in line "<< linha << "." << endl;
+		break;
+	case ERR_STRING_MAX:
+		cout << "Assignment of string " << nome << "in line " << linha << " " << aux << "." << endl;
+		break;
+	case ERR_WRONG_PAR_INPUT:
+		cout << "Used symbol of invalid type for input in line " << linha << " expected type INT or FLOAT." << endl;
+		break;
+	case ERR_WRONG_PAR_OUTPUT:
+		cout << "Used symbol of invalid type for output in line " << linha << " expected type INT or FLOAT." << endl;
+		break;	
 	default:
 		break;
 	}

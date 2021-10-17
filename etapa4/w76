@@ -1,12 +1,29 @@
-int v1, x, y;
+float v1, x, y;
 int v2[100];
 int f1 (char k, int l,float j) 
 {
   int a;
+  char a4;
+  string b,d;
   int v1;
   f1('a',2,5);
-  a = 4 -f1(3+4,2,7);
+  d = b ;
+  input a;
+  input a4;
+  output v1;
+  output a;
+  output 'a';
+  return 1;
+}
+
+char f2 (char k, int l,float j) 
+{
+  int a;
+  int v1;
+  f1('a',2,5);
+  a = 4;
   return 1;
 }
 
 char v3;
+int vabc;

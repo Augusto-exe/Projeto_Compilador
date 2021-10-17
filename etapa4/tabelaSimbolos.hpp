@@ -1,7 +1,7 @@
 #include<list>
 #include<string>
 #include "arvore.h"
-#include <map>
+#include <unordered_map>
 using namespace std;
 
 struct dadoTabelaSimbolos
@@ -15,7 +15,7 @@ struct dadoTabelaSimbolos
 };
 
 typedef struct dadoTabelaSimbolos DadoTabelaSimbolos; 
-typedef map<string,DadoTabelaSimbolos> MapaSimbolos;
+typedef unordered_map<string,DadoTabelaSimbolos> MapaSimbolos;
 
 class tabelaSimbolos{
 	public:

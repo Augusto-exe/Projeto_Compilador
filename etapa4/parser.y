@@ -217,7 +217,7 @@ comando: bloco ';' {$$ = NULL; libera_val($2);}
 | shift_left ';'{$$ = $1; libera_val($2);}
 | ret_cont_break ';' {$$ = $1; libera_val($2);}
 | fun_call ';' {$$ = $1; libera_val($2);}
-| comando_controle_fluxo ';' {$$ = $1; libera_val($2);}
+| comando_controle_fluxo ';' {$$ = $1; libera_val($2);};
 
 decla_loc: tipo_stat_cons lista_var_loc { $$ = $2;tabelas.atualizaTipoTamanho($1);};
 
@@ -228,7 +228,7 @@ var_loc: TK_IDENTIFICADOR TK_OC_LE id_lit { $$ = insere_nodo(NULL,$2); $$= inser
 | TK_IDENTIFICADOR { $$ = NULL;tabelas.insereSimboloNonVet(get_line_number(),NAT_VAR,$1,INDEF); libera_val($1);};
 
 id_lit: literal {$$ = $1;}
-| TK_IDENTIFICADOR {$$ = insere_nodo(NULL,$1);};
+| TK_IDENTIFICADOR {$$ = insere_nodo(NULL,$1);atualiza_tipo_semantico($$,tabelas.getTipoPorValorLex($1));};
 
 literal: all_int {$$ = $1;atualiza_tipo_semantico($$,ID_INT);}
 | all_float {$$ = $1;atualiza_tipo_semantico($$,ID_FLOAT);}
@@ -253,18 +253,18 @@ all_float: '-' TK_LIT_FLOAT { $$ = insere_nodo(NULL,inverte_sinal($2));libera_va
 | TK_LIT_FLOAT {$$ = insere_nodo(NULL,$1);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$1,ID_FLOAT);atualiza_tipo_semantico($$,ID_FLOAT);}
 | '+' TK_LIT_FLOAT {$$ = insere_nodo(NULL,$2); libera_val($1);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$2,ID_FLOAT);atualiza_tipo_semantico($$,ID_FLOAT);};
 
-atrib: var_vet '=' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);};
+atrib: var_vet '=' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);tabelas.verificaAtrib($1,$3);atualiza_tipo_semantico($$,$1->tipo_valor_semantico);};
 
-var_vet: TK_IDENTIFICADOR { $$= insere_nodo(NULL,$1);}
+var_vet: TK_IDENTIFICADOR { $$= insere_nodo(NULL,$1);atualiza_tipo_semantico($$,tabelas.getTipoPorValorLex($1));}
 | TK_IDENTIFICADOR '[' exp ']' { libera_val($2);libera_val($4);
-$$ = insere_nodo(NULL,geraVal(TIPO_VET,NOT_LIT,get_line_number(),(char*)"[]")); insere_filho($$,insere_nodo(NULL,$1)); insere_filho($$,$3);};
+$$ = insere_nodo(NULL,geraVal(TIPO_VET,NOT_LIT,get_line_number(),(char*)"[]")); insere_filho($$,insere_nodo(NULL,$1)); insere_filho($$,$3);atualiza_tipo_semantico($$,tabelas.getTipoPorValorLex($1));};
 
 ret_cont_break: TK_PR_RETURN exp {$$ = insere_nodo($2,geraVal(TIPO_RSV_WRD,NOT_LIT,get_line_number(),(char*)"return"));}
 | TK_PR_BREAK  {$$ = insere_nodo(NULL,geraVal(TIPO_RSV_WRD,NOT_LIT,get_line_number(),(char*)"break"));}
 | TK_PR_CONTINUE  {$$ = insere_nodo(NULL,geraVal(TIPO_RSV_WRD,NOT_LIT,get_line_number(),(char*)"continue"));};
 
-in_out: TK_PR_INPUT TK_IDENTIFICADOR {$$ = insere_nodo(insere_nodo(NULL,$2),geraVal(TIPO_RSV_WRD,NOT_LIT,get_line_number(),(char*)"input"));}
-| TK_PR_OUTPUT id_lit {$$ = insere_nodo($2,geraVal(TIPO_RSV_WRD,NOT_LIT,get_line_number(),(char*)"output"));};
+in_out: TK_PR_INPUT TK_IDENTIFICADOR {$$ = insere_nodo(insere_nodo(NULL,$2),geraVal(TIPO_RSV_WRD,NOT_LIT,get_line_number(),(char*)"input"));tabelas.avaliaInput($2);}
+| TK_PR_OUTPUT id_lit {$$ = insere_nodo($2,geraVal(TIPO_RSV_WRD,NOT_LIT,get_line_number(),(char*)"output")); tabelas.avaliaOutput($2->valor_lexico);};
 
 shift_right:  var_vet TK_OC_SR pos_int { $$ = insere_nodo($1,$2); insere_filho($$,$3); };
 

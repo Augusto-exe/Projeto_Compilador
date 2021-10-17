@@ -15,12 +15,12 @@ PilhaContexto tabelas;
 
 int main (int argc, char **argv)
 {
-  int ret = yyparse(); 
+  int ret = yyparse();
   exporta ((a_nodo*)arvore);
   libera((a_nodo*)arvore);
   arvore = NULL;
   yylex_destroy();
-  cout << "exportando tabelas" << endl;
-  tabelas.exportaTabelas();
+  //cout << "exportando tabelas" << endl;
+  //tabelas.exportaTabelas();
   return ret;
 }

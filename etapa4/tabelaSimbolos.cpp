@@ -1,3 +1,4 @@
+/* Grupo C -Augusto Exenberger Becker e Vitória Lentz */
 #include "tabelaSimbolos.hpp"
 #include <iostream>
 using namespace std;
@@ -19,7 +20,10 @@ bool tabelaSimbolos::existeSimbolo(string nome)
 	ret = this->tabSimbolos.find(nome) != this->tabSimbolos.end();
 	return ret;
 }
-
+void tabelaSimbolos::atualizaTamanhoString(string nome, int tamanho)
+{
+	this->tabSimbolos[nome].tamanho = tamanho;
+}
 void tabelaSimbolos::exportaTabela()
 {
 	for(auto itTab : this->tabSimbolos)

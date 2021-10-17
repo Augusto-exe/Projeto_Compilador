@@ -1,3 +1,4 @@
+/* Grupo C -Augusto Exenberger Becker e Vitória Lentz */
 #include<list>
 #include<string>
 #include "arvore.h"
@@ -27,6 +28,7 @@ class tabelaSimbolos{
 		void setTipoTamanhoPorNome(string nome,int tipo,int tamanho);
 		void adicionaParametrosParaFunc(string nomeFunc,list<struct dadoTabelaSimbolos> listaParam);
 		int getTipoPeloNome(string nomeChave);
+		void atualizaTamanhoString(string nome, int tamanho);
 	private:
 		MapaSimbolos tabSimbolos;
 };

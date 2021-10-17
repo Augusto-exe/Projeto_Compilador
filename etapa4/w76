@@ -12,8 +12,11 @@ int f1 (char k, int l,float j)
   output v1;
   output a;
 
-  return 1;
-  a >> 1;
+  string str3_ <="123", str1 <="4",str3 <="123",str7 <="1234567";
+
+  str3_ = str3;
+  str3 = str1;
+  str1 = str7;
   b << 12;
   return 1.3;
 }

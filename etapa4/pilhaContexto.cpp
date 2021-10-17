@@ -1,3 +1,4 @@
+/* Grupo C -Augusto Exenberger Becker e Vitória Lentz */
 #include "pilhaContexto.hpp"
 #include <iostream>
 using namespace std;
@@ -20,6 +21,34 @@ tabelaSimbolos PilhaContexto::popContexto()
 	this->contextos.pop_back();
 	return mapaRet;
 }
+
+int getTamanhoTipo(int tipo)
+{
+	int ret;
+	switch (tipo)
+	{
+	case ID_INT:
+		ret=4;
+		break;
+	case ID_FLOAT:
+		ret=8;
+		break;
+	case ID_BOOL:
+		ret=1;
+		break;
+	case ID_CHAR:
+		ret=1;
+		break;
+	case ID_STRING:
+		ret =0;
+		break;
+	default:
+		ret = 0;
+		break;
+	}
+	return ret;
+}
+
 void PilhaContexto::insereSimboloNonVet(int line, int natureza, lexic_val_type *valorLex, int tipo)
 {
 	DadoTabelaSimbolos novoSimbolo;
@@ -28,11 +57,12 @@ void PilhaContexto::insereSimboloNonVet(int line, int natureza, lexic_val_type *
 	novoSimbolo.linha = line;
 	novoSimbolo.natureza = natureza;
 	novoSimbolo.tipo = tipo;
-	
+	novoSimbolo.tamanho = 1;
 	if(natureza == NAT_LIT)
 	{
+		novoSimbolo.tamanho = getTamanhoTipo(novoSimbolo.tipo);
 		switch(novoSimbolo.tipo)
-		{
+		{			
 			case LIT_TIPO_INT:
 				nomeChave = string(to_string(valorLex->tk_value.vInt));
 				break;
@@ -47,6 +77,7 @@ void PilhaContexto::insereSimboloNonVet(int line, int natureza, lexic_val_type *
 				break;
 			case LIT_TIPO_STRING:
 				nomeChave = string(valorLex->tk_value.vStr);
+				novoSimbolo.tamanho = nomeChave.size(); 
 				break;
 			case INDEF:
 				nomeChave = string(valorLex->tk_value.vStr);
@@ -81,7 +112,8 @@ void PilhaContexto::insereSimboloVet(int line, int natureza, lexic_val_type *val
 	novoSimbolo.linha = line;
 	novoSimbolo.natureza = natureza;
 	novoSimbolo.tipo = tipo;
-		switch(novoSimbolo.tipo)
+	novoSimbolo.tamanho = tamanho;
+	switch(novoSimbolo.tipo)
 	{
 		case LIT_TIPO_INT:
 			nomeChave = string(to_string(valorLex->tk_value.vInt));
@@ -118,8 +150,58 @@ void PilhaContexto::insereSimboloVet(int line, int natureza, lexic_val_type *val
 
 void PilhaContexto::insereInicPendente(lexic_val_type *valorVariable,lexic_val_type *valorValue)
 {
-
+	int tipoValue;
+	IniciacaoPendente ini;
+	if(valorValue->type != TIPO_LIT)
+	{
+		tipoValue = this->verificaVar(valorValue);
+	}
+	ini.variable =valorVariable;
+	ini.value =valorValue;
+	this->inicsPendentes.push_back(ini);
 }
+
+void PilhaContexto::fazInic()
+{
+	DadoTabelaSimbolos var,value;
+	int linha;
+	string nome;
+	for(auto ini : this->inicsPendentes)
+	{
+		var = this->getSimboloPorValorLex(ini.variable);
+		value = this->getSimboloPorValorLex(ini.value);
+
+		linha = ini.value->lineno;
+		nome = string(ini.variable->tk_value.vStr);
+		if(value.tipo == ID_CHAR && var.tipo != ID_CHAR )
+		{
+			string msg = nome;
+			nome = string(ini.value->tk_value.vStr);
+			this->emitirErro(ERR_CHAR_TO_X,linha,nome,msg);
+		}
+		if(value.tipo == ID_STRING && var.tipo != ID_STRING )
+		{
+			string msg;
+			msg = nome;
+			nome = string(ini.value->tk_value.vStr);
+			this->emitirErro(ERR_STRING_TO_X,linha,nome,msg);
+		}
+
+		if(value.tipo!=var.tipo && !(checaConversaoImplicita(value.tipo,var.tipo)))
+		{
+			string msg;
+			msg= string(ini.value->tk_value.vStr);
+			this->emitirErro(ERR_WRONG_TYPE,linha,nome,msg);
+		}
+		if(var.tipo == ID_STRING && value.tipo == ID_STRING )
+		{
+			this->contextos.back().atualizaTamanhoString(nome,value.tamanho);
+		}
+		
+	}
+	this->inicsPendentes.clear();
+}
+
 
 void PilhaContexto::insereFun(int line, lexic_val_type *valorLex )
 {
@@ -265,7 +347,7 @@ int PilhaContexto::verificaFuncao(lexic_val_type *valorLex, a_nodo* nodo,int lin
 	return dadoFunc.tipo;
 }
 
-//retornar o tipo da função
+//retornar o tipo o vetor
 int PilhaContexto::verificaVetor(lexic_val_type *valorLex)
 {
 	string nomeVet = string(valorLex->tk_value.vStr);
@@ -281,16 +363,16 @@ int PilhaContexto::verificaVetor(lexic_val_type *valorLex)
 	{
 
 		if(dadoVet.natureza == NAT_VAR)
-			this->emitirErro(ERR_VARIABLE,valorLex->lineno,nomeVet,"Array");
+			this->emitirErro(ERR_VARIABLE,valorLex->lineno,nomeVet,"Vector");
 		else
-			this->emitirErro(ERR_FUNCTION,valorLex->lineno,nomeVet,"Array");
+			this->emitirErro(ERR_FUNCTION,valorLex->lineno,nomeVet,"Vector");
 
 	}
 
 	return dadoVet.tipo;
 }
 
-//retornar o tipo da função
+//retornar o tipo da Var
 int PilhaContexto::verificaVar(lexic_val_type *valorLex)
 {
 	string nomeVar = string(valorLex->tk_value.vStr);
@@ -313,33 +395,6 @@ int PilhaContexto::verificaVar(lexic_val_type *valorLex)
 	}
 
 	return dadoVar.tipo;
-}
-
-int getTamanhoTipo(int tipo)
-{
-	int ret;
-	switch (tipo)
-	{
-	case ID_INT:
-		ret=4;
-		break;
-	case ID_FLOAT:
-		ret=8;
-		break;
-	case ID_BOOL:
-		ret=1;
-		break;
-	case ID_CHAR:
-		ret=1;
-		break;
-	case ID_STRING:
-		ret =0;
-		break;
-	default:
-		ret = 0;
-		break;
-	}
-	return ret;
 }
 
 void PilhaContexto::atualizaFunTipoPar(lexic_val_type *valorLex,int tipo)
@@ -411,6 +466,37 @@ int PilhaContexto::getTipoPorValorLex(lexic_val_type *valorLex)
 	}
 	DadoTabelaSimbolos dado = retornaSimbolo(nomeChave);
 	return dado.tipo;
+}
+DadoTabelaSimbolos PilhaContexto::getSimboloPorValorLex(lexic_val_type *valorLex)
+{
+	string nomeChave = string(valorLex->tk_value.vStr);
+	if(valorLex->type == TIPO_LIT)
+	{
+		switch (valorLex->value_type)
+		{
+		case LIT_TIPO_INT:
+			nomeChave = string(to_string(valorLex->tk_value.vInt));
+			break;
+		case LIT_TIPO_BOOL:
+			nomeChave = string(to_string(valorLex->tk_value.vBool));
+			break;
+		case LIT_TIPO_CHAR:
+			nomeChave = string(valorLex->tk_value.vChar);
+			break;
+		case LIT_TIPO_FLOAT:
+			nomeChave = string(to_string(valorLex->tk_value.vFloat));
+			break;
+		case LIT_TIPO_STRING:
+			nomeChave = string(valorLex->tk_value.vStr);
+			break;
+		default:
+			nomeChave = string(valorLex->tk_value.vStr);
+			break;
+		}
+		nomeChave.append("LIT");
+	}
+	DadoTabelaSimbolos dado = retornaSimbolo(nomeChave);
+	return dado;
 }
 
 //retorna o tipo encontrado da input
@@ -591,7 +677,8 @@ void PilhaContexto::emitirErro(int tipoErro,int linha, string nome,string aux)
 		cout << "Function " << nome <<" in line " << linha << " " << aux << endl;
 		break;
 	case ERR_UNDECLARED:
-		cout << "Identifier " << nome << " in line " << linha << " was not declared before use" << endl; 
+		cout << "Identifier " << nome << " in line " << linha << " was not declared before use" << endl;
+		break; 
 	case ERR_STRING_TO_X:
 		cout << "Tried to make illegal conversion of string " << nome << " to symbol " << aux<<" in line "<< linha  << "." << endl;
 		break;

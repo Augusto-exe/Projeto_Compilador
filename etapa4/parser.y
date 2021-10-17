@@ -219,12 +219,12 @@ comando: bloco ';' {$$ = NULL; libera_val($2);}
 | fun_call ';' {$$ = $1; libera_val($2);}
 | comando_controle_fluxo ';' {$$ = $1; libera_val($2);};
 
-decla_loc: tipo_stat_cons lista_var_loc { $$ = $2;tabelas.atualizaTipoTamanho($1);};
+decla_loc: tipo_stat_cons lista_var_loc { $$ = $2;tabelas.atualizaTipoTamanho($1);tabelas.fazInic();};
 
 lista_var_loc: lista_var_loc ',' var_loc {libera_val($2); $$ = insere_filho($1,$3);}
 | var_loc { $$ = $1; };
 
-var_loc: TK_IDENTIFICADOR TK_OC_LE id_lit { $$ = insere_nodo(NULL,$2); $$= insere_filho($$,insere_nodo(NULL,$1));$$= insere_filho($$,$3);tabelas.insereSimboloNonVet(get_line_number(),NAT_VAR,$1,INDEF);}
+var_loc: TK_IDENTIFICADOR TK_OC_LE id_lit { $$ = insere_nodo(NULL,$2); $$= insere_filho($$,insere_nodo(NULL,$1));$$= insere_filho($$,$3);tabelas.insereSimboloNonVet(get_line_number(),NAT_VAR,$1,INDEF);tabelas.insereInicPendente($1,$3->valor_lexico);}
 | TK_IDENTIFICADOR { $$ = NULL;tabelas.insereSimboloNonVet(get_line_number(),NAT_VAR,$1,INDEF); libera_val($1);};
 
 id_lit: literal {$$ = $1;}
@@ -235,7 +235,7 @@ literal: all_int {$$ = $1;atualiza_tipo_semantico($$,ID_INT);}
 | TK_LIT_FALSE {$$ = insere_nodo(NULL,$1);atualiza_tipo_semantico($$,ID_BOOL);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$1,ID_BOOL);}
 | TK_LIT_TRUE  {$$ = insere_nodo(NULL,$1);atualiza_tipo_semantico($$,ID_BOOL);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$1,ID_BOOL);}
 | TK_LIT_CHAR {$$ = insere_nodo(NULL,$1);atualiza_tipo_semantico($$,ID_CHAR);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$1,ID_CHAR);}
-| TK_LIT_STRING {$$ = insere_nodo(NULL,$1);atualiza_tipo_semantico($$,ID_STRING);tabelas.insereSimboloNonVet(get_line_number(),NAT_VAR,$1,ID_STRING);};
+| TK_LIT_STRING {$$ = insere_nodo(NULL,$1);atualiza_tipo_semantico($$,ID_STRING);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$1,ID_STRING);};
 
 literal_num_bool: TK_LIT_INT {$$ = insere_nodo(NULL,$1);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$1,ID_INT);atualiza_tipo_semantico($$,ID_INT);}
 | TK_LIT_FLOAT {$$ = insere_nodo(NULL,$1);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$1,ID_FLOAT);atualiza_tipo_semantico($$,ID_FLOAT);}

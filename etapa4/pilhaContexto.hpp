@@ -36,6 +36,9 @@ class PilhaContexto
 		int getTipoPorValorLex(lexic_val_type *valorLex);
 		int avaliaInput(lexic_val_type *valorLex);
 		int avaliaOutput(lexic_val_type *valorLex);
+		void avaliaShift(lexic_val_type *valorLex);
+		void verificaReturn(int tipoRet,int linha);
+		int getTipoUltimaFunc();
 		
 	private:
 		PilhaMapas contextos;

@@ -9,11 +9,13 @@ int f1 (char k, int l,float j)
   f1('a',2,5);
   d = b ;
   input a;
-  input a4;
   output v1;
   output a;
-  output 'a';
+
   return 1;
+  a >> 1;
+  b << 12;
+  return 1.3;
 }
 
 char f2 (char k, int l,float j) 

@@ -383,6 +383,16 @@ int PilhaContexto::avaliaOutput(lexic_val_type *valorLex)
 	return tipo;
 }
 
+void PilhaContexto::avaliaShift(lexic_val_type *valorLex)
+{
+	if(valorLex->tk_value.vInt > 16)
+	{
+		string msg =to_string(valorLex->tk_value.vInt),nome ="";
+		this->emitirErro(ERR_WRONG_PAR_SHIFT,valorLex->lineno,nome,msg);
+	}
+
+}
+
 void PilhaContexto::atualizaTipoTamanho(int tipo)
 {
 	MapaSimbolos::iterator itMapa;
@@ -430,6 +440,22 @@ DadoTabelaSimbolos PilhaContexto::retornaSimbolo(string nome)
 	return dadoRet;
 }
 
+void PilhaContexto::verificaReturn(int tipoRet,int linha)
+{
+
+	int tipoFunc =this->getTipoUltimaFunc();
+	if(tipoRet!=tipoFunc && !(checaConversaoImplicita(tipoRet,tipoFunc)))
+	{
+		string msg ="",nome="";
+		this->emitirErro(ERR_WRONG_PAR_RETURN,linha,nome,msg);
+	}
+}
+int PilhaContexto::getTipoUltimaFunc()
+{
+	DadoTabelaSimbolos dado = (*(this->contextos.front().getTabela().begin())).second;
+	return dado.tipo;
+
+}
 void PilhaContexto::verificaAtrib(a_nodo* nodoDst,a_nodo* nodoOrig)
 {
 	string nome = string(nodoDst->valor_lexico->tk_value.vStr);
@@ -524,6 +550,12 @@ void PilhaContexto::emitirErro(int tipoErro,int linha, string nome,string aux)
 		break;
 	case ERR_WRONG_PAR_OUTPUT:
 		cout << "Used symbol of invalid type for output in line " << linha << " expected type INT or FLOAT." << endl;
+		break;
+	case ERR_WRONG_PAR_SHIFT:
+		cout << "Value " << aux << " exceeded limit of 16 for shift in line " << linha << "." << endl;
+		break;
+	case ERR_WRONG_PAR_RETURN:
+		cout << "Return value at line " << linha << " does not implicitly match function type declaration."<< endl;
 		break;	
 	default:
 		break;

@@ -1931,7 +1931,7 @@ yyreduce:
 
   case 75:
 #line 262 "parser.y" /* yacc.c:1646  */
-    {(yyval.nodo) = insere_nodo((yyvsp[0].nodo),geraVal(TIPO_RSV_WRD,NOT_LIT,get_line_number(),(char*)"return"));}
+    {(yyval.nodo) = insere_nodo((yyvsp[0].nodo),geraVal(TIPO_RSV_WRD,NOT_LIT,get_line_number(),(char*)"return"));tabelas.verificaReturn((yyvsp[0].nodo)->tipo_valor_semantico,get_line_number());}
 #line 1936 "parser.tab.c" /* yacc.c:1646  */
     break;
 
@@ -1961,13 +1961,13 @@ yyreduce:
 
   case 80:
 #line 269 "parser.y" /* yacc.c:1646  */
-    { (yyval.nodo) = insere_nodo((yyvsp[-2].nodo),(yyvsp[-1].valor_lexico)); insere_filho((yyval.nodo),(yyvsp[0].nodo)); }
+    { (yyval.nodo) = insere_nodo((yyvsp[-2].nodo),(yyvsp[-1].valor_lexico)); insere_filho((yyval.nodo),(yyvsp[0].nodo));tabelas.avaliaShift((yyvsp[0].nodo)->valor_lexico); }
 #line 1966 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 81:
 #line 271 "parser.y" /* yacc.c:1646  */
-    { (yyval.nodo) = insere_nodo((yyvsp[-2].nodo),(yyvsp[-1].valor_lexico)); insere_filho((yyval.nodo),(yyvsp[0].nodo)); }
+    { (yyval.nodo) = insere_nodo((yyvsp[-2].nodo),(yyvsp[-1].valor_lexico)); insere_filho((yyval.nodo),(yyvsp[0].nodo)); tabelas.avaliaShift((yyvsp[0].nodo)->valor_lexico);}
 #line 1972 "parser.tab.c" /* yacc.c:1646  */
     break;
 

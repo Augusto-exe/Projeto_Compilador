@@ -50,19 +50,3 @@ int tabelaSimbolos::getTipoPeloNome(string nomeChave)
 }
 
 
-
-
-/*
-int main()
-{
-	tabelaSimbolos tabela;
-	DadoTabelaSimbolos novoDado;
-	novoDado.tipo = 1;
-	tabela.insereSimbolo("primeiro",novoDado);
-	novoDado.tipo = 2;
-	tabela.insereSimbolo("segundo",novoDado);
-	novoDado.tipo = 3;
-	tabela.insereSimbolo("terceiro",novoDado);
-	tabela.exportaTabela();
-
-}*/

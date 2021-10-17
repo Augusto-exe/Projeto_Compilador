@@ -116,6 +116,11 @@ void PilhaContexto::insereSimboloVet(int line, int natureza, lexic_val_type *val
 	this->insereSimboloContextoAtual(nomeChave,novoSimbolo);
 }
 
+void PilhaContexto::insereInicPendente(lexic_val_type *valorVariable,lexic_val_type *valorValue)
+{
+
+}
+
 void PilhaContexto::insereFun(int line, lexic_val_type *valorLex )
 {
 	DadoTabelaSimbolos novoSimbolo;
@@ -402,6 +407,10 @@ void PilhaContexto::atualizaTipoTamanho(int tipo)
 		
 		if((*itMapa).second.tipo == INDEF)
 		{
+			if(tipo == ID_STRING && (*itMapa).second.natureza ==NAT_VET)
+			{
+				this->emitirErro(ERR_STRING_VECTOR,(*itMapa).second.linha,(*itMapa).first,"");
+			} 
 			this->contextos.back().setTipoTamanhoPorNome((*itMapa).first, tipo, (*itMapa).second.tamanho*getTamanhoTipo(tipo));
 			
 		}
@@ -556,6 +565,9 @@ void PilhaContexto::emitirErro(int tipoErro,int linha, string nome,string aux)
 		break;
 	case ERR_WRONG_PAR_RETURN:
 		cout << "Return value at line " << linha << " does not implicitly match function type declaration."<< endl;
+		break;
+	case ERR_STRING_VECTOR:
+		cout << "Declaring Vector " << nome << " with illegal type STRING in line " << linha << ".";
 		break;	
 	default:
 		break;

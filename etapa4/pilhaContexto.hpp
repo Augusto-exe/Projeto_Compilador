@@ -5,8 +5,13 @@
 
 
 typedef list<tabelaSimbolos> PilhaMapas;
+struct inicPend
+{
+	DadoTabelaSimbolos variable;
+	DadoTabelaSimbolos value;	
+};
 
-
+typedef struct inicPend IniciacaoPendente;
 class PilhaContexto
 {
 
@@ -39,9 +44,11 @@ class PilhaContexto
 		void avaliaShift(lexic_val_type *valorLex);
 		void verificaReturn(int tipoRet,int linha);
 		int getTipoUltimaFunc();
+		void insereInicPendente(lexic_val_type *valorVariable,lexic_val_type *valorValue);
 		
 	private:
 		PilhaMapas contextos;
 		list<struct dadoTabelaSimbolos> parametrosPendentes;
+		list<IniciacaoPendente> inicsPendentes;
 
 };

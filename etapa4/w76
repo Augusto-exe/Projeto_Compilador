@@ -22,10 +22,12 @@ char f2 (char k, int l,float j)
 {
   int a;
   int v1;
+  char c;
   f1('a',2,5);
   a = 4;
-  return 1;
+  return c;
 }
 
 char v3;
 int vabc;
+string a, d;

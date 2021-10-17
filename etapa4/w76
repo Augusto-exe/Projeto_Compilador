@@ -1,9 +1,11 @@
-float v1, x, y;
-int v2[100];
-int f1 (char k, int l,float j) 
+//float v1, x, y;
+//int v2[100];
+char f1 (char k, int l,float j) 
 {
-  v2[1] = 2;
-  
+  //v2[1] = 2;
+  {
+
+};
 
   int a;
   char a4;
@@ -12,16 +14,15 @@ int f1 (char k, int l,float j)
   f1('a',2,5);
   d = b ;
   input a;
-  output v1;
+  //output v1;
   output a;
 
   string str3_ <="123", str1 <="4",str3 <="123",str7 <="1234567";
 
   str3_ = str3;
   str3 = str1;
-  str1 = str7;
-  v2[a] = 3;
-  v2 = 3;
+  //str1 = str7;
+  //v2[a] = 3;
   return 1;
   a >> 1;
   b << 12;

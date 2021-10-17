@@ -18,7 +18,9 @@ void PilhaContexto::insereContexto()
 tabelaSimbolos PilhaContexto::popContexto()
 {
 	tabelaSimbolos mapaRet = this->contextos.back();
+
 	this->contextos.pop_back();
+
 	return mapaRet;
 }
 
@@ -232,7 +234,7 @@ int PilhaContexto::infereTipo(a_nodo* nodoEsq,a_nodo* nodoDir)
 	int tipoEsq = nodoEsq->tipo_valor_semantico;
 	int tipoDir = nodoDir->tipo_valor_semantico;
 
-	if(tipoDir == INDEF ||tipoEsq == INDEF || tipoDir == ID_STRING || tipoEsq == ID_STRING )
+	if(tipoDir == INDEF ||tipoEsq == INDEF || tipoDir == ID_STRING || tipoEsq == ID_STRING || tipoDir == ID_CHAR || tipoEsq ==ID_CHAR )
 		return INDEF;
 	if((tipoEsq == ID_INT && tipoDir == ID_INT)||(tipoEsq == ID_INT && tipoDir == ID_BOOL)|| (tipoEsq == ID_BOOL && tipoDir == ID_INT))
 		return ID_INT;
@@ -599,6 +601,7 @@ void PilhaContexto::verificaReturn(int tipoRet,int linha)
 }
 int PilhaContexto::getTipoUltimaFunc()
 {
+	//this->exportaTabelas();
 	DadoTabelaSimbolos dado = (*(this->contextos.front().getTabela().begin())).second;
 	return dado.tipo;
 

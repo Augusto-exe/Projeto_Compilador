@@ -257,7 +257,7 @@ atrib: var_vet '=' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_
 
 var_vet: TK_IDENTIFICADOR { $$= insere_nodo(NULL,$1);atualiza_tipo_semantico($$,tabelas.getTipoPorValorLex($1));tabelas.verificaVar($1);}
 | TK_IDENTIFICADOR '[' exp ']' { libera_val($2);libera_val($4);
-$$ = insere_nodo(NULL,geraVal(TIPO_VET,NOT_LIT,get_line_number(),(char*)"[]")); insere_filho($$,insere_nodo(NULL,$1)); insere_filho($$,$3);atualiza_tipo_semantico($$,tabelas.getTipoPorValorLex($1));tabelas.verificaVetor($1);};
+$$ = insere_nodo(NULL,geraVal(TIPO_VET,NOT_LIT,get_line_number(),(char*)"[]")); insere_filho($$,insere_nodo(NULL,$1)); insere_filho($$,$3);atualiza_tipo_semantico($$,tabelas.getTipoPorValorLex($1));tabelas.verificaVetor($1,$3);};
 
 ret_cont_break: TK_PR_RETURN exp {$$ = insere_nodo($2,geraVal(TIPO_RSV_WRD,NOT_LIT,get_line_number(),(char*)"return"));tabelas.verificaReturn($2->tipo_valor_semantico,get_line_number());}
 | TK_PR_BREAK  {$$ = insere_nodo(NULL,geraVal(TIPO_RSV_WRD,NOT_LIT,get_line_number(),(char*)"break"));}

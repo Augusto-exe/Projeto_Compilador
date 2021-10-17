@@ -347,8 +347,8 @@ int PilhaContexto::verificaFuncao(lexic_val_type *valorLex, a_nodo* nodo,int lin
 	return dadoFunc.tipo;
 }
 
-//retornar o tipo o vetor
-int PilhaContexto::verificaVetor(lexic_val_type *valorLex)
+//retornar o tipo da função
+int PilhaContexto::verificaVetor(lexic_val_type *valorLex, a_nodo* vetIndex)
 {
 	string nomeVet = string(valorLex->tk_value.vStr);
 	bool existe = this->existeSimboloContextos(nomeVet);
@@ -368,7 +368,9 @@ int PilhaContexto::verificaVetor(lexic_val_type *valorLex)
 			this->emitirErro(ERR_FUNCTION,valorLex->lineno,nomeVet,"Vector");
 
 	}
-
+	if(vetIndex->tipo_valor_semantico!=ID_INT && !(checaConversaoImplicita(ID_INT,vetIndex->tipo_valor_semantico)))
+		this->emitirErro(ERR_WRONG_TYPE,valorLex->lineno,nomeVet,"Array");
+		
 	return dadoVet.tipo;
 }
 

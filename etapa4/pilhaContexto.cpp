@@ -691,7 +691,7 @@ void PilhaContexto::emitirErro(int tipoErro,int linha, string nome,string aux)
 		cout << "Tried to make illegal conversion of " << nome << " to symbol "<< aux <<" in line "<< linha << "." << endl;
 		break;
 	case ERR_STRING_MAX:
-		cout << "Assignment of string " << nome << "in line " << linha << " " << aux << "." << endl;
+		cout << "Assignment of string " << nome << " in line " << linha << " " << aux << "." << endl;
 		break;
 	case ERR_WRONG_PAR_INPUT:
 		cout << "Used symbol of invalid type for input in line " << linha << " expected type INT or FLOAT." << endl;

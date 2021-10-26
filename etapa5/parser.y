@@ -291,9 +291,9 @@ exp: literal_num_bool {$$ = $1;}
 | '(' exp ')' {$$ = $2; libera_val($1); libera_val($3);} 
 | exp_unitaria {$$ = $1;} 
 | exp '+' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,tabelas.infereTipo($1,$3));$$->reg =geraRegistrador(&ultimoReg);$$->cod.appendInstCodigo(geraInst3op("add",$1->reg,$3->reg,$$->reg));$$->cod.appendCodigoInicio($3->cod.getCodigo());$$->cod.appendCodigoInicio($1->cod.getCodigo());$$->cod.exportaCod();}
-| exp '-' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,tabelas.infereTipo($1,$3));}
-| exp '*' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,tabelas.infereTipo($1,$3));}
-| exp '/' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,tabelas.infereTipo($1,$3));}
+| exp '-' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,tabelas.infereTipo($1,$3));$$->reg =geraRegistrador(&ultimoReg);$$->cod.appendInstCodigo(geraInst3op("sub",$1->reg,$3->reg,$$->reg));$$->cod.appendCodigoInicio($3->cod.getCodigo());$$->cod.appendCodigoInicio($1->cod.getCodigo());$$->cod.exportaCod();}
+| exp '*' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,tabelas.infereTipo($1,$3));$$->reg =geraRegistrador(&ultimoReg);$$->cod.appendInstCodigo(geraInst3op("mult",$1->reg,$3->reg,$$->reg));$$->cod.appendCodigoInicio($3->cod.getCodigo());$$->cod.appendCodigoInicio($1->cod.getCodigo());$$->cod.exportaCod();}
+| exp '/' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,tabelas.infereTipo($1,$3));$$->reg =geraRegistrador(&ultimoReg);$$->cod.appendInstCodigo(geraInst3op("div",$1->reg,$3->reg,$$->reg));$$->cod.appendCodigoInicio($3->cod.getCodigo());$$->cod.appendCodigoInicio($1->cod.getCodigo());$$->cod.exportaCod();}
 | exp '%' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,tabelas.infereTipo($1,$3));}
 | exp '|' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,tabelas.infereTipo($1,$3));}
 | exp '&' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,tabelas.infereTipo($1,$3));}

@@ -2062,19 +2062,19 @@ yyreduce:
 
   case 96:
 #line 294 "parser.y" /* yacc.c:1646  */
-    { (yyval.nodo) = insere_nodo(NULL,(yyvsp[-1].valor_lexico)); insere_filho((yyval.nodo),(yyvsp[-2].nodo)); insere_filho((yyval.nodo),(yyvsp[0].nodo));atualiza_tipo_semantico((yyval.nodo),tabelas.infereTipo((yyvsp[-2].nodo),(yyvsp[0].nodo)));}
+    { (yyval.nodo) = insere_nodo(NULL,(yyvsp[-1].valor_lexico)); insere_filho((yyval.nodo),(yyvsp[-2].nodo)); insere_filho((yyval.nodo),(yyvsp[0].nodo));atualiza_tipo_semantico((yyval.nodo),tabelas.infereTipo((yyvsp[-2].nodo),(yyvsp[0].nodo)));(yyval.nodo)->reg =geraRegistrador(&ultimoReg);(yyval.nodo)->cod.appendInstCodigo(geraInst3op("sub",(yyvsp[-2].nodo)->reg,(yyvsp[0].nodo)->reg,(yyval.nodo)->reg));(yyval.nodo)->cod.appendCodigoInicio((yyvsp[0].nodo)->cod.getCodigo());(yyval.nodo)->cod.appendCodigoInicio((yyvsp[-2].nodo)->cod.getCodigo());(yyval.nodo)->cod.exportaCod();}
 #line 2067 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 97:
 #line 295 "parser.y" /* yacc.c:1646  */
-    { (yyval.nodo) = insere_nodo(NULL,(yyvsp[-1].valor_lexico)); insere_filho((yyval.nodo),(yyvsp[-2].nodo)); insere_filho((yyval.nodo),(yyvsp[0].nodo));atualiza_tipo_semantico((yyval.nodo),tabelas.infereTipo((yyvsp[-2].nodo),(yyvsp[0].nodo)));}
+    { (yyval.nodo) = insere_nodo(NULL,(yyvsp[-1].valor_lexico)); insere_filho((yyval.nodo),(yyvsp[-2].nodo)); insere_filho((yyval.nodo),(yyvsp[0].nodo));atualiza_tipo_semantico((yyval.nodo),tabelas.infereTipo((yyvsp[-2].nodo),(yyvsp[0].nodo)));(yyval.nodo)->reg =geraRegistrador(&ultimoReg);(yyval.nodo)->cod.appendInstCodigo(geraInst3op("mult",(yyvsp[-2].nodo)->reg,(yyvsp[0].nodo)->reg,(yyval.nodo)->reg));(yyval.nodo)->cod.appendCodigoInicio((yyvsp[0].nodo)->cod.getCodigo());(yyval.nodo)->cod.appendCodigoInicio((yyvsp[-2].nodo)->cod.getCodigo());(yyval.nodo)->cod.exportaCod();}
 #line 2073 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 98:
 #line 296 "parser.y" /* yacc.c:1646  */
-    { (yyval.nodo) = insere_nodo(NULL,(yyvsp[-1].valor_lexico)); insere_filho((yyval.nodo),(yyvsp[-2].nodo)); insere_filho((yyval.nodo),(yyvsp[0].nodo));atualiza_tipo_semantico((yyval.nodo),tabelas.infereTipo((yyvsp[-2].nodo),(yyvsp[0].nodo)));}
+    { (yyval.nodo) = insere_nodo(NULL,(yyvsp[-1].valor_lexico)); insere_filho((yyval.nodo),(yyvsp[-2].nodo)); insere_filho((yyval.nodo),(yyvsp[0].nodo));atualiza_tipo_semantico((yyval.nodo),tabelas.infereTipo((yyvsp[-2].nodo),(yyvsp[0].nodo)));(yyval.nodo)->reg =geraRegistrador(&ultimoReg);(yyval.nodo)->cod.appendInstCodigo(geraInst3op("div",(yyvsp[-2].nodo)->reg,(yyvsp[0].nodo)->reg,(yyval.nodo)->reg));(yyval.nodo)->cod.appendCodigoInicio((yyvsp[0].nodo)->cod.getCodigo());(yyval.nodo)->cod.appendCodigoInicio((yyvsp[-2].nodo)->cod.getCodigo());(yyval.nodo)->cod.exportaCod();}
 #line 2079 "parser.tab.c" /* yacc.c:1646  */
     break;
 

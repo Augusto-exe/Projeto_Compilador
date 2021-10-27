@@ -193,8 +193,8 @@ bloco_fun: '{' fim_bloco { $$ =NULL; }
 lista_par_begin: '(' {tabelas.insereContexto(); libera_val($1);};
 lista_par_end: ')'{libera_val($1);};
 
-func_header:  tipo_stat  TK_IDENTIFICADOR lista_par_begin lista_par lista_par_end{tabelas.insereFun(get_line_number(),$2);$$ = insere_nodo(NULL,$2);tabelas.atualizaFunTipoPar($2,$1); atualiza_tipo_semantico($$,$1);}
-|tipo_stat  TK_IDENTIFICADOR lista_par_begin lista_par_end{tabelas.insereFun(get_line_number(),$2);$$ = insere_nodo(NULL,$2);tabelas.atualizaFunTipoPar($2,$1); atualiza_tipo_semantico($$,$1);};
+func_header:  tipo_stat  TK_IDENTIFICADOR lista_par_begin lista_par lista_par_end{$$ = insere_nodo(NULL,$2);$$->reg = geraRotulo(&ultimoRotulo);tabelas.insereFun(get_line_number(),$2,ultimoRotulo);tabelas.atualizaFunTipoPar($2,$1); atualiza_tipo_semantico($$,$1);}
+|tipo_stat  TK_IDENTIFICADOR lista_par_begin lista_par_end{$$ = insere_nodo(NULL,$2);$$->reg = geraRotulo(&ultimoRotulo);tabelas.insereFun(get_line_number(),$2,ultimoRotulo);tabelas.atualizaFunTipoPar($2,$1); atualiza_tipo_semantico($$,$1);};
 func: func_header bloco_fun { $$ = insere_filho( $1,$2); }
 
 
@@ -238,7 +238,7 @@ literal: all_int {$$ = $1;atualiza_tipo_semantico($$,ID_INT);}
 | TK_LIT_CHAR {$$ = insere_nodo(NULL,$1);atualiza_tipo_semantico($$,ID_CHAR);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$1,ID_CHAR);}
 | TK_LIT_STRING {$$ = insere_nodo(NULL,$1);atualiza_tipo_semantico($$,ID_STRING);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$1,ID_STRING);};
 
-literal_num_bool: TK_LIT_INT {$$ = insere_nodo(NULL,$1);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$1,ID_INT);atualiza_tipo_semantico($$,ID_INT);$$->reg =geraRegistrador(&ultimoReg);$$->cod.appendInstCodigo(geraInst2op("LoadI",to_string($$->valor_lexico->tk_value.vInt),$$->reg));}
+literal_num_bool: TK_LIT_INT {$$ = insere_nodo(NULL,$1);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$1,ID_INT);atualiza_tipo_semantico($$,ID_INT);$$->reg =geraRegistrador(&ultimoReg);$$->cod.appendInstCodigo(geraInst2op("LoadI",to_string($$->valor_lexico->tk_value.vInt),$$->reg,INST_LOADI));}
 | TK_LIT_FLOAT {$$ = insere_nodo(NULL,$1);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$1,ID_FLOAT);atualiza_tipo_semantico($$,ID_FLOAT);}
 | TK_LIT_FALSE {$$ = insere_nodo(NULL,$1);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$1,ID_BOOL);atualiza_tipo_semantico($$,ID_BOOL);}
 | TK_LIT_TRUE {$$ = insere_nodo(NULL,$1);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$1,ID_BOOL);atualiza_tipo_semantico($$,ID_BOOL);};
@@ -290,18 +290,18 @@ exp: literal_num_bool {$$ = $1;}
 | fun_call {$$ = $1;} 
 | '(' exp ')' {$$ = $2; libera_val($1); libera_val($3);} 
 | exp_unitaria {$$ = $1;} 
-| exp '+' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,tabelas.infereTipo($1,$3));$$->reg =geraRegistrador(&ultimoReg);$$->cod.appendInstCodigo(geraInst3op("add",$1->reg,$3->reg,$$->reg));$$->cod.appendCodigoInicio($3->cod.getCodigo());$$->cod.appendCodigoInicio($1->cod.getCodigo());$$->cod.exportaCod();}
-| exp '-' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,tabelas.infereTipo($1,$3));$$->reg =geraRegistrador(&ultimoReg);$$->cod.appendInstCodigo(geraInst3op("sub",$1->reg,$3->reg,$$->reg));$$->cod.appendCodigoInicio($3->cod.getCodigo());$$->cod.appendCodigoInicio($1->cod.getCodigo());$$->cod.exportaCod();}
-| exp '*' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,tabelas.infereTipo($1,$3));$$->reg =geraRegistrador(&ultimoReg);$$->cod.appendInstCodigo(geraInst3op("mult",$1->reg,$3->reg,$$->reg));$$->cod.appendCodigoInicio($3->cod.getCodigo());$$->cod.appendCodigoInicio($1->cod.getCodigo());$$->cod.exportaCod();}
-| exp '/' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,tabelas.infereTipo($1,$3));$$->reg =geraRegistrador(&ultimoReg);$$->cod.appendInstCodigo(geraInst3op("div",$1->reg,$3->reg,$$->reg));$$->cod.appendCodigoInicio($3->cod.getCodigo());$$->cod.appendCodigoInicio($1->cod.getCodigo());$$->cod.exportaCod();}
+| exp '+' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,tabelas.infereTipo($1,$3));$$->reg =geraRegistrador(&ultimoReg);$$->cod.appendInstCodigo(geraInst3op("add",$1->reg,$3->reg,$$->reg,INST_ARITLOG));$$->cod.appendCodigoInicio($3->cod.getCodigo());$$->cod.appendCodigoInicio($1->cod.getCodigo());}
+| exp '-' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,tabelas.infereTipo($1,$3));$$->reg =geraRegistrador(&ultimoReg);$$->cod.appendInstCodigo(geraInst3op("sub",$1->reg,$3->reg,$$->reg,INST_ARITLOG));$$->cod.appendCodigoInicio($3->cod.getCodigo());$$->cod.appendCodigoInicio($1->cod.getCodigo());}
+| exp '*' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,tabelas.infereTipo($1,$3));$$->reg =geraRegistrador(&ultimoReg);$$->cod.appendInstCodigo(geraInst3op("mult",$1->reg,$3->reg,$$->reg,INST_ARITLOG));$$->cod.appendCodigoInicio($3->cod.getCodigo());$$->cod.appendCodigoInicio($1->cod.getCodigo());}
+| exp '/' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,tabelas.infereTipo($1,$3));$$->reg =geraRegistrador(&ultimoReg);$$->cod.appendInstCodigo(geraInst3op("div",$1->reg,$3->reg,$$->reg,INST_ARITLOG));$$->cod.appendCodigoInicio($3->cod.getCodigo());$$->cod.appendCodigoInicio($1->cod.getCodigo());}
 | exp '%' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,tabelas.infereTipo($1,$3));}
 | exp '|' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,tabelas.infereTipo($1,$3));}
 | exp '&' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,tabelas.infereTipo($1,$3));}
 | exp '^' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,tabelas.infereTipo($1,$3));}
-| exp TK_OC_LE exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,ID_BOOL);}
-| exp TK_OC_GE exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,ID_BOOL);}
-| exp TK_OC_EQ exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,ID_BOOL);}
-| exp TK_OC_NE exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,ID_BOOL);}
+| exp TK_OC_LE exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,ID_BOOL);$$->reg = geraRegistrador(&ultimoReg);$$->cod.appendInstCodigo(geraInst3op("cbr","L1","L2",$$->reg,INST_CBR));$$->cod.appendInstCodigo(geraInst3op("cmp_LE",$1->reg,$3->reg,$$->reg,INST_REL));$$->cod.appendCodigoInicio($3->cod.getCodigo());$$->cod.appendCodigoInicio($1->cod.getCodigo());$$->cod.exportaCod();}
+| exp TK_OC_GE exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,ID_BOOL);$$->reg = geraRegistrador(&ultimoReg);$$->cod.appendInstCodigo(geraInst3op("cbr","L1","L2",$$->reg,INST_CBR));$$->cod.appendInstCodigo(geraInst3op("cmp_GE",$1->reg,$3->reg,$$->reg,INST_REL));$$->cod.appendCodigoInicio($3->cod.getCodigo());$$->cod.appendCodigoInicio($1->cod.getCodigo());$$->cod.exportaCod();}
+| exp TK_OC_EQ exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,ID_BOOL);$$->reg = geraRegistrador(&ultimoReg);$$->cod.appendInstCodigo(geraInst3op("cbr","L1","L2",$$->reg,INST_CBR));$$->cod.appendInstCodigo(geraInst3op("cmp_EQ",$1->reg,$3->reg,$$->reg,INST_REL));$$->cod.appendCodigoInicio($3->cod.getCodigo());$$->cod.appendCodigoInicio($1->cod.getCodigo());$$->cod.exportaCod();}
+| exp TK_OC_NE exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,ID_BOOL);$$->reg = geraRegistrador(&ultimoReg);$$->cod.appendInstCodigo(geraInst3op("cbr","L1","L2",$$->reg,INST_CBR));$$->cod.appendInstCodigo(geraInst3op("cmp_NE",$1->reg,$3->reg,$$->reg,INST_REL));$$->cod.appendCodigoInicio($3->cod.getCodigo());$$->cod.appendCodigoInicio($1->cod.getCodigo());$$->cod.exportaCod();}
 | exp TK_OC_AND exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,ID_BOOL);}
 | exp TK_OC_OR exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,ID_BOOL);}
 | exp '<' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,tabelas.infereTipo($1,$3));}

@@ -44,6 +44,16 @@
 #define ID				1
 #define LIT				2
 
+#define ESC_GLOBAL		0
+#define ESC_LOCAL		1
+
+
+#define INST_ARITLOG    1
+#define INST_REL        2
+#define INST_MEM		3
+#define INST_LOADI		4
+#define INST_JMP		5
+#define INST_CBR		6
 
 struct lexic_val_type{
 int lineno;

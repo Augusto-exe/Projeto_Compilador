@@ -22,8 +22,8 @@ class PilhaContexto
 		PilhaContexto();
 		void insereContexto();
 		tabelaSimbolos popContexto();
-		void insereSimboloNonVet(int line, int natureza, lexic_val_type *valorLex,int tipo);
-		void insereSimboloVet(int line, int natureza, lexic_val_type *valorLex,int tipo,int tamanho);
+		void insereSimboloNonVet(int line, int natureza, lexic_val_type *valorLex,int tipo, int escopo = ESC_LOCAL);
+		void insereSimboloVet(int line, int natureza, lexic_val_type *valorLex,int tipo,int tamanho,int escopo = ESC_LOCAL);
 		void atualizaTipoTamanho(int tipo);
 		void adicionaParametro(string nome,string nome_par);
 		void insereSimboloContextoAtual(string nome, DadoTabelaSimbolos novoSimbolo);
@@ -32,7 +32,7 @@ class PilhaContexto
 		DadoTabelaSimbolos retornaSimboloBack(string nome);
 		void exportaTabelas();
 		void emitirErro(int tipoErro, int linha, string nome,string aux);
-		void insereFun(int line, lexic_val_type *valorLex );
+		void insereFun(int line, lexic_val_type *valorLex,int rotulo );
 		void atualizaFunTipoPar(lexic_val_type *valorLex,int tipo );
 		void empilhaParametro(lexic_val_type *valorLex);
 		int infereTipo(a_nodo* nodoEsq,a_nodo* nodoDir);

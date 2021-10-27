@@ -13,6 +13,9 @@ struct dadoTabelaSimbolos
 	int tamanho;
 	list<struct dadoTabelaSimbolos> parametros;
 	lexic_val_type valorLexico;
+	int deslocamento;
+	int escopo;
+	int rot_reg;
 };
 
 typedef struct dadoTabelaSimbolos DadoTabelaSimbolos; 

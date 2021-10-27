@@ -17,22 +17,24 @@ string geraRegistrador(int *ultimoReg)
     return retStr;
 }
 
-Instrucao geraInst3op(string operacao,string op1,string op2, string dst){
+Instrucao geraInst3op(string operacao,string op1,string op2, string dst,int tipoInst){
     Instrucao inst;
     inst.dst = dst;
     inst.n_op = 3;
     inst.op1 = op1;
     inst.op2 = op2;
     inst.operacao = operacao;
+    inst.tipoInst = tipoInst;
     return inst;
 }
-Instrucao geraInst2op(string operacao,string op1,string dst){
+Instrucao geraInst2op(string operacao,string op1,string dst,int tipoInst){
     Instrucao inst;
     inst.dst = dst;
     inst.n_op = 2;
     inst.op1 = op1;
     inst.op2 = "";
     inst.operacao = operacao;
+    inst.tipoInst = tipoInst;
     return inst;
 }
 void ListaInst::appendInstCodigo(Instrucao inst){
@@ -58,9 +60,37 @@ void ListaInst::exportaCod(){
 void printaInst(Instrucao inst)
 {
     if(inst.n_op == 3)
-        cout <<inst.operacao << " "<< inst.op1 <<", " << inst.op2 <<" => "<< inst.dst  << endl;
+        switch (inst.tipoInst)
+        {
+        case INST_ARITLOG:
+            cout <<inst.operacao << " "<< inst.op1 <<", " << inst.op2 <<" => "<< inst.dst  << endl;
+            break;
+        case INST_MEM:
+            cout <<inst.operacao << inst.dst  << " "<< " => "<< inst.op1 <<", " << inst.op2 <<  endl;
+            break;
+        case INST_REL:
+            cout <<inst.operacao << " "<< inst.op1 <<", " << inst.op2 <<" -> "<< inst.dst  << endl;
+            break;
+        case INST_CBR:
+            cout <<inst.operacao << " "<<  inst.dst <<" -> " << inst.op1 <<", " << inst.op2  << endl;
+            break;
+        default:
+            break;
+        }
+        
     else
-        cout <<inst.operacao << " "<< inst.op1 <<" => "<< inst.dst   << endl;
+    switch (inst.tipoInst)
+        {
+        case INST_JMP:
+            cout <<inst.operacao << " -> "<< inst.dst  << endl;
+            break;
+        case INST_LOADI:
+            cout <<inst.operacao << " "<< inst.op1 <<" => "<< inst.dst   << endl;
+            break;
+        default:
+            break;
+        }
+        
 }
 
 

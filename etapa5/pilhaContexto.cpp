@@ -84,7 +84,7 @@ int getTamanhoTipo(int tipo)
 	return ret;
 }
 
-void PilhaContexto::insereSimboloNonVet(int line, int natureza, lexic_val_type *valorLex, int tipo)
+void PilhaContexto::insereSimboloNonVet(int line, int natureza, lexic_val_type *valorLex, int tipo,int escopo)
 {
 	DadoTabelaSimbolos novoSimbolo;
 	list<DadoTabelaSimbolos> parametros;
@@ -93,6 +93,7 @@ void PilhaContexto::insereSimboloNonVet(int line, int natureza, lexic_val_type *
 	novoSimbolo.natureza = natureza;
 	novoSimbolo.tipo = tipo;
 	novoSimbolo.tamanho = 1;
+	novoSimbolo.escopo= escopo;
 	if(natureza == NAT_LIT)
 	{
 		novoSimbolo.tamanho = getTamanhoTipo(novoSimbolo.tipo);
@@ -139,7 +140,7 @@ void PilhaContexto::insereSimboloNonVet(int line, int natureza, lexic_val_type *
 
 	this->insereSimboloContextoAtual(nomeChave, novoSimbolo);
 }
-void PilhaContexto::insereSimboloVet(int line, int natureza, lexic_val_type *valorLex,int tipo,int tamanho)
+void PilhaContexto::insereSimboloVet(int line, int natureza, lexic_val_type *valorLex,int tipo,int tamanho, int escopo)
 {
 	DadoTabelaSimbolos novoSimbolo;
 	list<DadoTabelaSimbolos> parametros;
@@ -148,6 +149,7 @@ void PilhaContexto::insereSimboloVet(int line, int natureza, lexic_val_type *val
 	novoSimbolo.natureza = natureza;
 	novoSimbolo.tipo = tipo;
 	novoSimbolo.tamanho = tamanho;
+	novoSimbolo.escopo= escopo;
 	switch(novoSimbolo.tipo)
 	{
 		case LIT_TIPO_INT:
@@ -238,7 +240,7 @@ void PilhaContexto::fazInic()
 }
 
 
-void PilhaContexto::insereFun(int line, lexic_val_type *valorLex )
+void PilhaContexto::insereFun(int line, lexic_val_type *valorLex, int rotulo )
 {
 	DadoTabelaSimbolos novoSimbolo;
 	list<DadoTabelaSimbolos> parametros;
@@ -248,7 +250,9 @@ void PilhaContexto::insereFun(int line, lexic_val_type *valorLex )
 	novoSimbolo.parametros = parametros;
 	novoSimbolo.valorLexico = *valorLex;
 	novoSimbolo.tamanho = 1;
-	if(this->existeSimboloContextoAtual(nome))
+	novoSimbolo.escopo = ESC_GLOBAL;
+	novoSimbolo.rot_reg = rotulo;
+	if(this->existeSimboloContextos(nome))
 		this->emitirErro(ERR_DECLARED,line,nome,nome);
 	
 	this->contextos.front().insereSimbolo(nome,novoSimbolo);
@@ -477,7 +481,7 @@ void PilhaContexto::exportaTabelas()
 {
 	for(auto contexto : this->contextos)
 	{
-		cout << "nova tabela : "<< endl;
+		cout << endl << "nova tabela : "<< endl;
 		contexto.exportaTabela();
 	}
 		

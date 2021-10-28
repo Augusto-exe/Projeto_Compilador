@@ -15,6 +15,8 @@ a_nodo* insere_nodo(a_nodo* filho,lexic_val_type* valor_lexico)
 	nodo->valor_lexico = valor_lexico;
 	nodo->reg ="";
 	nodo->cod = ListaInst();
+	nodo->idRemendosTrue = list<int>();	
+	nodo->idRemendosFalse = list<int>();
 	return nodo;
 }
 
@@ -66,6 +68,22 @@ a_nodo* insere_filho_fim(a_nodo* arvore, a_nodo* filho){
 	}
 	return arvore;
 }
+void appendListaTrue(a_nodo *arvore,list<int> idRemendos)
+{
+	list<int>::reverse_iterator itList;
+    for(itList = idRemendos.rbegin();itList !=idRemendos.rend();++itList)
+    {
+        arvore->idRemendosTrue.push_front((*itList));
+    }
+}
+void appendListaFalse(a_nodo *arvore,list<int> idRemendos)
+{
+	list<int>::reverse_iterator itList;
+    for(itList = idRemendos.rbegin();itList !=idRemendos.rend();++itList)
+    {
+        arvore->idRemendosFalse.push_front((*itList));
+    }
+}
 
 void atualiza_tipo_semantico(a_nodo* nodo, int tipo_semantico)
 {
@@ -81,7 +99,9 @@ a_nodo* insere_nodo_tipo( a_nodo* filho,lexic_val_type* valor_lexico, int tipo_n
 	nodo->prox_irmao = NULL;
 	nodo->valor_lexico = valor_lexico;
 	nodo->reg ="";
-	nodo->cod = ListaInst();	
+	nodo->cod = ListaInst();
+	nodo->idRemendosTrue = list<int>();	
+	nodo->idRemendosFalse = list<int>();
 	return nodo;
 
 }

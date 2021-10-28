@@ -17,7 +17,7 @@ string geraRegistrador(int *ultimoReg)
     return retStr;
 }
 
-Instrucao geraInst3op(string operacao,string op1,string op2, string dst,int tipoInst){
+Instrucao geraInst3op(string operacao,string op1,string op2, string dst,int tipoInst, int *id){
     Instrucao inst;
     inst.dst = dst;
     inst.n_op = 3;
@@ -25,9 +25,11 @@ Instrucao geraInst3op(string operacao,string op1,string op2, string dst,int tipo
     inst.op2 = op2;
     inst.operacao = operacao;
     inst.tipoInst = tipoInst;
+    *id= *id+1;
+    inst.id = *id;
     return inst;
 }
-Instrucao geraInst2op(string operacao,string op1,string dst,int tipoInst){
+Instrucao geraInst2op(string operacao,string op1,string dst,int tipoInst, int *id){
     Instrucao inst;
     inst.dst = dst;
     inst.n_op = 2;
@@ -35,12 +37,45 @@ Instrucao geraInst2op(string operacao,string op1,string dst,int tipoInst){
     inst.op2 = "";
     inst.operacao = operacao;
     inst.tipoInst = tipoInst;
+    *id= *id+1;
+    inst.id = *id;
     return inst;
 }
 void ListaInst::appendInstCodigo(Instrucao inst){
     this->codigo.push_front(inst);
 
 }
+void ListaInst::remendaTrue(list<int> idsRemendo, string rotulo)
+{
+    list<Instrucao>::iterator itInst;
+    list<int>::iterator itId;
+    for(itId = idsRemendo.begin();itId != idsRemendo.end();++itId)
+    {
+        for(itInst= this->codigo.begin();itInst !=this->codigo.end();++itInst)
+        {
+            if((*itId) == (*itInst).id)
+            {
+                (*itInst).op1= rotulo; //VERIFICAR CASOS EM Q PODE TER Q TROCAR OUTRO OPERADOR
+            }
+        }
+    }
+}
+void ListaInst::remendaFalse(list<int> idsRemendo, string rotulo)
+{
+    list<Instrucao>::iterator itInst;
+    list<int>::iterator itId;
+    for(itId = idsRemendo.begin();itId != idsRemendo.end();++itId)
+    {
+        for(itInst= this->codigo.begin();itInst !=this->codigo.end();++itInst)
+        {
+            if((*itId) == (*itInst).id)
+            {
+                (*itInst).op2= rotulo; //VERIFICAR CASOS EM Q PODE TER Q TROCAR OUTRO OPERADOR
+            }
+        }
+    }
+
+} 
 void ListaInst::appendCodigoInicio(list<Instrucao> codigoPref){
     list<Instrucao>::reverse_iterator itList;
     for(itList = codigoPref.rbegin();itList !=codigoPref.rend();++itList)
@@ -86,6 +121,9 @@ void printaInst(Instrucao inst)
             break;
         case INST_LOADI:
             cout <<inst.operacao << " "<< inst.op1 <<" => "<< inst.dst   << endl;
+            break;
+        case INST_NOP_ROT:
+            cout <<inst.operacao << ": "<< "nop" << endl;
             break;
         default:
             break;

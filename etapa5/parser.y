@@ -22,6 +22,7 @@
 	extern PilhaContexto tabelas;
 	int ultimoRotulo=-1;
 	int ultimoReg=-1;
+	int instId =-1;
 
 		
 %}
@@ -145,7 +146,8 @@
 %start programa
 
 %right '?' ':'
-%left TK_OC_AND TK_OC_OR
+%left TK_OC_OR
+%left TK_OC_AND 
 %left '|'
 %left '&' 
 %left TK_OC_EQ TK_OC_NE
@@ -238,7 +240,7 @@ literal: all_int {$$ = $1;atualiza_tipo_semantico($$,ID_INT);}
 | TK_LIT_CHAR {$$ = insere_nodo(NULL,$1);atualiza_tipo_semantico($$,ID_CHAR);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$1,ID_CHAR);}
 | TK_LIT_STRING {$$ = insere_nodo(NULL,$1);atualiza_tipo_semantico($$,ID_STRING);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$1,ID_STRING);};
 
-literal_num_bool: TK_LIT_INT {$$ = insere_nodo(NULL,$1);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$1,ID_INT);atualiza_tipo_semantico($$,ID_INT);$$->reg =geraRegistrador(&ultimoReg);$$->cod.appendInstCodigo(geraInst2op("LoadI",to_string($$->valor_lexico->tk_value.vInt),$$->reg,INST_LOADI));}
+literal_num_bool: TK_LIT_INT {$$ = insere_nodo(NULL,$1);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$1,ID_INT);atualiza_tipo_semantico($$,ID_INT);$$->reg =geraRegistrador(&ultimoReg);$$->cod.appendInstCodigo(geraInst2op("LoadI",to_string($$->valor_lexico->tk_value.vInt),$$->reg,INST_LOADI,&instId));}
 | TK_LIT_FLOAT {$$ = insere_nodo(NULL,$1);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$1,ID_FLOAT);atualiza_tipo_semantico($$,ID_FLOAT);}
 | TK_LIT_FALSE {$$ = insere_nodo(NULL,$1);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$1,ID_BOOL);atualiza_tipo_semantico($$,ID_BOOL);}
 | TK_LIT_TRUE {$$ = insere_nodo(NULL,$1);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$1,ID_BOOL);atualiza_tipo_semantico($$,ID_BOOL);};
@@ -290,22 +292,22 @@ exp: literal_num_bool {$$ = $1;}
 | fun_call {$$ = $1;} 
 | '(' exp ')' {$$ = $2; libera_val($1); libera_val($3);} 
 | exp_unitaria {$$ = $1;} 
-| exp '+' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,tabelas.infereTipo($1,$3));$$->reg =geraRegistrador(&ultimoReg);$$->cod.appendInstCodigo(geraInst3op("add",$1->reg,$3->reg,$$->reg,INST_ARITLOG));$$->cod.appendCodigoInicio($3->cod.getCodigo());$$->cod.appendCodigoInicio($1->cod.getCodigo());}
-| exp '-' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,tabelas.infereTipo($1,$3));$$->reg =geraRegistrador(&ultimoReg);$$->cod.appendInstCodigo(geraInst3op("sub",$1->reg,$3->reg,$$->reg,INST_ARITLOG));$$->cod.appendCodigoInicio($3->cod.getCodigo());$$->cod.appendCodigoInicio($1->cod.getCodigo());}
-| exp '*' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,tabelas.infereTipo($1,$3));$$->reg =geraRegistrador(&ultimoReg);$$->cod.appendInstCodigo(geraInst3op("mult",$1->reg,$3->reg,$$->reg,INST_ARITLOG));$$->cod.appendCodigoInicio($3->cod.getCodigo());$$->cod.appendCodigoInicio($1->cod.getCodigo());}
-| exp '/' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,tabelas.infereTipo($1,$3));$$->reg =geraRegistrador(&ultimoReg);$$->cod.appendInstCodigo(geraInst3op("div",$1->reg,$3->reg,$$->reg,INST_ARITLOG));$$->cod.appendCodigoInicio($3->cod.getCodigo());$$->cod.appendCodigoInicio($1->cod.getCodigo());}
+| exp '+' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,tabelas.infereTipo($1,$3));$$->reg =geraRegistrador(&ultimoReg);$$->cod.appendInstCodigo(geraInst3op("add",$1->reg,$3->reg,$$->reg,INST_ARITLOG,&instId));$$->cod.appendCodigoInicio($3->cod.getCodigo());$$->cod.appendCodigoInicio($1->cod.getCodigo());}
+| exp '-' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,tabelas.infereTipo($1,$3));$$->reg =geraRegistrador(&ultimoReg);$$->cod.appendInstCodigo(geraInst3op("sub",$1->reg,$3->reg,$$->reg,INST_ARITLOG,&instId));$$->cod.appendCodigoInicio($3->cod.getCodigo());$$->cod.appendCodigoInicio($1->cod.getCodigo());}
+| exp '*' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,tabelas.infereTipo($1,$3));$$->reg =geraRegistrador(&ultimoReg);$$->cod.appendInstCodigo(geraInst3op("mult",$1->reg,$3->reg,$$->reg,INST_ARITLOG,&instId));$$->cod.appendCodigoInicio($3->cod.getCodigo());$$->cod.appendCodigoInicio($1->cod.getCodigo());}
+| exp '/' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,tabelas.infereTipo($1,$3));$$->reg =geraRegistrador(&ultimoReg);$$->cod.appendInstCodigo(geraInst3op("div",$1->reg,$3->reg,$$->reg,INST_ARITLOG,&instId));$$->cod.appendCodigoInicio($3->cod.getCodigo());$$->cod.appendCodigoInicio($1->cod.getCodigo());}
 | exp '%' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,tabelas.infereTipo($1,$3));}
 | exp '|' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,tabelas.infereTipo($1,$3));}
 | exp '&' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,tabelas.infereTipo($1,$3));}
 | exp '^' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,tabelas.infereTipo($1,$3));}
-| exp TK_OC_LE exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,ID_BOOL);$$->reg = geraRegistrador(&ultimoReg);$$->cod.appendInstCodigo(geraInst3op("cbr","L1","L2",$$->reg,INST_CBR));$$->cod.appendInstCodigo(geraInst3op("cmp_LE",$1->reg,$3->reg,$$->reg,INST_REL));$$->cod.appendCodigoInicio($3->cod.getCodigo());$$->cod.appendCodigoInicio($1->cod.getCodigo());$$->cod.exportaCod();}
-| exp TK_OC_GE exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,ID_BOOL);$$->reg = geraRegistrador(&ultimoReg);$$->cod.appendInstCodigo(geraInst3op("cbr","L1","L2",$$->reg,INST_CBR));$$->cod.appendInstCodigo(geraInst3op("cmp_GE",$1->reg,$3->reg,$$->reg,INST_REL));$$->cod.appendCodigoInicio($3->cod.getCodigo());$$->cod.appendCodigoInicio($1->cod.getCodigo());$$->cod.exportaCod();}
-| exp TK_OC_EQ exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,ID_BOOL);$$->reg = geraRegistrador(&ultimoReg);$$->cod.appendInstCodigo(geraInst3op("cbr","L1","L2",$$->reg,INST_CBR));$$->cod.appendInstCodigo(geraInst3op("cmp_EQ",$1->reg,$3->reg,$$->reg,INST_REL));$$->cod.appendCodigoInicio($3->cod.getCodigo());$$->cod.appendCodigoInicio($1->cod.getCodigo());$$->cod.exportaCod();}
-| exp TK_OC_NE exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,ID_BOOL);$$->reg = geraRegistrador(&ultimoReg);$$->cod.appendInstCodigo(geraInst3op("cbr","L1","L2",$$->reg,INST_CBR));$$->cod.appendInstCodigo(geraInst3op("cmp_NE",$1->reg,$3->reg,$$->reg,INST_REL));$$->cod.appendCodigoInicio($3->cod.getCodigo());$$->cod.appendCodigoInicio($1->cod.getCodigo());$$->cod.exportaCod();}
-| exp TK_OC_AND exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,ID_BOOL);}
-| exp TK_OC_OR exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,ID_BOOL);}
-| exp '<' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,tabelas.infereTipo($1,$3));}
-| exp '>' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,tabelas.infereTipo($1,$3));}
+| exp TK_OC_LE exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,ID_BOOL);$$->reg = geraRegistrador(&ultimoReg);Instrucao inst =geraInst3op("cbr","x","y",$$->reg,INST_CBR,&instId);$$->idRemendosTrue.push_front(inst.id);$$->idRemendosFalse.push_front(inst.id);$$->cod.appendInstCodigo(inst);$$->cod.appendInstCodigo(geraInst3op("cmp_LE",$1->reg,$3->reg,$$->reg,INST_REL,&instId));$$->cod.appendCodigoInicio($3->cod.getCodigo());$$->cod.appendCodigoInicio($1->cod.getCodigo());$$->cod.exportaCod();}
+| exp TK_OC_GE exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,ID_BOOL);$$->reg = geraRegistrador(&ultimoReg);Instrucao inst =geraInst3op("cbr","x","y",$$->reg,INST_CBR,&instId);$$->idRemendosTrue.push_front(inst.id);$$->idRemendosFalse.push_front(inst.id);$$->cod.appendInstCodigo(inst);$$->cod.appendInstCodigo(geraInst3op("cmp_GE",$1->reg,$3->reg,$$->reg,INST_REL,&instId));$$->cod.appendCodigoInicio($3->cod.getCodigo());$$->cod.appendCodigoInicio($1->cod.getCodigo());$$->cod.exportaCod();}
+| exp TK_OC_EQ exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,ID_BOOL);$$->reg = geraRegistrador(&ultimoReg);Instrucao inst =geraInst3op("cbr","x","y",$$->reg,INST_CBR,&instId);$$->idRemendosTrue.push_front(inst.id);$$->idRemendosFalse.push_front(inst.id);$$->cod.appendInstCodigo(inst);$$->cod.appendInstCodigo(geraInst3op("cmp_EQ",$1->reg,$3->reg,$$->reg,INST_REL,&instId));$$->cod.appendCodigoInicio($3->cod.getCodigo());$$->cod.appendCodigoInicio($1->cod.getCodigo());$$->cod.exportaCod();}
+| exp TK_OC_NE exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,ID_BOOL);$$->reg = geraRegistrador(&ultimoReg);Instrucao inst =geraInst3op("cbr","x","y",$$->reg,INST_CBR,&instId);$$->idRemendosTrue.push_front(inst.id);$$->idRemendosFalse.push_front(inst.id);$$->cod.appendInstCodigo(inst);$$->cod.appendInstCodigo(geraInst3op("cmp_NE",$1->reg,$3->reg,$$->reg,INST_REL,&instId));$$->cod.appendCodigoInicio($3->cod.getCodigo());$$->cod.appendCodigoInicio($1->cod.getCodigo());$$->cod.exportaCod();}
+| exp TK_OC_AND exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,ID_BOOL);string rotTrue = geraRotulo(&ultimoRotulo); Instrucao nopInst = geraInst2op(rotTrue,"","",INST_NOP_ROT,&instId); $$->cod.appendCodigoInicio($3->cod.getCodigo());$$->cod.appendInstCodigo(nopInst);$1->cod.remendaTrue($1->idRemendosTrue,rotTrue);$1->idRemendosTrue.clear();$$->cod.appendCodigoInicio($1->cod.getCodigo());printf("\n\nprintando and:\n");appendListaTrue($$,$3->idRemendosTrue);appendListaFalse($$,$3->idRemendosFalse); appendListaFalse($$,$1->idRemendosFalse);$$->cod.exportaCod(); }
+| exp TK_OC_OR exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,ID_BOOL);string rotFalse = geraRotulo(&ultimoRotulo); Instrucao nopInst = geraInst2op(rotFalse,"","",INST_NOP_ROT,&instId); $$->cod.appendCodigoInicio($3->cod.getCodigo());$$->cod.appendInstCodigo(nopInst);$1->cod.remendaFalse($1->idRemendosFalse,rotFalse);$1->idRemendosFalse.clear();$$->cod.appendCodigoInicio($1->cod.getCodigo());printf("\n\nprintando or:\n"); $$->cod.exportaCod();}
+| exp '<' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,ID_BOOL);$$->reg = geraRegistrador(&ultimoReg);Instrucao inst =geraInst3op("cbr","x","y",$$->reg,INST_CBR,&instId);$$->idRemendosTrue.push_front(inst.id);$$->idRemendosFalse.push_front(inst.id);$$->cod.appendInstCodigo(inst);$$->cod.appendInstCodigo(geraInst3op("cmp_LT",$1->reg,$3->reg,$$->reg,INST_REL,&instId));$$->cod.appendCodigoInicio($3->cod.getCodigo());$$->cod.appendCodigoInicio($1->cod.getCodigo());$$->cod.exportaCod();}
+| exp '>' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,ID_BOOL);$$->reg = geraRegistrador(&ultimoReg);Instrucao inst =geraInst3op("cbr","x","y",$$->reg,INST_CBR,&instId);$$->idRemendosTrue.push_front(inst.id);$$->idRemendosFalse.push_front(inst.id);$$->cod.appendInstCodigo(inst);$$->cod.appendInstCodigo(geraInst3op("cmp_GT",$1->reg,$3->reg,$$->reg,INST_REL,&instId));$$->cod.appendCodigoInicio($3->cod.getCodigo());$$->cod.appendCodigoInicio($1->cod.getCodigo());$$->cod.exportaCod();}
 | exp '?' exp ':' exp { $$ = insere_nodo(NULL,geraVal(TIPO_CHAR_ESP,NOT_LIT,get_line_number(),(char*)"?:")); insere_filho($$,$1); insere_filho($$,$3); insere_filho($$,$5);libera_val($2);libera_val($4);atualiza_tipo_semantico($$,tabelas.infereTipoTern($1,$3,$5));};
 
 comando_controle_fluxo: comando_if {$$ = $1;}

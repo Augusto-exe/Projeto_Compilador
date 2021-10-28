@@ -54,6 +54,7 @@
 #define INST_LOADI		4
 #define INST_JMP		5
 #define INST_CBR		6
+#define INST_NOP_ROT	7
 
 struct lexic_val_type{
 int lineno;

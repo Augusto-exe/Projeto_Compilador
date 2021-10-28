@@ -11,7 +11,7 @@ struct inicPend
 	lexic_val_type* variable;
 	lexic_val_type* value;	
 };
-int getTamanhoTipo(int tipo);
+
 bool checaConversaoImplicita(int tipoOrig,int tipoDst);
 typedef struct inicPend IniciacaoPendente;
 string getNomeValorLexico(lexic_val_type* valorLex);

@@ -57,32 +57,7 @@ string getNomeValorLexico(lexic_val_type* valorLex)
 	return nomeChave;
 }
 
-int getTamanhoTipo(int tipo)
-{
-	int ret;
-	switch (tipo)
-	{
-	case ID_INT:
-		ret=4;
-		break;
-	case ID_FLOAT:
-		ret=8;
-		break;
-	case ID_BOOL:
-		ret=1;
-		break;
-	case ID_CHAR:
-		ret=1;
-		break;
-	case ID_STRING:
-		ret =0;
-		break;
-	default:
-		ret = 0;
-		break;
-	}
-	return ret;
-}
+
 
 void PilhaContexto::insereSimboloNonVet(int line, int natureza, lexic_val_type *valorLex, int tipo,int escopo)
 {
@@ -207,7 +182,6 @@ void PilhaContexto::fazInic()
 	{
 		var = this->getSimboloPorValorLex(ini.variable);
 		value = this->getSimboloPorValorLex(ini.value);
-
 		linha = ini.value->lineno;
 		nome = string(ini.variable->tk_value.vStr);
 		if(value.tipo == ID_CHAR && var.tipo != ID_CHAR )
@@ -252,6 +226,7 @@ void PilhaContexto::insereFun(int line, lexic_val_type *valorLex, int rotulo )
 	novoSimbolo.tamanho = 1;
 	novoSimbolo.escopo = ESC_GLOBAL;
 	novoSimbolo.rot_reg = rotulo;
+	novoSimbolo.deslocamento =-1;
 	if(this->existeSimboloContextos(nome))
 		this->emitirErro(ERR_DECLARED,line,nome,nome);
 	
@@ -523,7 +498,7 @@ int PilhaContexto::getTipoPorValorLex(lexic_val_type *valorLex)
 }
 DadoTabelaSimbolos PilhaContexto::getSimboloPorValorLex(lexic_val_type *valorLex)
 {
-	string nomeChave = string(valorLex->tk_value.vStr);
+	string nomeChave;
 	if(valorLex->type == TIPO_LIT)
 	{
 		switch (valorLex->value_type)
@@ -548,6 +523,9 @@ DadoTabelaSimbolos PilhaContexto::getSimboloPorValorLex(lexic_val_type *valorLex
 			break;
 		}
 		nomeChave.append("LIT");
+	}
+	else{
+		nomeChave = string(valorLex->tk_value.vStr);
 	}
 	DadoTabelaSimbolos dado = retornaSimbolo(nomeChave);
 	return dado;

@@ -20,9 +20,10 @@ struct dadoTabelaSimbolos
 
 typedef struct dadoTabelaSimbolos DadoTabelaSimbolos; 
 typedef unordered_map<string,DadoTabelaSimbolos> MapaSimbolos;
-
+int getTamanhoTipo(int tipo);
 class tabelaSimbolos{
 	public:
+		tabelaSimbolos();
 		void insereSimbolo(string nome, DadoTabelaSimbolos dado );
 		MapaSimbolos getTabela();
 		void insereTipoSimbolo(string nome, int tipo);
@@ -33,5 +34,6 @@ class tabelaSimbolos{
 		int getTipoPeloNome(string nomeChave);
 		void atualizaTamanhoString(string nome, int tamanho);
 	private:
+		int deslocTab;
 		MapaSimbolos tabSimbolos;
 };

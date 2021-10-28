@@ -16,6 +16,56 @@ string geraRegistrador(int *ultimoReg)
     string retStr = "r" + to_string(*ultimoReg);
     return retStr;
 }
+list<Instrucao> geraInstAtribTipoDesloc(int desloc, int escopo ,int tipo,string regOrig ,ListaInst *exp,list<int> idRemendoTrue,list<int> idRemendoFalse,int *ultimoReg,int *ultimoRotulo,int *id)
+{
+    Instrucao inst;
+    list<Instrucao> retList = list<Instrucao>();
+    string regBase;
+    string regDst = geraRegistrador(ultimoReg);
+    if(escopo == ESC_GLOBAL)
+        regBase = "rbss";
+    else
+        regBase = "rbf";
+    if(tipo == ID_BOOL)
+    {
+        string rot1 = geraRotulo(ultimoRotulo);
+        string rot2 = geraRotulo(ultimoRotulo);
+        string rot3 = geraRotulo(ultimoRotulo);
+        inst = geraInst3op("storeAI",regBase,to_string(desloc),regDst,INST_MEM,id);
+        retList.push_front(inst);
+        inst=geraInst2op(rot3,"","",INST_NOP_ROT,id);
+        retList.push_front(inst);
+        inst = geraInst2op("jumpI","",rot3,INST_JMP,id);
+        retList.push_front(inst);
+        inst = geraInst2op("loadI","1",regDst,INST_LOADI,id);
+        retList.push_front(inst);
+        inst=geraInst2op(rot2,"","",INST_NOP_ROT,id);
+        retList.push_front(inst);
+        (*exp).remendaTrue(idRemendoTrue,rot2);
+        inst = geraInst2op("jumpI","",rot3,INST_JMP,id);
+        retList.push_front(inst);
+        inst = geraInst2op("loadI","0",regDst,INST_LOADI,id);
+        retList.push_front(inst);
+        inst=geraInst2op(rot1,"","",INST_NOP_ROT,id);
+        retList.push_front(inst);
+        (*exp).remendaFalse(idRemendoFalse,rot1);
+
+
+    }
+    else
+    {
+        inst = geraInst3op("storeAI",regBase,to_string(desloc),regOrig,INST_MEM,id);
+        retList.push_front(inst);
+    }
+    list<Instrucao>::reverse_iterator itList;
+    list<Instrucao> listInstCod = (*exp).getCodigo();
+    for(itList = listInstCod.rbegin();itList !=listInstCod.rend();++itList)
+    {
+        retList.push_front((*itList));
+    }
+    
+    return retList;
+}
 
 Instrucao geraInst3op(string operacao,string op1,string op2, string dst,int tipoInst, int *id){
     Instrucao inst;
@@ -101,7 +151,7 @@ void printaInst(Instrucao inst)
             cout <<inst.operacao << " "<< inst.op1 <<", " << inst.op2 <<" => "<< inst.dst  << endl;
             break;
         case INST_MEM:
-            cout <<inst.operacao << inst.dst  << " "<< " => "<< inst.op1 <<", " << inst.op2 <<  endl;
+            cout <<inst.operacao << " " <<inst.dst << " => "<< inst.op1 <<", " << inst.op2 <<  endl;
             break;
         case INST_REL:
             cout <<inst.operacao << " "<< inst.op1 <<", " << inst.op2 <<" -> "<< inst.dst  << endl;

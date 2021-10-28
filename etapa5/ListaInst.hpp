@@ -18,6 +18,7 @@ typedef struct instrucao // inst: operacao op1, op2 => dst _OU_ operacao op1 => 
 
 string geraRotulo(int *ultimoRotulo);
 string geraRegistrador(int *ultimoReg);
+
 Instrucao geraInst3op(string operacao,string op1,string op2, string dst, int tipoInst, int *id);
 Instrucao geraInst2op(string operacao,string op1, string dst, int tipoInst, int *id);
 void printaInst(Instrucao inst);
@@ -37,3 +38,5 @@ class ListaInst
 		list<Instrucao> codigo;
 
 };
+
+list<Instrucao> geraInstAtribTipoDesloc(int desloc, int escopo ,int tipo,string regOrig ,ListaInst *exp,list<int> idRemendoTrue,list<int> idRemendoFalse,int *ultimoReg,int *ultimoRotulo,int *id);

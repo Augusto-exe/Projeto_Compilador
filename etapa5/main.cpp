@@ -17,6 +17,8 @@ int main (int argc, char **argv)
 {
   int ret = yyparse();
   //exporta ((a_nodo*)arvore);
+  cout << endl<< endl << "CODIGO GERADO" << endl << endl;
+  ((a_nodo*)arvore)->cod.exportaCod();
   libera((a_nodo*)arvore);
   arvore = NULL;
   yylex_destroy();

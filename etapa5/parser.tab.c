@@ -1518,7 +1518,7 @@ yyreduce:
 
   case 3:
 #line 164 "parser.y" /* yacc.c:1646  */
-    { if ((yyvsp[-1].nodo) == NULL){ (yyval.nodo) = (yyvsp[0].nodo); arvore = (yyvsp[0].nodo);} else{ insere_filho((yyvsp[-1].nodo),(yyvsp[0].nodo)); (yyval.nodo)=(yyvsp[0].nodo); } }
+    { if ((yyvsp[-1].nodo) == NULL){ (yyval.nodo) = (yyvsp[0].nodo); arvore = (yyvsp[0].nodo);} else{ insere_filho((yyvsp[-1].nodo),(yyvsp[0].nodo));(yyvsp[-1].nodo)->cod.appendCodigoFim((yyvsp[0].nodo)->cod.getCodigo()); (yyval.nodo)=(yyvsp[0].nodo);}}
 #line 1523 "parser.tab.c" /* yacc.c:1646  */
     break;
 
@@ -1662,7 +1662,7 @@ yyreduce:
 
   case 29:
 #line 200 "parser.y" /* yacc.c:1646  */
-    { (yyval.nodo) = insere_filho( (yyvsp[-1].nodo),(yyvsp[0].nodo)); }
+    { (yyval.nodo) = insere_filho( (yyvsp[-1].nodo),(yyvsp[0].nodo)); if((yyvsp[0].nodo) != NULL){(yyval.nodo)->cod.appendCodigoFim((yyvsp[0].nodo)->cod.getCodigo());}}
 #line 1667 "parser.tab.c" /* yacc.c:1646  */
     break;
 
@@ -1704,7 +1704,7 @@ yyreduce:
 
   case 36:
 #line 212 "parser.y" /* yacc.c:1646  */
-    { (yyval.nodo) = (yyvsp[-1].nodo); (yyval.nodo) = insere_filho((yyval.nodo),(yyvsp[0].nodo)); }
+    { (yyval.nodo) = (yyvsp[-1].nodo); (yyval.nodo) = insere_filho((yyval.nodo),(yyvsp[0].nodo));if((yyvsp[0].nodo)!=NULL){(yyval.nodo)->cod.appendCodigoFim((yyvsp[0].nodo)->cod.getCodigo());}}
 #line 1709 "parser.tab.c" /* yacc.c:1646  */
     break;
 
@@ -1716,7 +1716,7 @@ yyreduce:
 
   case 38:
 #line 215 "parser.y" /* yacc.c:1646  */
-    {(yyval.nodo) = NULL; libera_val((yyvsp[0].valor_lexico));}
+    {(yyval.nodo) = (yyvsp[-1].nodo); libera_val((yyvsp[0].valor_lexico));if((yyval.nodo) != NULL){}}
 #line 1721 "parser.tab.c" /* yacc.c:1646  */
     break;
 
@@ -2155,7 +2155,7 @@ yyreduce:
 
   case 111:
 #line 311 "parser.y" /* yacc.c:1646  */
-    { (yyval.nodo) = insere_nodo(NULL,geraVal(TIPO_CHAR_ESP,NOT_LIT,get_line_number(),(char*)"?:")); insere_filho((yyval.nodo),(yyvsp[-4].nodo)); insere_filho((yyval.nodo),(yyvsp[-2].nodo)); insere_filho((yyval.nodo),(yyvsp[0].nodo));libera_val((yyvsp[-3].valor_lexico));libera_val((yyvsp[-1].valor_lexico));atualiza_tipo_semantico((yyval.nodo),tabelas.infereTipoTern((yyvsp[-4].nodo),(yyvsp[-2].nodo),(yyvsp[0].nodo)));}
+    { (yyval.nodo) = insere_nodo(NULL,geraVal(TIPO_CHAR_ESP,NOT_LIT,get_line_number(),(char*)"?:")); insere_filho((yyval.nodo),(yyvsp[-4].nodo)); insere_filho((yyval.nodo),(yyvsp[-2].nodo)); insere_filho((yyval.nodo),(yyvsp[0].nodo));libera_val((yyvsp[-3].valor_lexico));libera_val((yyvsp[-1].valor_lexico));atualiza_tipo_semantico((yyval.nodo),tabelas.infereTipo((yyvsp[-2].nodo),(yyvsp[0].nodo)));}
 #line 2160 "parser.tab.c" /* yacc.c:1646  */
     break;
 
@@ -2179,13 +2179,13 @@ yyreduce:
 
   case 115:
 #line 317 "parser.y" /* yacc.c:1646  */
-    { (yyval.nodo) = insere_nodo_tipo(NULL,geraVal(TIPO_RSV_WRD,NOT_LIT,get_line_number(),(char*)"if"),NO_IF); (yyval.nodo)= insere_filho((yyval.nodo),(yyvsp[-2].nodo)); (yyval.nodo)= insere_filho((yyval.nodo),(yyvsp[0].nodo)); libera_val((yyvsp[-3].valor_lexico)); libera_val((yyvsp[-1].valor_lexico));}
+    { (yyval.nodo) = insere_nodo_tipo(NULL,geraVal(TIPO_RSV_WRD,NOT_LIT,get_line_number(),(char*)"if"),NO_IF); (yyval.nodo)= insere_filho((yyval.nodo),(yyvsp[-2].nodo)); (yyval.nodo)= insere_filho((yyval.nodo),(yyvsp[0].nodo)); libera_val((yyvsp[-3].valor_lexico)); libera_val((yyvsp[-1].valor_lexico)); string rotT = geraRotulo(&ultimoRotulo);string rotF = geraRotulo(&ultimoRotulo);ListaInst ListI; if((yyvsp[0].nodo)==NULL){ListI = ListaInst();}else{ListI = (yyvsp[0].nodo)->cod;}(yyval.nodo)->cod.appendCodigoInicio(geraInstIfElse((yyvsp[-2].nodo)->tipo_valor_semantico,&((yyvsp[-2].nodo)->cod),ListI,ListI,(yyvsp[-2].nodo)->idRemendosTrue,(yyvsp[-2].nodo)->idRemendosFalse,&ultimoReg,&ultimoRotulo,&instId,rotT,rotF,rotF));(yyvsp[-2].nodo)->idRemendosFalse.clear();(yyvsp[-2].nodo)->idRemendosTrue.clear(); printf("\n\npritnando If \n"); (yyval.nodo)->cod.exportaCod(); printf("\n\n");}
 #line 2184 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 116:
 #line 318 "parser.y" /* yacc.c:1646  */
-    { (yyval.nodo) = insere_nodo_tipo(NULL,geraVal(TIPO_RSV_WRD,NOT_LIT,get_line_number(),(char*)"if"),NO_IF); (yyval.nodo) = insere_filho((yyval.nodo),(yyvsp[-4].nodo)); (yyval.nodo) = insere_filho((yyval.nodo),(yyvsp[-2].nodo)); insere_filho((yyval.nodo),(yyvsp[0].nodo)); libera_val((yyvsp[-5].valor_lexico)); libera_val((yyvsp[-3].valor_lexico));}
+    { (yyval.nodo) = insere_nodo_tipo(NULL,geraVal(TIPO_RSV_WRD,NOT_LIT,get_line_number(),(char*)"if"),NO_IF); (yyval.nodo) = insere_filho((yyval.nodo),(yyvsp[-4].nodo)); (yyval.nodo) = insere_filho((yyval.nodo),(yyvsp[-2].nodo)); insere_filho((yyval.nodo),(yyvsp[0].nodo)); libera_val((yyvsp[-5].valor_lexico)); libera_val((yyvsp[-3].valor_lexico)); string rotT = geraRotulo(&ultimoRotulo);string rotF = geraRotulo(&ultimoRotulo); string rotEnd = geraRotulo(&ultimoRotulo); ListaInst ListT,ListF; if((yyvsp[-2].nodo)==NULL){ListT = ListaInst();}else{ListT = (yyvsp[-2].nodo)->cod;} if((yyvsp[0].nodo)==NULL){ListF = ListaInst();}else{ListF = (yyvsp[0].nodo)->cod;} (yyval.nodo)->cod.appendCodigoInicio(geraInstIfElse((yyvsp[-4].nodo)->tipo_valor_semantico,&((yyvsp[-4].nodo)->cod),ListT,ListF,(yyvsp[-4].nodo)->idRemendosTrue,(yyvsp[-4].nodo)->idRemendosFalse,&ultimoReg,&ultimoRotulo,&instId,rotT,rotF,rotEnd));(yyvsp[-4].nodo)->idRemendosFalse.clear();(yyvsp[-4].nodo)->idRemendosTrue.clear();printf("\n\npritnando If Else \n"); (yyval.nodo)->cod.exportaCod(); printf("\n\n");}
 #line 2190 "parser.tab.c" /* yacc.c:1646  */
     break;
 

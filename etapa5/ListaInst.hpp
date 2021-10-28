@@ -30,6 +30,7 @@ class ListaInst
 		ListaInst();
 		void appendInstCodigo(Instrucao inst);
         void appendCodigoInicio(list<Instrucao> codigoPref);
+        void appendCodigoFim(list<Instrucao> codigoPos);
         list<Instrucao> getCodigo();
         void remendaTrue(list<int> idsRemendo, string rotulo);
         void remendaFalse(list<int> idsRemendo, string rotulo); 
@@ -40,3 +41,5 @@ class ListaInst
 };
 
 list<Instrucao> geraInstAtribTipoDesloc(int desloc, int escopo ,int tipo,string regOrig ,ListaInst *exp,list<int> idRemendoTrue,list<int> idRemendoFalse,int *ultimoReg,int *ultimoRotulo,int *id);
+list<Instrucao> geraInstIfElse(int tipo,ListaInst *exp,ListaInst listaT,ListaInst listaF,list<int> idRemendoTrue,list<int> idRemendoFalse,int *ultimoReg,int *ultimoRotulo,int *id, string rotT,string rotF,string rotEnd);
+

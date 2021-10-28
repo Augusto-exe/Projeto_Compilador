@@ -2,7 +2,7 @@
 
 ListaInst::ListaInst()
 {
-
+    this->codigo = list<Instrucao>();
 }
 string geraRotulo(int *ultimoRotulo)
 {
@@ -67,6 +67,65 @@ list<Instrucao> geraInstAtribTipoDesloc(int desloc, int escopo ,int tipo,string 
     return retList;
 }
 
+list<Instrucao> geraInstIfElse(int tipo,ListaInst *exp,ListaInst listaT,ListaInst listaF,list<int> idRemendoTrue,list<int> idRemendoFalse,int *ultimoReg,int *ultimoRotulo,int *id, string rotT,string rotF,string rotEnd)
+{
+    Instrucao inst;
+    list<Instrucao> retList = list<Instrucao>();
+    list<Instrucao>::reverse_iterator itList;
+    list<Instrucao> listInstCod;
+    if(tipo == ID_BOOL)
+    {
+        if(rotF != rotEnd)//IF com else
+        {
+            inst=geraInst2op(rotEnd,"","",INST_NOP_ROT,id);
+            retList.push_front(inst);
+            listInstCod = listaF.getCodigo();
+            for(itList = listInstCod.rbegin();itList !=listInstCod.rend();++itList)
+            {
+                retList.push_front((*itList));
+            }
+            inst=geraInst2op(rotF,"","",INST_NOP_ROT,id);
+            retList.push_front(inst);
+            inst = geraInst2op("jumpI","",rotEnd,INST_JMP,id);
+            retList.push_front(inst);
+            (*exp).remendaFalse(idRemendoFalse,rotF);
+        }
+        else{
+
+            inst=geraInst2op(rotEnd,"","",INST_NOP_ROT,id);
+            retList.push_front(inst);
+            (*exp).remendaFalse(idRemendoFalse,rotEnd);
+        }
+
+        listInstCod = listaT.getCodigo();
+        for(itList = listInstCod.rbegin();itList !=listInstCod.rend();++itList)
+        {
+            retList.push_front((*itList));
+        }
+        inst=geraInst2op(rotT,"","",INST_NOP_ROT,id);
+        retList.push_front(inst);
+        (*exp).remendaTrue(idRemendoTrue,rotT);
+
+    }
+    else
+    {
+
+    }
+
+    listInstCod = (*exp).getCodigo();
+    for(itList = listInstCod.rbegin();itList !=listInstCod.rend();++itList)
+    {
+        retList.push_front((*itList));
+    }
+    
+    return retList;
+}
+list<Instrucao> geraBoolFromArit()
+{
+
+}
+
+
 Instrucao geraInst3op(string operacao,string op1,string op2, string dst,int tipoInst, int *id){
     Instrucao inst;
     inst.dst = dst;
@@ -128,12 +187,25 @@ void ListaInst::remendaFalse(list<int> idsRemendo, string rotulo)
 } 
 void ListaInst::appendCodigoInicio(list<Instrucao> codigoPref){
     list<Instrucao>::reverse_iterator itList;
+
     for(itList = codigoPref.rbegin();itList !=codigoPref.rend();++itList)
     {
         this->codigo.push_front((*itList));
     }
+
+}
+
+void ListaInst::appendCodigoFim(list<Instrucao> codigoPos){
+    list<Instrucao>::iterator itList;
+
+    for(itList = codigoPos.begin();itList !=codigoPos.end();++itList)
+    {
+        this->codigo.push_back((*itList));
+    }
+
 }
 list<Instrucao> ListaInst::getCodigo(){
+
     return this->codigo;
 }
 void ListaInst::exportaCod(){

@@ -319,7 +319,7 @@ comando_if: TK_PR_IF '(' exp ')' bloco  { $$ = insere_nodo_tipo(NULL,geraVal(TIP
 
 comando_for: TK_PR_FOR '(' atrib ':' exp ':' atrib ')' bloco { $$ = insere_nodo_tipo(NULL,geraVal(TIPO_RSV_WRD,NOT_LIT,get_line_number(),(char*)"for"),NO_FOR); $$ = insere_filho($$,$3); $$ = insere_filho($$,$5); $$ = insere_filho($$,$7); $$ = insere_filho($$,$9); libera_val($6); libera_val($4); libera_val ($2);libera_val($8);};
 
-comando_while: TK_PR_WHILE '(' exp ')' TK_PR_DO bloco { $$ =  insere_nodo_tipo(NULL,geraVal(TIPO_RSV_WRD,NOT_LIT,get_line_number(),(char*)"while"),NO_WHILE); $$ = insere_filho($$,$3); $$ = insere_filho($$,$6); libera_val($2); libera_val($4);}; 
+comando_while: TK_PR_WHILE '(' exp ')' TK_PR_DO bloco { $$ =  insere_nodo_tipo(NULL,geraVal(TIPO_RSV_WRD,NOT_LIT,get_line_number(),(char*)"while"),NO_WHILE); $$ = insere_filho($$,$3); $$ = insere_filho($$,$6); libera_val($2); libera_val($4); string rotT = geraRotulo(&ultimoRotulo);string rotEnd = geraRotulo(&ultimoRotulo);ListaInst ListI; if($6==NULL){ListI = ListaInst();}else{ListI = $6->cod;}$$->cod.appendCodigoInicio(geraInstWhile($3->tipo_valor_semantico,$3->reg,&($3->cod),ListI,$3->idRemendosTrue,$3->idRemendosFalse,&ultimoReg,&ultimoRotulo,&instId,rotT,rotEnd));$3->idRemendosFalse.clear();$3->idRemendosTrue.clear(); printf("\n\npritnando While \n"); $$->cod.exportaCod(); printf("\n\n");}; 
 
 op_unitario: '+' { $$ = insere_nodo(NULL,$1);}
 |'-' { $$ = insere_nodo(NULL,$1);}

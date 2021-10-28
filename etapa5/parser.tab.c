@@ -2197,7 +2197,7 @@ yyreduce:
 
   case 118:
 #line 322 "parser.y" /* yacc.c:1646  */
-    { (yyval.nodo) =  insere_nodo_tipo(NULL,geraVal(TIPO_RSV_WRD,NOT_LIT,get_line_number(),(char*)"while"),NO_WHILE); (yyval.nodo) = insere_filho((yyval.nodo),(yyvsp[-3].nodo)); (yyval.nodo) = insere_filho((yyval.nodo),(yyvsp[0].nodo)); libera_val((yyvsp[-4].valor_lexico)); libera_val((yyvsp[-2].valor_lexico));}
+    { (yyval.nodo) =  insere_nodo_tipo(NULL,geraVal(TIPO_RSV_WRD,NOT_LIT,get_line_number(),(char*)"while"),NO_WHILE); (yyval.nodo) = insere_filho((yyval.nodo),(yyvsp[-3].nodo)); (yyval.nodo) = insere_filho((yyval.nodo),(yyvsp[0].nodo)); libera_val((yyvsp[-4].valor_lexico)); libera_val((yyvsp[-2].valor_lexico)); string rotT = geraRotulo(&ultimoRotulo);string rotEnd = geraRotulo(&ultimoRotulo);ListaInst ListI; if((yyvsp[0].nodo)==NULL){ListI = ListaInst();}else{ListI = (yyvsp[0].nodo)->cod;}(yyval.nodo)->cod.appendCodigoInicio(geraInstWhile((yyvsp[-3].nodo)->tipo_valor_semantico,(yyvsp[-3].nodo)->reg,&((yyvsp[-3].nodo)->cod),ListI,(yyvsp[-3].nodo)->idRemendosTrue,(yyvsp[-3].nodo)->idRemendosFalse,&ultimoReg,&ultimoRotulo,&instId,rotT,rotEnd));(yyvsp[-3].nodo)->idRemendosFalse.clear();(yyvsp[-3].nodo)->idRemendosTrue.clear(); printf("\n\npritnando While \n"); (yyval.nodo)->cod.exportaCod(); printf("\n\n");}
 #line 2202 "parser.tab.c" /* yacc.c:1646  */
     break;
 

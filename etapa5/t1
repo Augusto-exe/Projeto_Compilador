@@ -13,6 +13,10 @@ int main(int j)
 		b = 4+5;
 	};
 
+	while(1) do
+	{
+		a =3;
+	};
 
 	char c,d;
 }
@@ -24,6 +28,11 @@ int mn(int j)
 	if(1 < 2)
 	{
 		b = 1 + 2 + 3 * 4 * (7-2) / 8;
+	};
+
+	while( 2 > 3) do
+	{
+		a =3;
 	};
 	b = 2 ==2 || 1 < 3 && 3 <= 5;
 	char c,d;

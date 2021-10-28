@@ -67,7 +67,7 @@ list<Instrucao> geraInstAtribTipoDesloc(int desloc, int escopo ,int tipo,string 
     return retList;
 }
 
-list<Instrucao> geraInstIfElse(int tipo,ListaInst *exp,ListaInst listaT,ListaInst listaF,list<int> idRemendoTrue,list<int> idRemendoFalse,int *ultimoReg,int *ultimoRotulo,int *id, string rotT,string rotF,string rotEnd)
+list<Instrucao> geraInstIfElse(int tipo,string regOrg,ListaInst *exp,ListaInst listaT,ListaInst listaF,list<int> idRemendoTrue,list<int> idRemendoFalse,int *ultimoReg,int *ultimoRotulo,int *id, string rotT,string rotF,string rotEnd)
 {
     Instrucao inst;
     list<Instrucao> retList = list<Instrucao>();
@@ -109,6 +109,39 @@ list<Instrucao> geraInstIfElse(int tipo,ListaInst *exp,ListaInst listaT,ListaIns
     }
     else
     {
+        if(rotF != rotEnd)//IF com else
+        {
+            inst=geraInst2op(rotEnd,"","",INST_NOP_ROT,id);
+            retList.push_front(inst);
+            listInstCod = listaF.getCodigo();
+            for(itList = listInstCod.rbegin();itList !=listInstCod.rend();++itList)
+            {
+                retList.push_front((*itList));
+            }
+            inst=geraInst2op(rotF,"","",INST_NOP_ROT,id);
+            retList.push_front(inst);
+            inst = geraInst2op("jumpI","",rotEnd,INST_JMP,id);
+            retList.push_front(inst);
+        }
+        else{
+
+            inst=geraInst2op(rotEnd,"","",INST_NOP_ROT,id);
+            retList.push_front(inst);
+        }
+
+        listInstCod = listaT.getCodigo();
+        for(itList = listInstCod.rbegin();itList !=listInstCod.rend();++itList)
+        {
+            retList.push_front((*itList));
+        }
+
+        inst=geraInst2op(rotT,"","",INST_NOP_ROT,id);
+        retList.push_front(inst);
+        list<Instrucao> listaTemp = geraBoolFromArit(ultimoReg,regOrg,rotT,rotF,id);
+        for(itList = listaTemp .rbegin();itList !=listaTemp.rend();++itList)
+        {
+            retList.push_front((*itList));
+        }
 
     }
 
@@ -120,9 +153,19 @@ list<Instrucao> geraInstIfElse(int tipo,ListaInst *exp,ListaInst listaT,ListaIns
     
     return retList;
 }
-list<Instrucao> geraBoolFromArit()
+list<Instrucao> geraBoolFromArit(int *ultimoReg,string regOrg,string rotT,string rotF, int *id)
 {
-
+        Instrucao inst;
+        list<Instrucao> retList = list<Instrucao>();
+        string regTemp = geraRegistrador(ultimoReg);
+        string regCmp = geraRegistrador(ultimoReg);
+        inst = geraInst3op("cbr",rotT,rotF,regCmp,INST_CBR,id);
+        retList.push_front(inst);
+        inst = geraInst3op("cmp_NE",regOrg,regTemp,regCmp,INST_REL,id);
+        retList.push_front(inst);
+        inst = geraInst2op("LoadI","0",regTemp,INST_LOADI,id);
+        retList.push_front(inst);
+        return retList;
 }
 
 

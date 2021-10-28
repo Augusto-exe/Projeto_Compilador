@@ -252,7 +252,7 @@ int PilhaContexto::infereTipo(a_nodo* nodoEsq,a_nodo* nodoDir)
 	}
 	if((tipoDir != tipoEsq) &&(tipoEsq == ID_CHAR || tipoDir == ID_CHAR))
 	{
-		emitirErro(ERR_STRING_TO_X,nodoEsq->valor_lexico->lineno,"","");
+		emitirErro(ERR_CHAR_TO_X,nodoEsq->valor_lexico->lineno,"","");
 	}
 	if(tipoEsq == tipoDir)
 		return tipoDir;

@@ -161,7 +161,7 @@
 //Definição básica de um programa
 
 programa:  {$$ = NULL; arvore = $$;}
-| programa func  { if ($1 == NULL){ $$ = $2; arvore = $2;} else{ insere_filho($1,$2);$1->cod.appendCodigoFim($2->cod.getCodigo()); $$=$2;}}
+| programa func  { if ($1 == NULL){ $$ = $2; arvore = $2;} else{ insere_filho($1,$2);$1->cod.appendCodigoFim($2->cod.getCodigo()); $$=$2; printf("\n\nexportando F\n"); $2->cod.exportaCod();}}
 | programa decla {$$ = $1;};
 
 decla: tipo_stat lista_var ';' { libera_val($3);tabelas.atualizaTipoTamanho($1);};
@@ -197,22 +197,22 @@ lista_par_end: ')'{libera_val($1);};
 
 func_header:  tipo_stat  TK_IDENTIFICADOR lista_par_begin lista_par lista_par_end{$$ = insere_nodo(NULL,$2);$$->reg = geraRotulo(&ultimoRotulo);tabelas.insereFun(get_line_number(),$2,ultimoRotulo);tabelas.atualizaFunTipoPar($2,$1); atualiza_tipo_semantico($$,$1);}
 |tipo_stat  TK_IDENTIFICADOR lista_par_begin lista_par_end{$$ = insere_nodo(NULL,$2);$$->reg = geraRotulo(&ultimoRotulo);tabelas.insereFun(get_line_number(),$2,ultimoRotulo);tabelas.atualizaFunTipoPar($2,$1); atualiza_tipo_semantico($$,$1);};
-func: func_header bloco_fun { $$ = insere_filho( $1,$2); if($2 != NULL){$$->cod.appendCodigoFim($2->cod.getCodigo());}}
+func: func_header bloco_fun { $$ = insere_filho( $1,$2); if($2 != NULL){$$->cod.appendCodigoFim($2->cod.getCodigo());printf("\n\n exporando BLOCO F\n"); $2->cod.exportaCod();}}
 
 
 lista_par: lista_par ',' tipo_cons TK_IDENTIFICADOR {tabelas.insereSimboloNonVet(get_line_number(),NAT_VAR,$4,$3);tabelas.empilhaParametro($4);libera_val($2); libera_val($4); }
 | tipo_cons TK_IDENTIFICADOR {tabelas.insereSimboloNonVet(get_line_number(),NAT_VAR,$2,$1); tabelas.empilhaParametro($2);libera_val($2);}; 
 
-com_bloco: '{' {tabelas.insereContexto();libera_val($1);};
-fim_bloco: '}' {libera_val($1); tabelas.popContexto();};
+com_bloco: '{' {int desloc = tabelas.getDeslocamentoAtual(); tabelas.insereContexto();tabelas.setDeslocamentoAtual(desloc);libera_val($1);};
+fim_bloco: '}' {libera_val($1);  int desloc = tabelas.getDeslocamentoAtual();tabelas.popContexto();tabelas.setDeslocamentoAtual(desloc);};
 bloco: com_bloco fim_bloco   { $$ =NULL; }
 | com_bloco seq_comando fim_bloco { $$ = $2;} ;
 
 //Definição da sequencia de comandos e abaixo os diferentes tipos de comandos
-seq_comando: comando seq_comando { $$ = $1; $$ = insere_filho($$,$2);if($2!=NULL){$$->cod.appendCodigoFim($2->cod.getCodigo());}}
-| comando { $$ = $1; };
+seq_comando: comando seq_comando{ $$ = $1; $$ = insere_filho($$,$2);if($2!=NULL){$$->cod.appendCodigoFim($2->cod.getCodigo()); printf("\n\nfim append\n");}}
+| comando { $$ = $1; ); if($1 !=NULL) $1->cod.exportaCod();};
 
-comando: bloco ';' {$$ = $1; libera_val($2);if($$ != NULL){}} 
+comando: bloco ';' {$$ = $1; libera_val($2);} 
 | decla_loc ';' {$$ = $1; libera_val($2);}
 | atrib ';' {$$ = $1; libera_val($2);}
 | in_out ';' {$$ = $1; libera_val($2);}

@@ -52,6 +52,8 @@ class PilhaContexto
 		int getTipoUltimaFunc();
 		void insereInicPendente(lexic_val_type *valorVariable,lexic_val_type *valorValue);
 		void fazInic();
+		int getDeslocamentoAtual();
+		void setDeslocamentoAtual(int desloc);
 		
 	private:
 		PilhaMapas contextos;

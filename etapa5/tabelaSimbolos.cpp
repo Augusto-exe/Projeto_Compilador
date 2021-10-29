@@ -57,6 +57,15 @@ void tabelaSimbolos::insereTipoSimbolo(string nome, int tipo)
 
 }
 
+void tabelaSimbolos::setDeslocamento(int desloc){
+	this->deslocTab = desloc;
+}
+
+int tabelaSimbolos::getDeslocamento()
+{
+	return this->deslocTab;
+}
+
 bool tabelaSimbolos::existeSimbolo(string nome)
 {
 	bool ret;

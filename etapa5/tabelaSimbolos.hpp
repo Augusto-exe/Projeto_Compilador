@@ -33,6 +33,8 @@ class tabelaSimbolos{
 		void adicionaParametrosParaFunc(string nomeFunc,list<struct dadoTabelaSimbolos> listaParam);
 		int getTipoPeloNome(string nomeChave);
 		void atualizaTamanhoString(string nome, int tamanho);
+		void setDeslocamento(int desloc);
+		int getDeslocamento();
 	private:
 		int deslocTab;
 		MapaSimbolos tabSimbolos;

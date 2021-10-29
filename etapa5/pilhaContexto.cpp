@@ -266,6 +266,17 @@ int PilhaContexto::infereTipo(a_nodo* nodoEsq,a_nodo* nodoDir)
 	return ID_BOOL;
 }
 
+int PilhaContexto::getDeslocamentoAtual()
+{
+	return this->contextos.back().getDeslocamento();
+
+}
+void PilhaContexto::setDeslocamentoAtual(int desloc)
+{
+	this->contextos.back().setDeslocamento(desloc);
+
+}
+
 int PilhaContexto::infereTipoTern(a_nodo* nodoEsq,a_nodo* nodoMeio,a_nodo* nodoDir)
 {
 	int tipo_temp;

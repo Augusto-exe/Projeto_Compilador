@@ -212,21 +212,25 @@ list<Instrucao> geraInstWhile(int tipo,string regOrg,ListaInst *exp,ListaInst li
             retList.push_front((*itList));
         }
 
-        inst=geraInst2op(rotTemp,"","",INST_NOP_ROT,id);
-        retList.push_front(inst);
-
         listInstCod = (*exp).getCodigo();
         for(itList = listInstCod.rbegin();itList !=listInstCod.rend();++itList)
         {
             retList.push_front((*itList));
         }
+        inst=geraInst2op(rotTemp,"","",INST_NOP_ROT,id);
+        retList.push_front(inst);
     }
 
 
     
     return retList;
 }
+/*
+geraLeituraVar()
+{
 
+}
+*/
 
 list<Instrucao> geraBoolFromArit(int *ultimoReg,string regOrg,string rotT,string rotF, int *id)
 {
@@ -306,6 +310,7 @@ void ListaInst::remendaFalse(list<int> idsRemendo, string rotulo)
 void ListaInst::appendCodigoInicio(list<Instrucao> codigoPref){
     list<Instrucao>::reverse_iterator itList;
 
+    if((codigoPref.back().id != this->codigo.back().id)||(codigoPref.front().id != this->codigo.front().id))
     for(itList = codigoPref.rbegin();itList !=codigoPref.rend();++itList)
     {
         this->codigo.push_front((*itList));
@@ -316,10 +321,12 @@ void ListaInst::appendCodigoInicio(list<Instrucao> codigoPref){
 void ListaInst::appendCodigoFim(list<Instrucao> codigoPos){
     list<Instrucao>::iterator itList;
 
+    if((codigoPos.back().id != this->codigo.back().id)||(codigoPos.front().id != this->codigo.front().id))
     for(itList = codigoPos.begin();itList !=codigoPos.end();++itList)
     {
         this->codigo.push_back((*itList));
     }
+
 
 }
 list<Instrucao> ListaInst::getCodigo(){

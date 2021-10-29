@@ -59,5 +59,6 @@ class PilhaContexto
 		PilhaMapas contextos;
 		list<struct dadoTabelaSimbolos> parametrosPendentes;
 		list<IniciacaoPendente> inicsPendentes;
+		list<string> varTipoPend;
 
 };

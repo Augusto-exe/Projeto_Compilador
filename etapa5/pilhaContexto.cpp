@@ -106,6 +106,10 @@ void PilhaContexto::insereSimboloNonVet(int line, int natureza, lexic_val_type *
 	{
 		nomeChave = string(valorLex->tk_value.vStr);
 		nomeOrg = nomeChave; 
+		if(novoSimbolo.tipo == INDEF)
+		{
+			this->varTipoPend.push_back(nomeChave);
+		}
 		if(this->existeSimboloContextoAtual(nomeChave))
 			this->emitirErro(ERR_DECLARED,line,nomeOrg,nomeChave);
 	}
@@ -152,7 +156,10 @@ void PilhaContexto::insereSimboloVet(int line, int natureza, lexic_val_type *val
 	}
 	nomeOrg = nomeChave; 
 
-
+	if(novoSimbolo.tipo == INDEF)
+	{
+		this->varTipoPend.push_back(nomeChave);
+	}
 	novoSimbolo.valorLexico = *valorLex;
 	novoSimbolo.parametros = parametros;
 	if(this->existeSimboloContextoAtual(nomeChave))
@@ -587,22 +594,22 @@ void PilhaContexto::avaliaShift(lexic_val_type *valorLex)
 
 void PilhaContexto::atualizaTipoTamanho(int tipo)
 {
-	MapaSimbolos::iterator itMapa;
 	MapaSimbolos mapa = this->contextos.back().getTabela();
-	for(itMapa = mapa.begin(); itMapa != mapa.end();++itMapa)
+	for(auto nome:this->varTipoPend)
 	{
 		
-		if((*itMapa).second.tipo == INDEF)
+		if(mapa[nome].tipo == INDEF)
 		{
-			if(tipo == ID_STRING && (*itMapa).second.natureza ==NAT_VET)
+			if(tipo == ID_STRING && mapa[nome].natureza ==NAT_VET)
 			{
-				this->emitirErro(ERR_STRING_VECTOR,(*itMapa).second.linha,(*itMapa).first,"");
+				this->emitirErro(ERR_STRING_VECTOR,mapa[nome].linha,nome,"");
 			} 
-			this->contextos.back().setTipoTamanhoPorNome((*itMapa).first, tipo, (*itMapa).second.tamanho*getTamanhoTipo(tipo));
+			this->contextos.back().setTipoTamanhoPorNome(nome, tipo, mapa[nome].tamanho*getTamanhoTipo(tipo));
 			
 		}
 			
 	}
+	this->varTipoPend.clear();
 }
 void PilhaContexto::insereSimboloContextoAtual(string nome, DadoTabelaSimbolos novoSimbolo)
 {

@@ -225,12 +225,40 @@ list<Instrucao> geraInstWhile(int tipo,string regOrg,ListaInst *exp,ListaInst li
     
     return retList;
 }
-/*
-geraLeituraVar()
+
+list<Instrucao> geraCodigoInicial(string rotMain,int *id )
 {
+    Instrucao inst;
+    list<Instrucao> retList;
+    inst = geraInst2op("jumpI","",rotMain,INST_JMP,id);
+    retList.push_front(inst);
+    inst = geraInst2op("loadI","1024","rfp",INST_LOADI,id);
+    retList.push_front(inst);
+    inst = geraInst2op("loadI","1024","rsp",INST_LOADI,id);
+    retList.push_front(inst);
+    inst = geraInst2op("loadI",to_string(*id +3),"rbss",INST_LOADI,id);
+    retList.push_front(inst);
+
+    return retList;
 
 }
-*/
+
+list<Instrucao> geraLeituraVar(string regDst, int deslocamento, int escopo, int* ultimoReg,int* ultimoRotulo,int* id)
+{
+    string regBase;
+    Instrucao inst;
+    list<Instrucao> retList;
+    if(escopo == ESC_GLOBAL)
+        regBase = "rbss";
+    else
+        regBase = "rbf";
+    
+    inst = geraInst3op("loadAI",regBase,to_string(deslocamento),regDst,INST_MEM_READ,id);
+    retList.push_front(inst);
+
+    return retList;
+}
+
 
 list<Instrucao> geraInit(int deslocDst,int escopoDst, int natureza, string nomeValue,int deslocOrig,int escopoOrig, int *ultimoReg, int* ultimoRotulo,int* id)
 {

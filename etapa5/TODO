@@ -1,15 +1,17 @@
---Transformação de partes aritméticas em logícas
---Transformação de partes lógica sem atiriméticas
---Fazer funcionar expressão booelana do tipo if(true) ( só um literal booleano)
+--Transformação de partes aritméticas em logícas [ ]
 
---Implementar expressões com leitura de variáveis
+--Transformação de partes lógicas em atiriméticas [X]
 
---Implementar Chamada de Função
+--Fazer funcionar expressão booelana do tipo if(true) ( só um literal booleano) [ ]
 
---Implementar For While
+--Implementar expressões com leitura de variáveis [X]
 
---Implementar If com aritiméticas
+--Implementar Chamada de Função [ ]
 
---Conseguir misturar expressões Aritiméticas com booleanas
+--Implementar For [ ] While [X]
+
+--Implementar If com aritiméticas [X]
+
+--Conseguir misturar expressões Aritiméticas com booleanas [ ]
 
 

@@ -23,6 +23,8 @@
 	int ultimoRotulo=-1;
 	int ultimoReg=-1;
 	int instId =-1;
+	string rotMain;
+	
 
 		
 %}
@@ -143,7 +145,7 @@
 %type <tipo> tipo_stat
 %type <tipo> tipo_nome
 
-%start programa
+%start prog
 
 %right '?' ':'
 %left TK_OC_OR
@@ -159,12 +161,12 @@
 
 %%
 //Definição básica de um programa
-
+prog: programa {if(arvore != NULL) ((a_nodo*)arvore)->cod.appendCodigoInicio(geraCodigoInicial(rotMain,&instId));};
 programa:  {$$ = NULL; arvore = $$;}
-| programa func  { if ($1 == NULL){ $$ = $2; arvore = $2;} else{ insere_filho($1,$2);$1->cod.appendCodigoFim($2->cod.getCodigo()); $$=$2; printf("\n\nexportando F\n"); $2->cod.exportaCod();}}
+| programa func  { if ($1 == NULL){ $$ = $2; arvore = $2;} else{insere_filho($1,$2);((a_nodo*)arvore)->cod.appendCodigoFim($2->cod.getCodigo()); $$=$2; }}
 | programa decla {$$ = $1;};
 
-decla: tipo_stat lista_var ';' { libera_val($3);tabelas.atualizaTipoTamanho($1);};
+decla: tipo_stat lista_var ';' { libera_val($3);tabelas.atualizaTipoTamanho($1,&instId);};
 
 //Definição dos tipos com indicadores prefixados ou não para declaracoes globais
 
@@ -197,7 +199,7 @@ lista_par_end: ')'{libera_val($1);};
 
 func_header:  tipo_stat  TK_IDENTIFICADOR lista_par_begin lista_par lista_par_end{$$ = insere_nodo(NULL,$2);$$->reg = geraRotulo(&ultimoRotulo);tabelas.insereFun(get_line_number(),$2,ultimoRotulo);tabelas.atualizaFunTipoPar($2,$1); atualiza_tipo_semantico($$,$1);}
 |tipo_stat  TK_IDENTIFICADOR lista_par_begin lista_par_end{$$ = insere_nodo(NULL,$2);$$->reg = geraRotulo(&ultimoRotulo);tabelas.insereFun(get_line_number(),$2,ultimoRotulo);tabelas.atualizaFunTipoPar($2,$1); atualiza_tipo_semantico($$,$1);};
-func: func_header bloco_fun { $$ = insere_filho( $1,$2); if($2 != NULL){$$->cod.appendCodigoFim($2->cod.getCodigo());printf("\n\n exporando BLOCO F\n"); $2->cod.exportaCod();}}
+func: func_header bloco_fun {string rotTemp = geraRotulo(&ultimoRotulo); $$ = insere_filho( $1,$2); $$->cod.appendInstCodigo(geraInst2op(rotTemp,"","",INST_NOP_ROT,&instId)); if("main" == string($$->valor_lexico->tk_value.vStr)) rotMain = rotTemp; if($2 != NULL){$$->cod.appendCodigoFim($2->cod.getCodigo());}}
 
 
 lista_par: lista_par ',' tipo_cons TK_IDENTIFICADOR {tabelas.insereSimboloNonVet(get_line_number(),NAT_VAR,$4,$3);tabelas.empilhaParametro($4);libera_val($2); libera_val($4); }
@@ -210,7 +212,7 @@ bloco: com_bloco fim_bloco   { $$ =NULL; }
 
 //Definição da sequencia de comandos e abaixo os diferentes tipos de comandos
 seq_comando: comando seq_comando{ $$ = $1; $$ = insere_filho($$,$2);if($2!=NULL){$$->cod.appendCodigoFim($2->cod.getCodigo());}}
-| comando { $$ = $1; if($1 !=NULL) $1->cod.exportaCod();};
+| comando { $$ = $1; };
 
 comando: bloco ';' {$$ = $1; libera_val($2);} 
 | decla_loc ';' {$$ = $1; libera_val($2);}
@@ -222,7 +224,7 @@ comando: bloco ';' {$$ = $1; libera_val($2);}
 | fun_call ';' {$$ = $1; libera_val($2);}
 | comando_controle_fluxo ';' {$$ = $1; libera_val($2);};
 
-decla_loc: tipo_stat_cons lista_var_loc { $$ = $2;tabelas.atualizaTipoTamanho($1); if($$!=NULL){$$->cod.appendCodigoInicio(tabelas.fazInic(&ultimoReg,&ultimoRotulo,&instId));}};
+decla_loc: tipo_stat_cons lista_var_loc { $$ = $2;list<Instrucao> listaI = tabelas.atualizaTipoTamanho($1,&instId); if($$!=NULL){$$->cod.appendCodigoInicio(tabelas.fazInic(&ultimoReg,&ultimoRotulo,&instId));$$->cod.appendCodigoInicio(listaI);}else{$$ = insere_nodo_tipo(NULL,NULL,NO_TEMP);$$->cod.appendCodigoInicio(listaI); }};
 
 lista_var_loc: lista_var_loc ',' var_loc {libera_val($2); $$ = insere_filho($1,$3);}
 | var_loc { $$ = $1;};
@@ -256,7 +258,7 @@ all_float: '-' TK_LIT_FLOAT { $$ = insere_nodo(NULL,inverte_sinal($2));libera_va
 | TK_LIT_FLOAT {$$ = insere_nodo(NULL,$1);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$1,ID_FLOAT);atualiza_tipo_semantico($$,ID_FLOAT);}
 | '+' TK_LIT_FLOAT {$$ = insere_nodo(NULL,$2); libera_val($1);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$2,ID_FLOAT);atualiza_tipo_semantico($$,ID_FLOAT);};
 
-atrib: var_vet '=' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);tabelas.verificaAtrib($1,$3);atualiza_tipo_semantico($$,$1->tipo_valor_semantico);DadoTabelaSimbolos dado = tabelas.getSimboloPorValorLex($1->valor_lexico); $$->cod.appendCodigoInicio(geraInstAtribTipoDesloc(dado.deslocamento, dado.escopo ,$3->tipo_valor_semantico,$3->reg ,&($3->cod),$3->idRemendosTrue,$3->idRemendosFalse,&ultimoReg,&ultimoRotulo,&instId));printf("\n\nATRIB:\n");$$->cod.exportaCod();};
+atrib: var_vet '=' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);tabelas.verificaAtrib($1,$3);atualiza_tipo_semantico($$,$1->tipo_valor_semantico);DadoTabelaSimbolos dado = tabelas.getSimboloPorValorLex($1->valor_lexico); $$->cod.appendCodigoInicio(geraInstAtribTipoDesloc(dado.deslocamento, dado.escopo ,$3->tipo_valor_semantico,$3->reg ,&($3->cod),$3->idRemendosTrue,$3->idRemendosFalse,&ultimoReg,&ultimoRotulo,&instId));};
 
 var_vet: TK_IDENTIFICADOR { $$= insere_nodo(NULL,$1);atualiza_tipo_semantico($$,tabelas.getTipoPorValorLex($1));tabelas.verificaVar($1);}
 | TK_IDENTIFICADOR '[' exp ']' { libera_val($2);libera_val($4);
@@ -288,7 +290,7 @@ id_lit_exp: TK_LIT_CHAR { $$ = insere_nodo(NULL,$1);atualiza_tipo_semantico($$,I
 //Definição das expressões
 
 exp: literal_num_bool {$$ = $1;} 
-| var_vet {$$ = $1;}
+| var_vet {$$ = $1;$$->reg = geraRegistrador(&ultimoReg);DadoTabelaSimbolos dado = tabelas.getSimboloPorValorLex($1->valor_lexico); $$->cod.appendCodigoInicio(geraLeituraVar($$->reg,dado.deslocamento,dado.escopo,&ultimoReg,&ultimoRotulo,&instId));}
 | fun_call {$$ = $1;} 
 | '(' exp ')' {$$ = $2; libera_val($1); libera_val($3);} 
 | exp_unitaria {$$ = $1;} 
@@ -304,8 +306,8 @@ exp: literal_num_bool {$$ = $1;}
 | exp TK_OC_GE exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,ID_BOOL);$$->reg = geraRegistrador(&ultimoReg);Instrucao inst =geraInst3op("cbr","x","y",$$->reg,INST_CBR,&instId);$$->idRemendosTrue.push_front(inst.id);$$->idRemendosFalse.push_front(inst.id);$$->cod.appendInstCodigo(inst);$$->cod.appendInstCodigo(geraInst3op("cmp_GE",$1->reg,$3->reg,$$->reg,INST_REL,&instId));$$->cod.appendCodigoInicio($3->cod.getCodigo());$$->cod.appendCodigoInicio($1->cod.getCodigo());}
 | exp TK_OC_EQ exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,ID_BOOL);$$->reg = geraRegistrador(&ultimoReg);Instrucao inst =geraInst3op("cbr","x","y",$$->reg,INST_CBR,&instId);$$->idRemendosTrue.push_front(inst.id);$$->idRemendosFalse.push_front(inst.id);$$->cod.appendInstCodigo(inst);$$->cod.appendInstCodigo(geraInst3op("cmp_EQ",$1->reg,$3->reg,$$->reg,INST_REL,&instId));$$->cod.appendCodigoInicio($3->cod.getCodigo());$$->cod.appendCodigoInicio($1->cod.getCodigo());}
 | exp TK_OC_NE exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,ID_BOOL);$$->reg = geraRegistrador(&ultimoReg);Instrucao inst =geraInst3op("cbr","x","y",$$->reg,INST_CBR,&instId);$$->idRemendosTrue.push_front(inst.id);$$->idRemendosFalse.push_front(inst.id);$$->cod.appendInstCodigo(inst);$$->cod.appendInstCodigo(geraInst3op("cmp_NE",$1->reg,$3->reg,$$->reg,INST_REL,&instId));$$->cod.appendCodigoInicio($3->cod.getCodigo());$$->cod.appendCodigoInicio($1->cod.getCodigo());}
-| exp TK_OC_AND exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,ID_BOOL);string rotTrue = geraRotulo(&ultimoRotulo); Instrucao nopInst = geraInst2op(rotTrue,"","",INST_NOP_ROT,&instId); $$->cod.appendCodigoInicio($3->cod.getCodigo());$$->cod.appendInstCodigo(nopInst);$1->cod.remendaTrue($1->idRemendosTrue,rotTrue);$1->idRemendosTrue.clear();$$->cod.appendCodigoInicio($1->cod.getCodigo());appendListaTrue($$,$3->idRemendosTrue);appendListaFalse($$,$3->idRemendosFalse); appendListaFalse($$,$1->idRemendosFalse);printf("\n\nAND:\n");$$->cod.exportaCod(); }
-| exp TK_OC_OR exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,ID_BOOL);string rotFalse = geraRotulo(&ultimoRotulo); Instrucao nopInst = geraInst2op(rotFalse,"","",INST_NOP_ROT,&instId); $$->cod.appendCodigoInicio($3->cod.getCodigo());$$->cod.appendInstCodigo(nopInst);$1->cod.remendaFalse($1->idRemendosFalse,rotFalse);$1->idRemendosFalse.clear();$$->cod.appendCodigoInicio($1->cod.getCodigo());appendListaTrue($$,$3->idRemendosTrue);appendListaFalse($$,$3->idRemendosFalse); appendListaTrue($$,$1->idRemendosTrue);printf("\n\nOR:\n");$$->cod.exportaCod();}
+| exp TK_OC_AND exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,ID_BOOL);string rotTrue = geraRotulo(&ultimoRotulo); Instrucao nopInst = geraInst2op(rotTrue,"","",INST_NOP_ROT,&instId); $$->cod.appendCodigoInicio($3->cod.getCodigo());$$->cod.appendInstCodigo(nopInst);$1->cod.remendaTrue($1->idRemendosTrue,rotTrue);$1->idRemendosTrue.clear();$$->cod.appendCodigoInicio($1->cod.getCodigo());appendListaTrue($$,$3->idRemendosTrue);appendListaFalse($$,$3->idRemendosFalse); appendListaFalse($$,$1->idRemendosFalse); }
+| exp TK_OC_OR exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,ID_BOOL);string rotFalse = geraRotulo(&ultimoRotulo); Instrucao nopInst = geraInst2op(rotFalse,"","",INST_NOP_ROT,&instId); $$->cod.appendCodigoInicio($3->cod.getCodigo());$$->cod.appendInstCodigo(nopInst);$1->cod.remendaFalse($1->idRemendosFalse,rotFalse);$1->idRemendosFalse.clear();$$->cod.appendCodigoInicio($1->cod.getCodigo());appendListaTrue($$,$3->idRemendosTrue);appendListaFalse($$,$3->idRemendosFalse); appendListaTrue($$,$1->idRemendosTrue);}
 | exp '<' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,ID_BOOL);$$->reg = geraRegistrador(&ultimoReg);Instrucao inst =geraInst3op("cbr","x","y",$$->reg,INST_CBR,&instId);$$->idRemendosTrue.push_front(inst.id);$$->idRemendosFalse.push_front(inst.id);$$->cod.appendInstCodigo(inst);$$->cod.appendInstCodigo(geraInst3op("cmp_LT",$1->reg,$3->reg,$$->reg,INST_REL,&instId));$$->cod.appendCodigoInicio($3->cod.getCodigo());$$->cod.appendCodigoInicio($1->cod.getCodigo());}
 | exp '>' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);atualiza_tipo_semantico($$,ID_BOOL);$$->reg = geraRegistrador(&ultimoReg);Instrucao inst =geraInst3op("cbr","x","y",$$->reg,INST_CBR,&instId);$$->idRemendosTrue.push_front(inst.id);$$->idRemendosFalse.push_front(inst.id);$$->cod.appendInstCodigo(inst);$$->cod.appendInstCodigo(geraInst3op("cmp_GT",$1->reg,$3->reg,$$->reg,INST_REL,&instId));$$->cod.appendCodigoInicio($3->cod.getCodigo());$$->cod.appendCodigoInicio($1->cod.getCodigo());}
 | exp '?' exp ':' exp { $$ = insere_nodo(NULL,geraVal(TIPO_CHAR_ESP,NOT_LIT,get_line_number(),(char*)"?:")); insere_filho($$,$1); insere_filho($$,$3); insere_filho($$,$5);libera_val($2);libera_val($4);atualiza_tipo_semantico($$,tabelas.infereTipo($3,$5));};
@@ -314,12 +316,12 @@ comando_controle_fluxo: comando_if {$$ = $1;}
 | comando_for {$$ = $1;}
 | comando_while {$$ = $1;};
 
-comando_if: TK_PR_IF '(' exp ')' bloco  { $$ = insere_nodo_tipo(NULL,geraVal(TIPO_RSV_WRD,NOT_LIT,get_line_number(),(char*)"if"),NO_IF); $$= insere_filho($$,$3); $$= insere_filho($$,$5); libera_val($2); libera_val($4); string rotT = geraRotulo(&ultimoRotulo);string rotF = geraRotulo(&ultimoRotulo);ListaInst ListI; if($5==NULL){ListI = ListaInst();}else{ListI = $5->cod;}$$->cod.appendCodigoInicio(geraInstIfElse($3->tipo_valor_semantico,$3->reg,&($3->cod),ListI,ListI,$3->idRemendosTrue,$3->idRemendosFalse,&ultimoReg,&ultimoRotulo,&instId,rotT,rotF,rotF));$3->idRemendosFalse.clear();$3->idRemendosTrue.clear(); printf("\n\npritnando If \n"); $$->cod.exportaCod(); printf("\n\n");}
-| TK_PR_IF '(' exp ')' bloco TK_PR_ELSE bloco { $$ = insere_nodo_tipo(NULL,geraVal(TIPO_RSV_WRD,NOT_LIT,get_line_number(),(char*)"if"),NO_IF); $$ = insere_filho($$,$3); $$ = insere_filho($$,$5); insere_filho($$,$7); libera_val($2); libera_val($4); string rotT = geraRotulo(&ultimoRotulo);string rotF = geraRotulo(&ultimoRotulo); string rotEnd = geraRotulo(&ultimoRotulo); ListaInst ListT,ListF; if($5==NULL){ListT = ListaInst();}else{ListT = $5->cod;} if($7==NULL){ListF = ListaInst();}else{ListF = $7->cod;} $$->cod.appendCodigoInicio(geraInstIfElse($3->tipo_valor_semantico,$3->reg,&($3->cod),ListT,ListF,$3->idRemendosTrue,$3->idRemendosFalse,&ultimoReg,&ultimoRotulo,&instId,rotT,rotF,rotEnd));$3->idRemendosFalse.clear();$3->idRemendosTrue.clear();printf("\n\npritnando If Else \n"); $$->cod.exportaCod(); printf("\n\n");};
+comando_if: TK_PR_IF '(' exp ')' bloco  { $$ = insere_nodo_tipo(NULL,geraVal(TIPO_RSV_WRD,NOT_LIT,get_line_number(),(char*)"if"),NO_IF); $$= insere_filho($$,$3); $$= insere_filho($$,$5); libera_val($2); libera_val($4); string rotT = geraRotulo(&ultimoRotulo);string rotF = geraRotulo(&ultimoRotulo);ListaInst ListI; if($5==NULL){ListI = ListaInst();}else{ListI = $5->cod;}$$->cod.appendCodigoInicio(geraInstIfElse($3->tipo_valor_semantico,$3->reg,&($3->cod),ListI,ListI,$3->idRemendosTrue,$3->idRemendosFalse,&ultimoReg,&ultimoRotulo,&instId,rotT,rotF,rotF));$3->idRemendosFalse.clear();$3->idRemendosTrue.clear();}
+| TK_PR_IF '(' exp ')' bloco TK_PR_ELSE bloco { $$ = insere_nodo_tipo(NULL,geraVal(TIPO_RSV_WRD,NOT_LIT,get_line_number(),(char*)"if"),NO_IF); $$ = insere_filho($$,$3); $$ = insere_filho($$,$5); insere_filho($$,$7); libera_val($2); libera_val($4); string rotT = geraRotulo(&ultimoRotulo);string rotF = geraRotulo(&ultimoRotulo); string rotEnd = geraRotulo(&ultimoRotulo); ListaInst ListT,ListF; if($5==NULL){ListT = ListaInst();}else{ListT = $5->cod;} if($7==NULL){ListF = ListaInst();}else{ListF = $7->cod;} $$->cod.appendCodigoInicio(geraInstIfElse($3->tipo_valor_semantico,$3->reg,&($3->cod),ListT,ListF,$3->idRemendosTrue,$3->idRemendosFalse,&ultimoReg,&ultimoRotulo,&instId,rotT,rotF,rotEnd));$3->idRemendosFalse.clear();$3->idRemendosTrue.clear();};
 
 comando_for: TK_PR_FOR '(' atrib ':' exp ':' atrib ')' bloco { $$ = insere_nodo_tipo(NULL,geraVal(TIPO_RSV_WRD,NOT_LIT,get_line_number(),(char*)"for"),NO_FOR); $$ = insere_filho($$,$3); $$ = insere_filho($$,$5); $$ = insere_filho($$,$7); $$ = insere_filho($$,$9); libera_val($6); libera_val($4); libera_val ($2);libera_val($8);};
 
-comando_while: TK_PR_WHILE '(' exp ')' TK_PR_DO bloco { $$ =  insere_nodo_tipo(NULL,geraVal(TIPO_RSV_WRD,NOT_LIT,get_line_number(),(char*)"while"),NO_WHILE); $$ = insere_filho($$,$3); $$ = insere_filho($$,$6); libera_val($2); libera_val($4); string rotT = geraRotulo(&ultimoRotulo);string rotEnd = geraRotulo(&ultimoRotulo);ListaInst ListI; if($6==NULL){ListI = ListaInst();}else{ListI = $6->cod;}$$->cod.appendCodigoInicio(geraInstWhile($3->tipo_valor_semantico,$3->reg,&($3->cod),ListI,$3->idRemendosTrue,$3->idRemendosFalse,&ultimoReg,&ultimoRotulo,&instId,rotT,rotEnd));$3->idRemendosFalse.clear();$3->idRemendosTrue.clear(); printf("\n\npritnando While \n"); $$->cod.exportaCod(); printf("\n\n");}; 
+comando_while: TK_PR_WHILE '(' exp ')' TK_PR_DO bloco { $$ =  insere_nodo_tipo(NULL,geraVal(TIPO_RSV_WRD,NOT_LIT,get_line_number(),(char*)"while"),NO_WHILE); $$ = insere_filho($$,$3); $$ = insere_filho($$,$6); libera_val($2); libera_val($4); string rotT = geraRotulo(&ultimoRotulo);string rotEnd = geraRotulo(&ultimoRotulo);ListaInst ListI; if($6==NULL){ListI = ListaInst();}else{ListI = $6->cod;}$$->cod.appendCodigoInicio(geraInstWhile($3->tipo_valor_semantico,$3->reg,&($3->cod),ListI,$3->idRemendosTrue,$3->idRemendosFalse,&ultimoReg,&ultimoRotulo,&instId,rotT,rotEnd));$3->idRemendosFalse.clear();$3->idRemendosTrue.clear();}; 
 
 op_unitario: '+' { $$ = insere_nodo(NULL,$1);}
 |'-' { $$ = insere_nodo(NULL,$1);}

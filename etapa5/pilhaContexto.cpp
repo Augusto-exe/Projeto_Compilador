@@ -591,9 +591,10 @@ void PilhaContexto::avaliaShift(lexic_val_type *valorLex)
 	}
 
 }
-
-void PilhaContexto::atualizaTipoTamanho(int tipo)
+list<Instrucao> PilhaContexto::atualizaTipoTamanho(int tipo, int*id)
 {
+	list<Instrucao> retList;
+	Instrucao inst;
 	MapaSimbolos mapa = this->contextos.back().getTabela();
 	for(auto nome:this->varTipoPend)
 	{
@@ -607,9 +608,15 @@ void PilhaContexto::atualizaTipoTamanho(int tipo)
 			this->contextos.back().setTipoTamanhoPorNome(nome, tipo, mapa[nome].tamanho*getTamanhoTipo(tipo));
 			
 		}
-			
+		if(mapa[nome].escopo == ESC_LOCAL)
+		{
+			inst = geraInst3op("addi","rps",to_string( mapa[nome].tamanho*getTamanhoTipo(tipo)),"rps",INST_ARITLOG,id);
+			retList.push_back(inst);
+		}
+	
 	}
 	this->varTipoPend.clear();
+	return retList;
 }
 void PilhaContexto::insereSimboloContextoAtual(string nome, DadoTabelaSimbolos novoSimbolo)
 {

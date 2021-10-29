@@ -35,6 +35,7 @@
 #define NO_FOR			4
 #define NO_IF			5
 #define NO_ELSE			6
+#define NO_TEMP			7
 
 #define NAT_LIT			1
 #define NAT_VAR			2
@@ -55,7 +56,7 @@
 #define INST_JMP		5
 #define INST_CBR		6
 #define INST_NOP_ROT	7
-#define INST_MEM_READ		8
+#define INST_MEM_READ	8
 
 struct lexic_val_type{
 int lineno;

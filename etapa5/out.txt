@@ -1,571 +1,95 @@
-
-
-ATRIB:
-LoadI 1 => r3
-LoadI 2 => r4
-add r3, r4 => r5
-LoadI 3 => r6
-LoadI 4 => r7
-mult r6, r7 => r8
-LoadI 7 => r9
-LoadI 2 => r10
-sub r9, r10 => r11
-mult r8, r11 => r12
-LoadI 8 => r13
-div r12, r13 => r14
-add r5, r14 => r15
-storeAI r15 => rbf, 8
-
-
- exporando Comando
-LoadI 1 => r3
-LoadI 2 => r4
-add r3, r4 => r5
-LoadI 3 => r6
-LoadI 4 => r7
-mult r6, r7 => r8
-LoadI 7 => r9
-LoadI 2 => r10
-sub r9, r10 => r11
-mult r8, r11 => r12
-LoadI 8 => r13
-div r12, r13 => r14
-add r5, r14 => r15
-storeAI r15 => rbf, 8
-
-
-pritnando If 
-LoadI 1 => r0
-LoadI 2 => r1
-cmp_LT r0, r1 -> r2
-cbr r2 -> L1, L2
+loadI 96 => rbss
+loadI 1024 => rsp
+loadI 1024 => rfp
+jumpI -> L13
+L11: nop
+loadI 1 => r4
+storeAI r4 => rbf, 8
+loadI 2 => r2
+storeAI r2 => rbf, 12
+loadAI rbf, 8 => r0
+storeAI r0 => rbf, 16
+LoadI 1 => r6
+LoadI 2 => r7
+cmp_LT r6, r7 -> r8
+cbr r8 -> L1, L2
 L1: nop
-LoadI 1 => r3
-LoadI 2 => r4
-add r3, r4 => r5
-LoadI 3 => r6
-LoadI 4 => r7
-mult r6, r7 => r8
-LoadI 7 => r9
+LoadI 1 => r9
 LoadI 2 => r10
-sub r9, r10 => r11
-mult r8, r11 => r12
-LoadI 8 => r13
-div r12, r13 => r14
-add r5, r14 => r15
-storeAI r15 => rbf, 8
+add r9, r10 => r11
+LoadI 3 => r12
+LoadI 4 => r13
+mult r12, r13 => r14
+LoadI 7 => r15
+LoadI 2 => r16
+sub r15, r16 => r17
+mult r14, r17 => r18
+LoadI 8 => r19
+div r18, r19 => r20
+add r11, r20 => r21
+storeAI r21 => rbf, 4
 L2: nop
-
-
-
-
-AND:
-LoadI 1 => r20
-LoadI 3 => r21
-cmp_LT r20, r21 -> r22
-cbr r22 -> L3, y
-L3: nop
-LoadI 3 => r23
-LoadI 5 => r24
-cmp_LE r23, r24 -> r25
-cbr r25 -> x, y
-
-
-OR:
-LoadI 2 => r17
-LoadI 2 => r18
-cmp_EQ r17, r18 -> r19
-cbr r19 -> x, L4
-L4: nop
-LoadI 1 => r20
-LoadI 3 => r21
-cmp_LT r20, r21 -> r22
-cbr r22 -> L3, y
-L3: nop
-LoadI 3 => r23
-LoadI 5 => r24
-cmp_LE r23, r24 -> r25
-cbr r25 -> x, y
-
-
-ATRIB:
-LoadI 2 => r17
-LoadI 2 => r18
-cmp_EQ r17, r18 -> r19
-cbr r19 -> L6, L4
-L4: nop
-LoadI 1 => r20
-LoadI 3 => r21
-cmp_LT r20, r21 -> r22
-cbr r22 -> L3, L5
-L3: nop
-LoadI 3 => r23
-LoadI 5 => r24
-cmp_LE r23, r24 -> r25
-cbr r25 -> L6, L5
 L5: nop
+LoadI 1 => r23
 loadI 0 => r26
-jumpI -> L7
-L6: nop
-loadI 1 => r26
-jumpI -> L7
-L7: nop
-storeAI r26 => rbf, 8
-
-
- exporando Comando
-
-
- exporando seq Comando
-LoadI 1 => r0
-LoadI 2 => r1
-cmp_LT r0, r1 -> r2
-cbr r2 -> L1, L2
-L1: nop
-LoadI 1 => r3
-LoadI 2 => r4
-add r3, r4 => r5
-LoadI 3 => r6
-LoadI 4 => r7
-mult r6, r7 => r8
-LoadI 7 => r9
-LoadI 2 => r10
-sub r9, r10 => r11
-mult r8, r11 => r12
-LoadI 8 => r13
-div r12, r13 => r14
-add r5, r14 => r15
-storeAI r15 => rbf, 8
-L2: nop
-LoadI 2 => r17
-LoadI 2 => r18
-cmp_EQ r17, r18 -> r19
-cbr r19 -> L6, L4
-L4: nop
-LoadI 1 => r20
-LoadI 3 => r21
-cmp_LT r20, r21 -> r22
-cbr r22 -> L3, L5
+cmp_NE r23, r26 -> r27
+cbr r27 -> L3, L4
 L3: nop
-LoadI 3 => r23
-LoadI 5 => r24
-cmp_LE r23, r24 -> r25
-cbr r25 -> L6, L5
-L5: nop
-loadI 0 => r26
-jumpI -> L7
-L6: nop
-loadI 1 => r26
-jumpI -> L7
-L7: nop
-storeAI r26 => rbf, 8
-
-
- exporando seq Comando
-LoadI 1 => r0
-LoadI 2 => r1
-cmp_LT r0, r1 -> r2
-cbr r2 -> L1, L2
-L1: nop
-LoadI 1 => r3
-LoadI 2 => r4
-add r3, r4 => r5
-LoadI 3 => r6
-LoadI 4 => r7
-mult r6, r7 => r8
-LoadI 7 => r9
-LoadI 2 => r10
-sub r9, r10 => r11
-mult r8, r11 => r12
-LoadI 8 => r13
-div r12, r13 => r14
-add r5, r14 => r15
-storeAI r15 => rbf, 8
-L2: nop
-LoadI 2 => r17
-LoadI 2 => r18
-cmp_EQ r17, r18 -> r19
-cbr r19 -> L6, L4
+LoadI 2 => r24
+storeAI r24 => rbf, 4
+jumpI -> L5
 L4: nop
-LoadI 1 => r20
-LoadI 3 => r21
-cmp_LT r20, r21 -> r22
-cbr r22 -> L3, L5
-L3: nop
-LoadI 3 => r23
-LoadI 5 => r24
-cmp_LE r23, r24 -> r25
-cbr r25 -> L6, L5
-L5: nop
-loadI 0 => r26
-jumpI -> L7
-L6: nop
-loadI 1 => r26
-jumpI -> L7
+LoadI 2 => r28
+LoadI 2 => r29
+cmp_EQ r28, r29 -> r30
+cbr r30 -> L9, L7
 L7: nop
-storeAI r26 => rbf, 8
-
-
- exporando BLOCO F
-LoadI 1 => r0
-LoadI 2 => r1
-cmp_LT r0, r1 -> r2
-cbr r2 -> L1, L2
-L1: nop
-LoadI 1 => r3
-LoadI 2 => r4
-add r3, r4 => r5
-LoadI 3 => r6
-LoadI 4 => r7
-mult r6, r7 => r8
-LoadI 7 => r9
-LoadI 2 => r10
-sub r9, r10 => r11
-mult r8, r11 => r12
-LoadI 8 => r13
-div r12, r13 => r14
-add r5, r14 => r15
-storeAI r15 => rbf, 8
-L2: nop
-LoadI 2 => r17
-LoadI 2 => r18
-cmp_EQ r17, r18 -> r19
-cbr r19 -> L6, L4
-L4: nop
-LoadI 1 => r20
-LoadI 3 => r21
-cmp_LT r20, r21 -> r22
-cbr r22 -> L3, L5
-L3: nop
-LoadI 3 => r23
-LoadI 5 => r24
-cmp_LE r23, r24 -> r25
-cbr r25 -> L6, L5
-L5: nop
-loadI 0 => r26
-jumpI -> L7
+LoadI 1 => r31
+LoadI 3 => r32
+cmp_LT r31, r32 -> r33
+cbr r33 -> L6, L8
 L6: nop
-loadI 1 => r26
-jumpI -> L7
-L7: nop
-storeAI r26 => rbf, 8
-
-
-ATRIB:
-LoadI 1 => r30
-LoadI 2 => r31
-add r30, r31 => r32
-LoadI 3 => r33
-LoadI 4 => r34
-mult r33, r34 => r35
-LoadI 7 => r36
-LoadI 2 => r37
-sub r36, r37 => r38
-mult r35, r38 => r39
-LoadI 8 => r40
-div r39, r40 => r41
-add r32, r41 => r42
-storeAI r42 => rbf, 8
-
-
- exporando Comando
-LoadI 1 => r30
-LoadI 2 => r31
-add r30, r31 => r32
-LoadI 3 => r33
-LoadI 4 => r34
-mult r33, r34 => r35
-LoadI 7 => r36
-LoadI 2 => r37
-sub r36, r37 => r38
-mult r35, r38 => r39
-LoadI 8 => r40
-div r39, r40 => r41
-add r32, r41 => r42
-storeAI r42 => rbf, 8
-
-
-pritnando If 
-LoadI 1 => r27
-LoadI 2 => r28
-cmp_GT r27, r28 -> r29
-cbr r29 -> L9, L10
+LoadI 3 => r34
+LoadI 5 => r35
+cmp_LE r34, r35 -> r36
+cbr r36 -> L9, L8
+L8: nop
+loadI 0 => r37
+jumpI -> L10
 L9: nop
-LoadI 1 => r30
-LoadI 2 => r31
-add r30, r31 => r32
-LoadI 3 => r33
-LoadI 4 => r34
-mult r33, r34 => r35
-LoadI 7 => r36
-LoadI 2 => r37
-sub r36, r37 => r38
-mult r35, r38 => r39
-LoadI 8 => r40
-div r39, r40 => r41
-add r32, r41 => r42
-storeAI r42 => rbf, 8
+loadI 1 => r37
+jumpI -> L10
 L10: nop
-
-
-
-
- exporando Comando
-
-
- exporando seq Comando
-LoadI 1 => r27
-LoadI 2 => r28
-cmp_GT r27, r28 -> r29
-cbr r29 -> L9, L10
-L9: nop
-LoadI 1 => r30
-LoadI 2 => r31
-add r30, r31 => r32
-LoadI 3 => r33
-LoadI 4 => r34
-mult r33, r34 => r35
-LoadI 7 => r36
-LoadI 2 => r37
-sub r36, r37 => r38
-mult r35, r38 => r39
-LoadI 8 => r40
-div r39, r40 => r41
-add r32, r41 => r42
+storeAI r37 => rbf, 4
+L13: nop
+loadI 2 => r42
 storeAI r42 => rbf, 8
-L10: nop
-LoadI 1 => r27
-LoadI 2 => r28
-cmp_GT r27, r28 -> r29
-cbr r29 -> L9, L10
-L9: nop
-LoadI 1 => r30
-LoadI 2 => r31
-add r30, r31 => r32
-LoadI 3 => r33
-LoadI 4 => r34
-mult r33, r34 => r35
-LoadI 7 => r36
-LoadI 2 => r37
-sub r36, r37 => r38
-mult r35, r38 => r39
-LoadI 8 => r40
-div r39, r40 => r41
-add r32, r41 => r42
-storeAI r42 => rbf, 8
-L10: nop
-
-
- exporando seq Comando
-LoadI 1 => r27
-LoadI 2 => r28
-cmp_GT r27, r28 -> r29
-cbr r29 -> L9, L10
-L9: nop
-LoadI 1 => r30
-LoadI 2 => r31
-add r30, r31 => r32
-LoadI 3 => r33
-LoadI 4 => r34
-mult r33, r34 => r35
-LoadI 7 => r36
-LoadI 2 => r37
-sub r36, r37 => r38
-mult r35, r38 => r39
-LoadI 8 => r40
-div r39, r40 => r41
-add r32, r41 => r42
-storeAI r42 => rbf, 8
-L10: nop
-LoadI 1 => r27
-LoadI 2 => r28
-cmp_GT r27, r28 -> r29
-cbr r29 -> L9, L10
-L9: nop
-LoadI 1 => r30
-LoadI 2 => r31
-add r30, r31 => r32
-LoadI 3 => r33
-LoadI 4 => r34
-mult r33, r34 => r35
-LoadI 7 => r36
-LoadI 2 => r37
-sub r36, r37 => r38
-mult r35, r38 => r39
-LoadI 8 => r40
-div r39, r40 => r41
-add r32, r41 => r42
-storeAI r42 => rbf, 8
-L10: nop
-
-
- exporando BLOCO F
-LoadI 1 => r27
-LoadI 2 => r28
-cmp_GT r27, r28 -> r29
-cbr r29 -> L9, L10
-L9: nop
-LoadI 1 => r30
-LoadI 2 => r31
-add r30, r31 => r32
-LoadI 3 => r33
-LoadI 4 => r34
-mult r33, r34 => r35
-LoadI 7 => r36
-LoadI 2 => r37
-sub r36, r37 => r38
-mult r35, r38 => r39
-LoadI 8 => r40
-div r39, r40 => r41
-add r32, r41 => r42
-storeAI r42 => rbf, 8
-L10: nop
-LoadI 1 => r27
-LoadI 2 => r28
-cmp_GT r27, r28 -> r29
-cbr r29 -> L9, L10
-L9: nop
-LoadI 1 => r30
-LoadI 2 => r31
-add r30, r31 => r32
-LoadI 3 => r33
-LoadI 4 => r34
-mult r33, r34 => r35
-LoadI 7 => r36
-LoadI 2 => r37
-sub r36, r37 => r38
-mult r35, r38 => r39
-LoadI 8 => r40
-div r39, r40 => r41
-add r32, r41 => r42
-storeAI r42 => rbf, 8
-L10: nop
-
-
-exportando F
-LoadI 1 => r27
-LoadI 2 => r28
-cmp_GT r27, r28 -> r29
-cbr r29 -> L9, L10
-L9: nop
-LoadI 1 => r30
-LoadI 2 => r31
-add r30, r31 => r32
-LoadI 3 => r33
-LoadI 4 => r34
-mult r33, r34 => r35
-LoadI 7 => r36
-LoadI 2 => r37
-sub r36, r37 => r38
-mult r35, r38 => r39
-LoadI 8 => r40
-div r39, r40 => r41
-add r32, r41 => r42
-storeAI r42 => rbf, 8
-L10: nop
-LoadI 1 => r27
-LoadI 2 => r28
-cmp_GT r27, r28 -> r29
-cbr r29 -> L9, L10
-L9: nop
-LoadI 1 => r30
-LoadI 2 => r31
-add r30, r31 => r32
-LoadI 3 => r33
-LoadI 4 => r34
-mult r33, r34 => r35
-LoadI 7 => r36
-LoadI 2 => r37
-sub r36, r37 => r38
-mult r35, r38 => r39
-LoadI 8 => r40
-div r39, r40 => r41
-add r32, r41 => r42
-storeAI r42 => rbf, 8
-L10: nop
-
-
-CODIGO GERADO
-
-LoadI 1 => r0
-LoadI 2 => r1
-cmp_LT r0, r1 -> r2
-cbr r2 -> L1, L2
-L1: nop
-LoadI 1 => r3
-LoadI 2 => r4
-add r3, r4 => r5
-LoadI 3 => r6
-LoadI 4 => r7
-mult r6, r7 => r8
-LoadI 7 => r9
-LoadI 2 => r10
-sub r9, r10 => r11
-mult r8, r11 => r12
-LoadI 8 => r13
-div r12, r13 => r14
-add r5, r14 => r15
-storeAI r15 => rbf, 8
-L2: nop
-LoadI 2 => r17
-LoadI 2 => r18
-cmp_EQ r17, r18 -> r19
-cbr r19 -> L6, L4
-L4: nop
-LoadI 1 => r20
-LoadI 3 => r21
-cmp_LT r20, r21 -> r22
-cbr r22 -> L3, L5
-L3: nop
-LoadI 3 => r23
-LoadI 5 => r24
-cmp_LE r23, r24 -> r25
-cbr r25 -> L6, L5
-L5: nop
-loadI 0 => r26
-jumpI -> L7
-L6: nop
-loadI 1 => r26
-jumpI -> L7
-L7: nop
-storeAI r26 => rbf, 8
-LoadI 1 => r27
-LoadI 2 => r28
-cmp_GT r27, r28 -> r29
-cbr r29 -> L9, L10
-L9: nop
-LoadI 1 => r30
-LoadI 2 => r31
-add r30, r31 => r32
-LoadI 3 => r33
-LoadI 4 => r34
-mult r33, r34 => r35
-LoadI 7 => r36
-LoadI 2 => r37
-sub r36, r37 => r38
-mult r35, r38 => r39
-LoadI 8 => r40
-div r39, r40 => r41
-add r32, r41 => r42
-storeAI r42 => rbf, 8
-L10: nop
-LoadI 1 => r27
-LoadI 2 => r28
-cmp_GT r27, r28 -> r29
-cbr r29 -> L9, L10
-L9: nop
-LoadI 1 => r30
-LoadI 2 => r31
-add r30, r31 => r32
-LoadI 3 => r33
-LoadI 4 => r34
-mult r33, r34 => r35
-LoadI 7 => r36
-LoadI 2 => r37
-sub r36, r37 => r38
-mult r35, r38 => r39
-LoadI 8 => r40
-div r39, r40 => r41
-add r32, r41 => r42
-storeAI r42 => rbf, 8
-L10: nop
+loadI 2 => r40
+storeAI r40 => rbf, 12
+loadI 2 => r38
+storeAI r38 => rbf, 16
+LoadI 99 => r44
+storeAI r44 => rbf, 4
+LoadI 1 => r46
+LoadI 2 => r47
+add r46, r47 => r48
+storeAI r48 => rbf, 4
+L15: nop
+loadI 2 => r54
+storeAI r54 => rbf, 8
+loadI 2 => r52
+storeAI r52 => rbf, 12
+loadI 2 => r50
+storeAI r50 => rbf, 16
+LoadI 99 => r56
+storeAI r56 => rbf, 4
+LoadI 1 => r58
+LoadI 2 => r59
+add r58, r59 => r60
+storeAI r60 => rbf, 4
+LoadI 99 => r62
+storeAI r62 => rbf, 4
+LoadI 99 => r64
+storeAI r64 => rbf, 4
+LoadI 99 => r66
+storeAI r66 => rbf, 4

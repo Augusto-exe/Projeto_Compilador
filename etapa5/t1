@@ -2,7 +2,7 @@ int a,b,c;
 
 int mn(int j)
 {
-	int b,a <= 1,c <= 2,d <= a;
+	int b;
 	if(1 < 2)
 	{
 		b = 1 + 2 + 3 * 4 * (7-2) / 8;
@@ -20,10 +20,24 @@ int g;
 
 int main(int j)
 {
-	int b,a <= 2,c <= 2,d <= 2;
+	int b;
 	b=99;
 
 	b = 1 + 2 ;
 
+
+}
+float dsdah;
+int gsafa;
+
+int m(int k)
+{
+	int b,a <= 2,c <= 2,d <= 2;
+	b=99;
+
+	b = 1 + 2 ;
+	b=99;
+	b=99;
+	b=99;
 
 }

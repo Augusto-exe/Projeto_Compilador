@@ -97,7 +97,7 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 30 "parser.y" /* yacc.c:1909  */
+#line 32 "parser.y" /* yacc.c:1909  */
 
 	struct lexic_val_type* valor_lexico;
 	struct arvore* nodo;

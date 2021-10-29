@@ -24,7 +24,7 @@ class PilhaContexto
 		tabelaSimbolos popContexto();
 		void insereSimboloNonVet(int line, int natureza, lexic_val_type *valorLex,int tipo, int escopo = ESC_LOCAL);
 		void insereSimboloVet(int line, int natureza, lexic_val_type *valorLex,int tipo,int tamanho,int escopo = ESC_LOCAL);
-		void atualizaTipoTamanho(int tipo);
+		list<Instrucao> atualizaTipoTamanho(int tipo, int*id);
 		void adicionaParametro(string nome,string nome_par);
 		void insereSimboloContextoAtual(string nome, DadoTabelaSimbolos novoSimbolo);
 		bool existeSimboloContextos(string nome);

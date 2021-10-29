@@ -2,26 +2,28 @@ int a,b,c;
 
 int mn(int j)
 {
-	int b;
+	int b,a <= 1,c <= 2,d <= a;
 	if(1 < 2)
 	{
 		b = 1 + 2 + 3 * 4 * (7-2) / 8;
 	};
+	
+	while(1) do
+	{
+		b =2;	
+	};
 
+	b = 2 ==2 || 1 < 3 && 3 <= 5;
 }
 float h;
 int g;
 
 int main(int j)
 {
-	int b,a <= 2;
-	int hue;
-	int ue;
+	int b,a <= 2,c <= 2,d <= 2;
 	b=99;
 
 	b = 1 + 2 ;
 
 
-
-	char c,d;
 }

@@ -209,8 +209,8 @@ bloco: com_bloco fim_bloco   { $$ =NULL; }
 | com_bloco seq_comando fim_bloco { $$ = $2;} ;
 
 //Definição da sequencia de comandos e abaixo os diferentes tipos de comandos
-seq_comando: comando seq_comando{ $$ = $1; $$ = insere_filho($$,$2);if($2!=NULL){$$->cod.appendCodigoFim($2->cod.getCodigo()); printf("\n\nfim append\n");}}
-| comando { $$ = $1; ); if($1 !=NULL) $1->cod.exportaCod();};
+seq_comando: comando seq_comando{ $$ = $1; $$ = insere_filho($$,$2);if($2!=NULL){$$->cod.appendCodigoFim($2->cod.getCodigo());}}
+| comando { $$ = $1; if($1 !=NULL) $1->cod.exportaCod();};
 
 comando: bloco ';' {$$ = $1; libera_val($2);} 
 | decla_loc ';' {$$ = $1; libera_val($2);}
@@ -222,10 +222,10 @@ comando: bloco ';' {$$ = $1; libera_val($2);}
 | fun_call ';' {$$ = $1; libera_val($2);}
 | comando_controle_fluxo ';' {$$ = $1; libera_val($2);};
 
-decla_loc: tipo_stat_cons lista_var_loc { $$ = $2;tabelas.atualizaTipoTamanho($1);tabelas.fazInic();};
+decla_loc: tipo_stat_cons lista_var_loc { $$ = $2;tabelas.atualizaTipoTamanho($1); if($$!=NULL){$$->cod.appendCodigoInicio(tabelas.fazInic(&ultimoReg,&ultimoRotulo,&instId));}};
 
 lista_var_loc: lista_var_loc ',' var_loc {libera_val($2); $$ = insere_filho($1,$3);}
-| var_loc { $$ = $1; };
+| var_loc { $$ = $1;};
 
 var_loc: TK_IDENTIFICADOR TK_OC_LE id_lit { $$ = insere_nodo(NULL,$2); $$= insere_filho($$,insere_nodo(NULL,$1));$$= insere_filho($$,$3);tabelas.insereSimboloNonVet(get_line_number(),NAT_VAR,$1,INDEF);tabelas.insereInicPendente($1,$3->valor_lexico);}
 | TK_IDENTIFICADOR { $$ = NULL;tabelas.insereSimboloNonVet(get_line_number(),NAT_VAR,$1,INDEF); libera_val($1);};

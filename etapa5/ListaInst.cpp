@@ -232,19 +232,53 @@ geraLeituraVar()
 }
 */
 
+list<Instrucao> geraInit(int deslocDst,int escopoDst, int natureza, string nomeValue,int deslocOrig,int escopoOrig, int *ultimoReg, int* ultimoRotulo,int* id)
+{
+    Instrucao inst;
+    list<Instrucao> retList = list<Instrucao>();
+    string regAux = geraRegistrador(ultimoReg);
+    string regBaseD,regBaseO;
+    string regDst = geraRegistrador(ultimoReg);
+
+    if(escopoDst == ESC_GLOBAL)
+        regBaseD = "rbss";
+    else
+        regBaseD = "rbf";
+       
+    if(escopoOrig == ESC_GLOBAL)
+        regBaseO = "rbss";
+    else
+        regBaseO = "rbf";
+    
+    inst = geraInst3op("storeAI",regBaseD,to_string(deslocDst),regAux,INST_MEM,id);
+    retList.push_front(inst);
+
+    if(natureza == NAT_LIT)
+    {
+        inst = geraInst2op("loadI",nomeValue,regAux,INST_LOADI,id);
+        retList.push_front(inst);
+    }
+    else
+    {
+        inst = geraInst3op("loadAI",regBaseO,to_string(deslocOrig),regAux,INST_MEM_READ,id);
+        retList.push_front(inst);
+    }
+    return retList;
+}
+
 list<Instrucao> geraBoolFromArit(int *ultimoReg,string regOrg,string rotT,string rotF, int *id)
 {
-        Instrucao inst;
-        list<Instrucao> retList = list<Instrucao>();
-        string regTemp = geraRegistrador(ultimoReg);
-        string regCmp = geraRegistrador(ultimoReg);
-        inst = geraInst3op("cbr",rotT,rotF,regCmp,INST_CBR,id);
-        retList.push_front(inst);
-        inst = geraInst3op("cmp_NE",regOrg,regTemp,regCmp,INST_REL,id);
-        retList.push_front(inst);
-        inst = geraInst2op("LoadI","0",regTemp,INST_LOADI,id);
-        retList.push_front(inst);
-        return retList;
+    Instrucao inst;
+    list<Instrucao> retList = list<Instrucao>();
+    string regTemp = geraRegistrador(ultimoReg);
+    string regCmp = geraRegistrador(ultimoReg);
+    inst = geraInst3op("cbr",rotT,rotF,regCmp,INST_CBR,id);
+    retList.push_front(inst);
+    inst = geraInst3op("cmp_NE",regOrg,regTemp,regCmp,INST_REL,id);
+    retList.push_front(inst);
+    inst = geraInst2op("loadI","0",regTemp,INST_LOADI,id);
+    retList.push_front(inst);
+    return retList;
 }
 
 
@@ -261,6 +295,7 @@ Instrucao geraInst3op(string operacao,string op1,string op2, string dst,int tipo
     return inst;
 }
 Instrucao geraInst2op(string operacao,string op1,string dst,int tipoInst, int *id){
+
     Instrucao inst;
     inst.dst = dst;
     inst.n_op = 2;
@@ -311,10 +346,14 @@ void ListaInst::appendCodigoInicio(list<Instrucao> codigoPref){
     list<Instrucao>::reverse_iterator itList;
 
     if((codigoPref.back().id != this->codigo.back().id)||(codigoPref.front().id != this->codigo.front().id))
-    for(itList = codigoPref.rbegin();itList !=codigoPref.rend();++itList)
     {
-        this->codigo.push_front((*itList));
+        for(itList = codigoPref.rbegin();itList !=codigoPref.rend();++itList)
+        {
+            this->codigo.push_front((*itList));
+        }
+
     }
+
 
 }
 
@@ -349,6 +388,9 @@ void printaInst(Instrucao inst)
             break;
         case INST_MEM:
             cout <<inst.operacao << " " <<inst.dst << " => "<< inst.op1 <<", " << inst.op2 <<  endl;
+            break;
+        case INST_MEM_READ:
+            cout <<inst.operacao << " " << inst.op1 <<", " << inst.op2  <<" => "<<  inst.dst << endl;
             break;
         case INST_REL:
             cout <<inst.operacao << " "<< inst.op1 <<", " << inst.op2 <<" -> "<< inst.dst  << endl;

@@ -51,7 +51,7 @@ class PilhaContexto
 		void verificaReturn(int tipoRet,int linha);
 		int getTipoUltimaFunc();
 		void insereInicPendente(lexic_val_type *valorVariable,lexic_val_type *valorValue);
-		void fazInic();
+		list<Instrucao> fazInic(int *ultimoReg,int *ultimoRotulo,int*id);
 		int getDeslocamentoAtual();
 		void setDeslocamentoAtual(int desloc);
 		

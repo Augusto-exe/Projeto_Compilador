@@ -1704,13 +1704,13 @@ yyreduce:
 
   case 36:
 #line 212 "parser.y" /* yacc.c:1646  */
-    { (yyval.nodo) = (yyvsp[-1].nodo); (yyval.nodo) = insere_filho((yyval.nodo),(yyvsp[0].nodo));if((yyvsp[0].nodo)!=NULL){printf("\n\n exportando seq Comando (atual)\n"); (yyval.nodo)->cod.exportaCod();printf("\n\n exportando seq Comando inserida\n"); (yyvsp[0].nodo)->cod.exportaCod();(yyval.nodo)->cod.appendCodigoFim((yyvsp[0].nodo)->cod.getCodigo()); printf("\n\nfim append\n");}}
+    { (yyval.nodo) = (yyvsp[-1].nodo); (yyval.nodo) = insere_filho((yyval.nodo),(yyvsp[0].nodo));if((yyvsp[0].nodo)!=NULL){(yyval.nodo)->cod.appendCodigoFim((yyvsp[0].nodo)->cod.getCodigo());}}
 #line 1709 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 37:
 #line 213 "parser.y" /* yacc.c:1646  */
-    { (yyval.nodo) = (yyvsp[0].nodo); printf("\n\n exportando Comando\n"); if((yyvsp[0].nodo) !=NULL) (yyvsp[0].nodo)->cod.exportaCod();}
+    { (yyval.nodo) = (yyvsp[0].nodo); if((yyvsp[0].nodo) !=NULL) (yyvsp[0].nodo)->cod.exportaCod();}
 #line 1715 "parser.tab.c" /* yacc.c:1646  */
     break;
 
@@ -1770,7 +1770,7 @@ yyreduce:
 
   case 47:
 #line 225 "parser.y" /* yacc.c:1646  */
-    { (yyval.nodo) = (yyvsp[0].nodo);tabelas.atualizaTipoTamanho((yyvsp[-1].tipo));tabelas.fazInic();}
+    { (yyval.nodo) = (yyvsp[0].nodo);tabelas.atualizaTipoTamanho((yyvsp[-1].tipo)); if((yyval.nodo)!=NULL){(yyval.nodo)->cod.appendCodigoInicio(tabelas.fazInic(&ultimoReg,&ultimoRotulo,&instId));}}
 #line 1775 "parser.tab.c" /* yacc.c:1646  */
     break;
 
@@ -1782,7 +1782,7 @@ yyreduce:
 
   case 49:
 #line 228 "parser.y" /* yacc.c:1646  */
-    { (yyval.nodo) = (yyvsp[0].nodo); }
+    { (yyval.nodo) = (yyvsp[0].nodo);}
 #line 1787 "parser.tab.c" /* yacc.c:1646  */
     break;
 

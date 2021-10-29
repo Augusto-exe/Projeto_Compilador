@@ -170,12 +170,14 @@ void PilhaContexto::insereInicPendente(lexic_val_type *valorVariable,lexic_val_t
 	}
 	ini.variable =valorVariable;
 	ini.value =valorValue;
-	this->inicsPendentes.push_back(ini);
+	this->inicsPendentes.push_front(ini);
 }
 
-void PilhaContexto::fazInic()
+list<Instrucao> PilhaContexto::fazInic(int *ultimoReg,int *ultimoRotulo,int *id)
 {
 	DadoTabelaSimbolos var,value;
+	list<Instrucao> retList = list<Instrucao>();
+	list<Instrucao> auxList = list<Instrucao>();
 	int linha;
 	string nome;
 	for(auto ini : this->inicsPendentes)
@@ -208,9 +210,15 @@ void PilhaContexto::fazInic()
 		{
 			this->contextos.back().atualizaTamanhoString(nome,value.tamanho);
 		}
-		
+		string nomeValue = getNomeValorLexico(ini.value);
+		auxList = geraInit(var.deslocamento,var.escopo,value.natureza, nomeValue ,value.deslocamento,value.escopo,ultimoReg,ultimoRotulo,id);
+		for(list<Instrucao>::reverse_iterator itList = auxList.rbegin();itList !=auxList.rend();++itList)
+        {
+            retList.push_front((*itList));
+        }
 	}
 	this->inicsPendentes.clear();
+	return retList;
 }
 
 
@@ -281,7 +289,7 @@ int PilhaContexto::infereTipoTern(a_nodo* nodoEsq,a_nodo* nodoMeio,a_nodo* nodoD
 {
 	int tipo_temp;
 	a_nodo* nodo_temp;
-	nodo_temp = (a_nodo*)malloc(sizeof(a_nodo));
+	nodo_temp = new a_nodo;
 
 	tipo_temp = this->infereTipo(nodoEsq,nodoMeio);
 	nodo_temp->tipo_valor_semantico= tipo_temp;

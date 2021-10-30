@@ -242,7 +242,7 @@ literal: all_int {$$ = $1;atualiza_tipo_semantico($$,ID_INT);}
 | TK_LIT_CHAR {$$ = insere_nodo(NULL,$1);atualiza_tipo_semantico($$,ID_CHAR);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$1,ID_CHAR);}
 | TK_LIT_STRING {$$ = insere_nodo(NULL,$1);atualiza_tipo_semantico($$,ID_STRING);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$1,ID_STRING);};
 
-literal_num_bool: TK_LIT_INT {$$ = insere_nodo(NULL,$1);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$1,ID_INT);atualiza_tipo_semantico($$,ID_INT);$$->reg =geraRegistrador(&ultimoReg);$$->cod.appendInstCodigo(geraInst2op("LoadI",to_string($$->valor_lexico->tk_value.vInt),$$->reg,INST_LOADI,&instId));}
+literal_num_bool: TK_LIT_INT {$$ = insere_nodo(NULL,$1);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$1,ID_INT);atualiza_tipo_semantico($$,ID_INT);$$->reg =geraRegistrador(&ultimoReg);$$->cod.appendInstCodigo(geraInst2op("loadI",to_string($$->valor_lexico->tk_value.vInt),$$->reg,INST_LOADI,&instId));}
 | TK_LIT_FLOAT {$$ = insere_nodo(NULL,$1);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$1,ID_FLOAT);atualiza_tipo_semantico($$,ID_FLOAT);}
 | TK_LIT_FALSE {$$ = insere_nodo(NULL,$1);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$1,ID_BOOL);atualiza_tipo_semantico($$,ID_BOOL);}
 | TK_LIT_TRUE {$$ = insere_nodo(NULL,$1);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$1,ID_BOOL);atualiza_tipo_semantico($$,ID_BOOL);};
@@ -331,7 +331,7 @@ op_unitario: '+' { $$ = insere_nodo(NULL,$1);}
 |'&' { $$ = insere_nodo(NULL,$1);}
 |'#' { $$ = insere_nodo(NULL,$1);}
 |'?' { $$ = insere_nodo(NULL,$1);};
-exp_unitaria: op_unitario exp { $$ = $1; insere_filho($$,$2);atualiza_tipo_semantico($$,$2->tipo_valor_semantico);} %prec PREC_UNA; 	
+exp_unitaria: op_unitario exp { $$ = $1; insere_filho($$,$2);atualiza_tipo_semantico($$,$2->tipo_valor_semantico); if(string ($1->valor_lexico->tk_value.vStr) == "-") $$->reg =geraRegistrador(&ultimoReg);string reg0 = geraRegistrador(&ultimoReg); $$->cod.appendInstCodigo(geraInst3op("sub",reg0,$2->reg,$$->reg,INST_ARITLOG,&instId));$$->cod.appendCodigoInicio($2->cod.getCodigo());$$->cod.appendInstCodigo(geraInst2op("loadI","0",reg0,INST_LOADI,&instId));} %prec PREC_UNA; 	
 %%
 
 int yyerror(char const *s){

@@ -610,7 +610,7 @@ list<Instrucao> PilhaContexto::atualizaTipoTamanho(int tipo, int*id)
 		}
 		if(mapa[nome].escopo == ESC_LOCAL)
 		{
-			inst = geraInst3op("addi","rps",to_string( mapa[nome].tamanho*getTamanhoTipo(tipo)),"rps",INST_ARITLOG,id);
+			inst = geraInst3op("addI","rps",to_string( mapa[nome].tamanho*getTamanhoTipo(tipo)),"rps",INST_ARITLOG,id);
 			retList.push_back(inst);
 		}
 	

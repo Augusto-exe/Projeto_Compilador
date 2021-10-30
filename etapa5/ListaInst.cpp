@@ -25,7 +25,7 @@ list<Instrucao> geraInstAtribTipoDesloc(int desloc, int escopo ,int tipo,string 
     if(escopo == ESC_GLOBAL)
         regBase = "rbss";
     else
-        regBase = "rbf";
+        regBase = "rfp";
     if(tipo == ID_BOOL)
     {
         string rot1 = geraRotulo(ultimoRotulo);
@@ -345,7 +345,7 @@ list<Instrucao> geraLeituraVar(string regDst, int deslocamento, int escopo, int*
     if(escopo == ESC_GLOBAL)
         regBase = "rbss";
     else
-        regBase = "rbf";
+        regBase = "rfp";
     
     inst = geraInst3op("loadAI",regBase,to_string(deslocamento),regDst,INST_MEM_READ,id);
     retList.push_front(inst);
@@ -365,12 +365,12 @@ list<Instrucao> geraInit(int deslocDst,int escopoDst, int natureza, string nomeV
     if(escopoDst == ESC_GLOBAL)
         regBaseD = "rbss";
     else
-        regBaseD = "rbf";
+        regBaseD = "rfp";
        
     if(escopoOrig == ESC_GLOBAL)
         regBaseO = "rbss";
     else
-        regBaseO = "rbf";
+        regBaseO = "rfp";
     
     inst = geraInst3op("storeAI",regBaseD,to_string(deslocDst),regAux,INST_MEM,id);
     retList.push_front(inst);

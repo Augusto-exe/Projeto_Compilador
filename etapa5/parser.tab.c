@@ -1856,7 +1856,7 @@ yyreduce:
 
   case 61:
 #line 245 "parser.y" /* yacc.c:1646  */
-    {(yyval.nodo) = insere_nodo(NULL,(yyvsp[0].valor_lexico));tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,(yyvsp[0].valor_lexico),ID_INT);atualiza_tipo_semantico((yyval.nodo),ID_INT);(yyval.nodo)->reg =geraRegistrador(&ultimoReg);(yyval.nodo)->cod.appendInstCodigo(geraInst2op("LoadI",to_string((yyval.nodo)->valor_lexico->tk_value.vInt),(yyval.nodo)->reg,INST_LOADI,&instId));}
+    {(yyval.nodo) = insere_nodo(NULL,(yyvsp[0].valor_lexico));tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,(yyvsp[0].valor_lexico),ID_INT);atualiza_tipo_semantico((yyval.nodo),ID_INT);(yyval.nodo)->reg =geraRegistrador(&ultimoReg);(yyval.nodo)->cod.appendInstCodigo(geraInst2op("loadI",to_string((yyval.nodo)->valor_lexico->tk_value.vInt),(yyval.nodo)->reg,INST_LOADI,&instId));}
 #line 1861 "parser.tab.c" /* yacc.c:1646  */
     break;
 
@@ -2199,7 +2199,7 @@ yyreduce:
 
   case 118:
 #line 322 "parser.y" /* yacc.c:1646  */
-    { (yyval.nodo) = insere_nodo_tipo(NULL,geraVal(TIPO_RSV_WRD,NOT_LIT,get_line_number(),(char*)"for"),NO_FOR); (yyval.nodo) = insere_filho((yyval.nodo),(yyvsp[-6].nodo)); (yyval.nodo) = insere_filho((yyval.nodo),(yyvsp[-4].nodo)); (yyval.nodo) = insere_filho((yyval.nodo),(yyvsp[-2].nodo)); (yyval.nodo) = insere_filho((yyval.nodo),(yyvsp[0].nodo)); libera_val((yyvsp[-3].valor_lexico)); libera_val((yyvsp[-5].valor_lexico)); libera_val ((yyvsp[-7].valor_lexico));libera_val((yyvsp[-1].valor_lexico)); string rotT = geraRotulo(&ultimoRotulo);string rotEnd = geraRotulo(&ultimoRotulo);ListaInst ListI; if((yyvsp[0].nodo)==NULL){ListI = ListaInst();}else{ListI = (yyvsp[0].nodo)->cod;}(yyval.nodo)->cod.appendCodigoInicio(geraInstFor((yyvsp[-4].nodo)->tipo_valor_semantico,(yyvsp[-4].nodo)->reg,&((yyvsp[-4].nodo)->cod),ListI,(yyvsp[-6].nodo)->cod,(yyvsp[-2].nodo)->cod,(yyvsp[-4].nodo)->idRemendosTrue,(yyvsp[-4].nodo)->idRemendosFalse,&ultimoReg,&ultimoRotulo,&instId,rotT,rotEnd));(yyvsp[-4].nodo)->idRemendosFalse.clear();(yyvsp[-4].nodo)->idRemendosTrue.clear();(yyvsp[-6].nodo)->idRemendosTrue.clear();printf("\n\nFOR\n");(yyval.nodo)->cod.exportaCod();printf("\n\n");}
+    { (yyval.nodo) = insere_nodo_tipo(NULL,geraVal(TIPO_RSV_WRD,NOT_LIT,get_line_number(),(char*)"for"),NO_FOR); (yyval.nodo) = insere_filho((yyval.nodo),(yyvsp[-6].nodo)); (yyval.nodo) = insere_filho((yyval.nodo),(yyvsp[-4].nodo)); (yyval.nodo) = insere_filho((yyval.nodo),(yyvsp[-2].nodo)); (yyval.nodo) = insere_filho((yyval.nodo),(yyvsp[0].nodo)); libera_val((yyvsp[-3].valor_lexico)); libera_val((yyvsp[-5].valor_lexico)); libera_val ((yyvsp[-7].valor_lexico));libera_val((yyvsp[-1].valor_lexico)); string rotT = geraRotulo(&ultimoRotulo);string rotEnd = geraRotulo(&ultimoRotulo);ListaInst ListI; if((yyvsp[0].nodo)==NULL){ListI = ListaInst();}else{ListI = (yyvsp[0].nodo)->cod;}(yyval.nodo)->cod.appendCodigoInicio(geraInstFor((yyvsp[-4].nodo)->tipo_valor_semantico,(yyvsp[-4].nodo)->reg,&((yyvsp[-4].nodo)->cod),ListI,(yyvsp[-6].nodo)->cod,(yyvsp[-2].nodo)->cod,(yyvsp[-4].nodo)->idRemendosTrue,(yyvsp[-4].nodo)->idRemendosFalse,&ultimoReg,&ultimoRotulo,&instId,rotT,rotEnd));(yyvsp[-4].nodo)->idRemendosFalse.clear();(yyvsp[-4].nodo)->idRemendosTrue.clear();(yyvsp[-6].nodo)->idRemendosTrue.clear();}
 #line 2204 "parser.tab.c" /* yacc.c:1646  */
     break;
 
@@ -2259,7 +2259,7 @@ yyreduce:
 
   case 128:
 #line 334 "parser.y" /* yacc.c:1646  */
-    { (yyval.nodo) = (yyvsp[-1].nodo); insere_filho((yyval.nodo),(yyvsp[0].nodo));atualiza_tipo_semantico((yyval.nodo),(yyvsp[0].nodo)->tipo_valor_semantico);}
+    { (yyval.nodo) = (yyvsp[-1].nodo); insere_filho((yyval.nodo),(yyvsp[0].nodo));atualiza_tipo_semantico((yyval.nodo),(yyvsp[0].nodo)->tipo_valor_semantico); if(string ((yyvsp[-1].nodo)->valor_lexico->tk_value.vStr) == "-") (yyval.nodo)->reg =geraRegistrador(&ultimoReg);string reg0 = geraRegistrador(&ultimoReg); (yyval.nodo)->cod.appendInstCodigo(geraInst3op("sub",reg0,(yyvsp[0].nodo)->reg,(yyval.nodo)->reg,INST_ARITLOG,&instId));(yyval.nodo)->cod.appendCodigoInicio((yyvsp[0].nodo)->cod.getCodigo());(yyval.nodo)->cod.appendInstCodigo(geraInst2op("loadI","0",reg0,INST_LOADI,&instId));}
 #line 2264 "parser.tab.c" /* yacc.c:1646  */
     break;
 

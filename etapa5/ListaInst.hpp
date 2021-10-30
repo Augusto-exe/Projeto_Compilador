@@ -29,6 +29,7 @@ class ListaInst
 	public:
 		ListaInst();
 		void appendInstCodigo(Instrucao inst);
+        void appendInstFimCodigo(Instrucao inst);
         void appendCodigoInicio(list<Instrucao> codigoPref);
         void appendCodigoFim(list<Instrucao> codigoPos);
         list<Instrucao> getCodigo();
@@ -47,3 +48,4 @@ list<Instrucao> geraInstWhile(int tipo,string regOrg,ListaInst *exp,ListaInst li
 list<Instrucao> geraInit(int deslocDst,int escopoDst, int natureza, string nomeValue,int deslocOrig,int escopoOrig, int *ultimoReg, int* ultimoRotulo,int *id);
 list<Instrucao> geraLeituraVar(string regDst, int deslocamento, int escopo, int* ultimoReg,int* ultimoRotulo,int* id);
 list<Instrucao> geraCodigoInicial(string rotMain,int *id );
+list<Instrucao> geraInstFor(int tipo,string regOrg,ListaInst *exp,ListaInst listaT,ListaInst listaIni,ListaInst listaAtrib,list<int> idRemendoTrue,list<int> idRemendoFalse,int *ultimoReg,int *ultimoRotulo,int *id, string rotT,string rotEnd);

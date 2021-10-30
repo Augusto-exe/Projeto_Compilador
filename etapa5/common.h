@@ -57,6 +57,7 @@
 #define INST_CBR		6
 #define INST_NOP_ROT	7
 #define INST_MEM_READ	8
+#define INST_HALT		8
 
 struct lexic_val_type{
 int lineno;

@@ -35,9 +35,9 @@ int m(int k)
 	int b,a <= 2,c <= 2,d <= 2;
 	b=99;
 
-	b = 1 + 2 ;
-	b=99;
-	b=99;
-	b=99;
+	for( a=2 : a < 5 : a = a+1)
+	{
+		output a;
+	};
 
 }

@@ -1670,7 +1670,7 @@ yyreduce:
 
   case 30:
 #line 202 "parser.y" /* yacc.c:1646  */
-    {string rotTemp = geraRotulo(&ultimoRotulo); (yyval.nodo) = insere_filho( (yyvsp[-1].nodo),(yyvsp[0].nodo)); (yyval.nodo)->cod.appendInstCodigo(geraInst2op(rotTemp,"","",INST_NOP_ROT,&instId)); if("main" == string((yyval.nodo)->valor_lexico->tk_value.vStr)) rotMain = rotTemp; if((yyvsp[0].nodo) != NULL){(yyval.nodo)->cod.appendCodigoFim((yyvsp[0].nodo)->cod.getCodigo());}}
+    {string rotTemp = geraRotulo(&ultimoRotulo); (yyval.nodo) = insere_filho( (yyvsp[-1].nodo),(yyvsp[0].nodo)); (yyval.nodo)->cod.appendInstCodigo(geraInst2op(rotTemp,"","",INST_NOP_ROT,&instId)); if("main" == string((yyval.nodo)->valor_lexico->tk_value.vStr)) rotMain = rotTemp; if((yyvsp[0].nodo) != NULL){(yyval.nodo)->cod.appendCodigoFim((yyvsp[0].nodo)->cod.getCodigo()); if("main" == string((yyval.nodo)->valor_lexico->tk_value.vStr))(yyval.nodo)->cod.appendInstFimCodigo(geraInst2op("","","",INST_HALT,&instId));}}
 #line 1675 "parser.tab.c" /* yacc.c:1646  */
     break;
 
@@ -2193,13 +2193,13 @@ yyreduce:
 
   case 117:
 #line 320 "parser.y" /* yacc.c:1646  */
-    { (yyval.nodo) = insere_nodo_tipo(NULL,geraVal(TIPO_RSV_WRD,NOT_LIT,get_line_number(),(char*)"if"),NO_IF); (yyval.nodo) = insere_filho((yyval.nodo),(yyvsp[-4].nodo)); (yyval.nodo) = insere_filho((yyval.nodo),(yyvsp[-2].nodo)); insere_filho((yyval.nodo),(yyvsp[0].nodo)); libera_val((yyvsp[-5].valor_lexico)); libera_val((yyvsp[-3].valor_lexico)); string rotT = geraRotulo(&ultimoRotulo);string rotF = geraRotulo(&ultimoRotulo); string rotEnd = geraRotulo(&ultimoRotulo); ListaInst ListT,ListF; if((yyvsp[-2].nodo)==NULL){ListT = ListaInst();}else{ListT = (yyvsp[-2].nodo)->cod;} if((yyvsp[0].nodo)==NULL){ListF = ListaInst();}else{ListF = (yyvsp[0].nodo)->cod;} (yyval.nodo)->cod.appendCodigoInicio(geraInstIfElse((yyvsp[-4].nodo)->tipo_valor_semantico,(yyvsp[-4].nodo)->reg,&((yyvsp[-4].nodo)->cod),ListT,ListF,(yyvsp[-4].nodo)->idRemendosTrue,(yyvsp[-4].nodo)->idRemendosFalse,&ultimoReg,&ultimoRotulo,&instId,rotT,rotF,rotEnd));(yyvsp[-4].nodo)->idRemendosFalse.clear();(yyvsp[-4].nodo)->idRemendosTrue.clear();}
+    { (yyval.nodo) = insere_nodo_tipo(NULL,geraVal(TIPO_RSV_WRD,NOT_LIT,get_line_number(),(char*)"if"),NO_IF); (yyval.nodo) = insere_filho((yyval.nodo),(yyvsp[-4].nodo)); (yyval.nodo) = insere_filho((yyval.nodo),(yyvsp[-2].nodo)); insere_filho((yyval.nodo),(yyvsp[0].nodo)); libera_val((yyvsp[-5].valor_lexico)); libera_val((yyvsp[-3].valor_lexico)); string rotT = geraRotulo(&ultimoRotulo);string rotF = geraRotulo(&ultimoRotulo); string rotEnd = geraRotulo(&ultimoRotulo); ListaInst ListT,ListF; if((yyvsp[-2].nodo)==NULL){ListT = ListaInst();}else{ListT = (yyvsp[-2].nodo)->cod;} if((yyvsp[0].nodo)==NULL){ListF = ListaInst();}else{ListF = (yyvsp[0].nodo)->cod;} (yyval.nodo)->cod.appendCodigoInicio(geraInstIfElse((yyvsp[-4].nodo)->tipo_valor_semantico,(yyvsp[-4].nodo)->reg,&((yyvsp[-4].nodo)->cod),ListT,ListF,(yyvsp[-4].nodo)->idRemendosTrue,(yyvsp[-4].nodo)->idRemendosFalse,&ultimoReg,&ultimoRotulo,&instId,rotT,rotF,rotEnd));(yyvsp[-4].nodo)->idRemendosFalse.clear();}
 #line 2198 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 118:
 #line 322 "parser.y" /* yacc.c:1646  */
-    { (yyval.nodo) = insere_nodo_tipo(NULL,geraVal(TIPO_RSV_WRD,NOT_LIT,get_line_number(),(char*)"for"),NO_FOR); (yyval.nodo) = insere_filho((yyval.nodo),(yyvsp[-6].nodo)); (yyval.nodo) = insere_filho((yyval.nodo),(yyvsp[-4].nodo)); (yyval.nodo) = insere_filho((yyval.nodo),(yyvsp[-2].nodo)); (yyval.nodo) = insere_filho((yyval.nodo),(yyvsp[0].nodo)); libera_val((yyvsp[-3].valor_lexico)); libera_val((yyvsp[-5].valor_lexico)); libera_val ((yyvsp[-7].valor_lexico));libera_val((yyvsp[-1].valor_lexico));}
+    { (yyval.nodo) = insere_nodo_tipo(NULL,geraVal(TIPO_RSV_WRD,NOT_LIT,get_line_number(),(char*)"for"),NO_FOR); (yyval.nodo) = insere_filho((yyval.nodo),(yyvsp[-6].nodo)); (yyval.nodo) = insere_filho((yyval.nodo),(yyvsp[-4].nodo)); (yyval.nodo) = insere_filho((yyval.nodo),(yyvsp[-2].nodo)); (yyval.nodo) = insere_filho((yyval.nodo),(yyvsp[0].nodo)); libera_val((yyvsp[-3].valor_lexico)); libera_val((yyvsp[-5].valor_lexico)); libera_val ((yyvsp[-7].valor_lexico));libera_val((yyvsp[-1].valor_lexico)); string rotT = geraRotulo(&ultimoRotulo);string rotEnd = geraRotulo(&ultimoRotulo);ListaInst ListI; if((yyvsp[0].nodo)==NULL){ListI = ListaInst();}else{ListI = (yyvsp[0].nodo)->cod;}(yyval.nodo)->cod.appendCodigoInicio(geraInstFor((yyvsp[-4].nodo)->tipo_valor_semantico,(yyvsp[-4].nodo)->reg,&((yyvsp[-4].nodo)->cod),ListI,(yyvsp[-6].nodo)->cod,(yyvsp[-2].nodo)->cod,(yyvsp[-4].nodo)->idRemendosTrue,(yyvsp[-4].nodo)->idRemendosFalse,&ultimoReg,&ultimoRotulo,&instId,rotT,rotEnd));(yyvsp[-4].nodo)->idRemendosFalse.clear();(yyvsp[-4].nodo)->idRemendosTrue.clear();(yyvsp[-6].nodo)->idRemendosTrue.clear();printf("\n\nFOR\n");(yyval.nodo)->cod.exportaCod();printf("\n\n");}
 #line 2204 "parser.tab.c" /* yacc.c:1646  */
     break;
 

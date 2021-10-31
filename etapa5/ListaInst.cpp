@@ -364,15 +364,15 @@ list<Instrucao> geraInstList(int* ultimoReg, int* id, string regDst)
     list<Instrucao> retList = list<Instrucao>();
 
     string regAux = geraRegistrador(ultimoReg);
-    inst = geraInst3op("storeAI", regAux, to_string(*id), regDst, INST_MEM,id);
+    inst = geraInst3op("storeAI", regDst,to_string(*id), regAux,  INST_MEM,id);
     retList.push_front(inst);
-    inst = geraInst3op("loadAI", regAux, "rfp", to_string(*id), INST_MEM, id);
+    inst = geraInst3op("loadAI", "rfp", regAux, to_string(*id), INST_MEM, id);
     retList.push_front(inst);
     
     return retList;
 }
 
-list<Instrucao> geraInstFunc(string regPilha, int* ultimoReg, int* id, ListaInst listaT)
+list<Instrucao> geraInstFunc(string regPilha, int* ultimoReg, int* id, ListaInst listaT, string rotulo)
 {
     Instrucao inst;
     list<Instrucao> retList = list<Instrucao>();
@@ -380,6 +380,8 @@ list<Instrucao> geraInstFunc(string regPilha, int* ultimoReg, int* id, ListaInst
     list<Instrucao> listInstCod;
     regPilha = geraRegistrador(ultimoReg);
 
+    inst = geraInst2op("jump","",rotulo,INST_JMP,id);
+    retList.push_front(inst);
 
     listInstCod = listaT.getCodigo();
     for(itList = listInstCod.rbegin();itList !=listInstCod.rend();++itList)

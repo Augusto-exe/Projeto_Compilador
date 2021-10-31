@@ -275,7 +275,7 @@ shift_right:  var_vet TK_OC_SR pos_int { $$ = insere_nodo($1,$2); insere_filho($
 
 shift_left: var_vet TK_OC_SL pos_int { $$ = insere_nodo($1,$2); insere_filho($$,$3); tabelas.avaliaShift($3->valor_lexico);};
 
-fun_call: TK_IDENTIFICADOR '(' fun_input ')' { libera_val($2); libera_val($4); $$ = insere_nodo_tipo($3,$1,NO_FUN_CALL);int tipo = tabelas.verificaFuncao($1,$3,get_line_number()); atualiza_tipo_semantico($$,tipo); ListaInst ListI; if($3==NULL){ListI = ListaInst();}else{ListI = $3->cod;} $$->cod.appendCodigoInicio(geraInstFunc($$->reg,&ultimoReg,&instId,ListI));} ;
+fun_call: TK_IDENTIFICADOR '(' fun_input ')' { libera_val($2); libera_val($4); $$ = insere_nodo_tipo($3,$1,NO_FUN_CALL);int tipo = tabelas.verificaFuncao($1,$3,get_line_number()); atualiza_tipo_semantico($$,tipo); ListaInst ListI; if($3==NULL){ListI = ListaInst();}else{ListI = $3->cod;} $$->cod.appendCodigoInicio(geraInstFunc($$->reg,&ultimoReg,&instId,ListI, geraRotulo(&ultimoRotulo)));} ;
 
 lista_arg: id_lit_exp ',' lista_arg { libera_val($2); $$ = insere_filho($1,$3); $1->is_arg = true; }
 | id_lit_exp {$$ = $1; $$->is_arg =true; };

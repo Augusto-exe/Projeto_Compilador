@@ -358,13 +358,13 @@ list<Instrucao> geraInstReturn(string regPilha, int* ultimoReg, int* id) {
     return retList;
 }
 
-list<Instrucao> geraInstList(int* ultimoReg, int* id)
+list<Instrucao> geraInstList(int* ultimoReg, int* id, string regDst)
 {
     Instrucao inst;
     list<Instrucao> retList = list<Instrucao>();
 
     string regAux = geraRegistrador(ultimoReg);
-    inst = geraInst3op("storeAI", regAux, to_string(*id), "rfp", INST_MEM,id);
+    inst = geraInst3op("storeAI", regAux, to_string(*id), regDst, INST_MEM,id);
     retList.push_front(inst);
     inst = geraInst3op("loadAI", regAux, "rfp", to_string(*id), INST_MEM, id);
     retList.push_front(inst);

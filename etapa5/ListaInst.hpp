@@ -52,4 +52,4 @@ list<Instrucao> geraInstFor(int tipo,string regOrg,ListaInst *exp,ListaInst list
 list<Instrucao> geraInstFunc(string regPilha, int* ultimoReg, int* id, ListaInst listaT);
 list<Instrucao> geraDeclaFunc(string regPilha, int* ultimoReg, int* id, ListaInst listaT);
 list<Instrucao> geraInstReturn(string regPilha, int* ultimoReg, int* id);
-list<Instrucao> geraInstList(int* ultimoReg, int* id);
+list<Instrucao> geraInstList(int* ultimoReg, int* id, string regDst);

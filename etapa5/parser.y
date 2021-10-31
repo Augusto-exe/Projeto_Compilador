@@ -202,8 +202,8 @@ func_header:  tipo_stat  TK_IDENTIFICADOR lista_par_begin lista_par lista_par_en
 func: func_header bloco_fun {string rotTemp = geraRotulo(&ultimoRotulo); $$ = insere_filho( $1,$2); $$->cod.appendInstCodigo(geraInst2op(rotTemp,"","",INST_NOP_ROT,&instId)); if("main" == string($$->valor_lexico->tk_value.vStr)) rotMain = rotTemp; if($2 != NULL){$$->cod.appendCodigoFim($2->cod.getCodigo()); if("main" == string($$->valor_lexico->tk_value.vStr))$$->cod.appendInstFimCodigo(geraInst2op("","","",INST_HALT,&instId));}}
 
 
-lista_par: lista_par ',' tipo_cons TK_IDENTIFICADOR {$$ = $1; tabelas.insereSimboloNonVet(get_line_number(),NAT_VAR,$4,$3);tabelas.empilhaParametro($4);libera_val($2); libera_val($4); $$->cod.appendCodigoInicio(geraInstList(&ultimoReg,&instId));}
-| tipo_cons TK_IDENTIFICADOR {tabelas.insereSimboloNonVet(get_line_number(),NAT_VAR,$2,$1); tabelas.empilhaParametro($2); $$=insere_nodo(NULL,$2); libera_val($2); $$->cod.appendCodigoInicio(geraInstList(&ultimoReg,&instId));}; 
+lista_par: lista_par ',' tipo_cons TK_IDENTIFICADOR {$$ = $1; tabelas.insereSimboloNonVet(get_line_number(),NAT_VAR,$4,$3);tabelas.empilhaParametro($4);libera_val($2); libera_val($4); $$->cod.appendCodigoInicio(geraInstList(&ultimoReg,&instId,"rfp"));}
+| tipo_cons TK_IDENTIFICADOR {tabelas.insereSimboloNonVet(get_line_number(),NAT_VAR,$2,$1); tabelas.empilhaParametro($2); $$=insere_nodo(NULL,$2); libera_val($2); $$->cod.appendCodigoInicio(geraInstList(&ultimoReg,&instId,"rfp"));}; 
 
 com_bloco: '{' {int desloc = tabelas.getDeslocamentoAtual(); tabelas.insereContexto();tabelas.setDeslocamentoAtual(desloc);libera_val($1);};
 fim_bloco: '}' {libera_val($1);  int desloc = tabelas.getDeslocamentoAtual();tabelas.popContexto();tabelas.setDeslocamentoAtual(desloc);};
@@ -281,7 +281,7 @@ lista_arg: id_lit_exp ',' lista_arg { libera_val($2); $$ = insere_filho($1,$3); 
 | id_lit_exp {$$ = $1; $$->is_arg =true; };
 
 fun_input: {$$=NULL;}
-|lista_arg {$$=$1; $$->cod.appendCodigoInicio(geraInstList(&ultimoReg,&instId));};
+|lista_arg {$$=$1; $$->cod.appendCodigoInicio(geraInstList(&ultimoReg,&instId,"rsp"));};
 
 id_lit_exp: TK_LIT_CHAR { $$ = insere_nodo(NULL,$1);atualiza_tipo_semantico($$,ID_CHAR);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$1,ID_CHAR);}
 | TK_LIT_STRING { $$ = insere_nodo(NULL,$1);atualiza_tipo_semantico($$,ID_STRING);tabelas.insereSimboloNonVet(get_line_number(),NAT_VAR,$1,ID_STRING);} 

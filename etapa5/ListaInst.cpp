@@ -320,6 +320,93 @@ list<Instrucao> geraInstFor(int tipo,string regOrg,ListaInst *exp,ListaInst list
     return retList;
 }
 
+list<Instrucao> geraDeclaFunc(string regPilha, int* ultimoReg, int* id, ListaInst listaT)
+{
+    Instrucao inst;
+    list<Instrucao> retList = list<Instrucao>();
+    list<Instrucao> itList;
+    string regRetorno = geraRegistrador(ultimoReg);
+
+
+    itList = listaT.getCodigo();
+    list<Instrucao>::reverse_iterator countList = itList.rbegin();
+    for(int count = 0; countList != itList.rend(); count++, ++countList)
+    {
+        count++;
+        string regAux = geraRegistrador(ultimoReg);
+        inst = geraInst3op("storeAI", regAux, to_string(*id + 8), "rfp", INST_MEM,id);
+        retList.push_front(inst);
+        inst = geraInst3op("loadAI", regAux, "rfp", to_string(*id + count), INST_MEM, id);
+        retList.push_front(inst);
+    }
+
+    inst = geraInst3op("addi",  to_string(*id),"rsp", "rsp", INST_MEM, id);
+    retList.push_front(inst);
+
+    return retList;
+}
+
+list<Instrucao> geraInstReturn(string regPilha, int* ultimoReg, int* id) {
+    Instrucao inst;
+    list<Instrucao> retList = list<Instrucao>();
+    string regRetorno = geraRegistrador(ultimoReg);
+    string regAux2 = geraRegistrador(ultimoReg);
+    inst = geraInst2op("jump","",regAux2,INST_JMP,id);
+    retList.push_front(inst);
+    inst = geraInst3op("loadAI", regRetorno, "rfp", to_string(*id + 8), INST_MEM,id);
+    retList.push_front(inst);
+    string regAux1 = geraRegistrador(ultimoReg);
+    inst = geraInst3op("loadAI", regAux1, "rfp", to_string(*id + 4), INST_MEM, id);
+    retList.push_front(inst);
+    inst = geraInst3op("loadAI", regAux2, "rfp", to_string(*id), INST_MEM, id);
+    retList.push_front(inst);
+    return retList;
+}
+
+list<Instrucao> geraInstList(int* ultimoReg, int* id)
+{
+    Instrucao inst;
+    list<Instrucao> retList = list<Instrucao>();
+
+    string regAux = geraRegistrador(ultimoReg);
+    inst = geraInst3op("storeAI", regAux, to_string(*id), "rfp", INST_MEM,id);
+    retList.push_front(inst);
+    inst = geraInst3op("loadAI", regAux, "rfp", to_string(*id), INST_MEM, id);
+    retList.push_front(inst);
+    
+    return retList;
+}
+
+list<Instrucao> geraInstFunc(string regPilha, int* ultimoReg, int* id, ListaInst listaT)
+{
+    Instrucao inst;
+    list<Instrucao> retList = list<Instrucao>();
+    list<Instrucao> itList;
+    regPilha = geraRegistrador(ultimoReg);
+
+
+    itList = listaT.getCodigo();
+    list<Instrucao>::reverse_iterator countList = itList.rbegin();
+    for(int count = 0; countList != itList.rend(); count++, ++countList)    {
+        count++;
+        string regAux = geraRegistrador(ultimoReg);
+        inst = geraInst3op("storeAI", regAux, to_string(*id + 8), "rfp", INST_MEM,id);
+        retList.push_front(inst);
+        inst = geraInst3op("loadAI", regAux, "rfp", to_string(*id + count), INST_MEM, id);
+        retList.push_front(inst);
+    }
+
+    inst = geraInst3op("storeAI", "rsp", to_string(*id + 8), "rfp", INST_MEM,id);
+    retList.push_front(inst);
+    inst = geraInst3op("storeAI", "rsp", to_string(*id + 4), "rsp", INST_MEM, id);
+    retList.push_front(inst);
+    inst = geraInst3op("storeAI", "rsp", to_string(*id), regPilha,  INST_MEM, id);
+    retList.push_front(inst);
+    inst = geraInst3op("addi", regPilha, "rpc", to_string(*id), INST_MEM, id);
+    retList.push_front(inst);
+    return retList;
+}
+
 list<Instrucao> geraCodigoInicial(string rotMain,int *id )
 {
     Instrucao inst;

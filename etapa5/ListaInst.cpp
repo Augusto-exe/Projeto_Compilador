@@ -324,20 +324,15 @@ list<Instrucao> geraDeclaFunc(string regPilha, int* ultimoReg, int* id, ListaIns
 {
     Instrucao inst;
     list<Instrucao> retList = list<Instrucao>();
-    list<Instrucao> itList;
+    list<Instrucao>::reverse_iterator itList;
+    list<Instrucao> listInstCod;
     string regRetorno = geraRegistrador(ultimoReg);
 
 
-    itList = listaT.getCodigo();
-    list<Instrucao>::reverse_iterator countList = itList.rbegin();
-    for(int count = 0; countList != itList.rend(); count++, ++countList)
+    listInstCod = listaT.getCodigo();
+    for(itList = listInstCod.rbegin();itList !=listInstCod.rend();++itList)
     {
-        count++;
-        string regAux = geraRegistrador(ultimoReg);
-        inst = geraInst3op("storeAI", regAux, to_string(*id + 8), "rfp", INST_MEM,id);
-        retList.push_front(inst);
-        inst = geraInst3op("loadAI", regAux, "rfp", to_string(*id + count), INST_MEM, id);
-        retList.push_front(inst);
+        retList.push_front((*itList));
     }
 
     inst = geraInst3op("addi",  to_string(*id),"rsp", "rsp", INST_MEM, id);
@@ -381,19 +376,15 @@ list<Instrucao> geraInstFunc(string regPilha, int* ultimoReg, int* id, ListaInst
 {
     Instrucao inst;
     list<Instrucao> retList = list<Instrucao>();
-    list<Instrucao> itList;
+    list<Instrucao>::reverse_iterator itList;
+    list<Instrucao> listInstCod;
     regPilha = geraRegistrador(ultimoReg);
 
 
-    itList = listaT.getCodigo();
-    list<Instrucao>::reverse_iterator countList = itList.rbegin();
-    for(int count = 0; countList != itList.rend(); count++, ++countList)    {
-        count++;
-        string regAux = geraRegistrador(ultimoReg);
-        inst = geraInst3op("storeAI", regAux, to_string(*id + 8), "rfp", INST_MEM,id);
-        retList.push_front(inst);
-        inst = geraInst3op("loadAI", regAux, "rfp", to_string(*id + count), INST_MEM, id);
-        retList.push_front(inst);
+    listInstCod = listaT.getCodigo();
+    for(itList = listInstCod.rbegin();itList !=listInstCod.rend();++itList)
+    {
+        retList.push_front((*itList));
     }
 
     inst = geraInst3op("storeAI", "rsp", to_string(*id + 8), "rfp", INST_MEM,id);

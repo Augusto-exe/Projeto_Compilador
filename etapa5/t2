@@ -1,8 +1,15 @@
-int main(int j,int y)
+int fun1(int k)
+{
+	return k;
+}
+
+
+int main(int j)
 {
 	int b,a <= 1,c <= 2,d <= a;
-	b = a +1;
+	b = a*7;
 	//main(1,5);
+	d = fun1(287);
 
 	return 0;
 }

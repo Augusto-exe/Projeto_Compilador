@@ -1990,7 +1990,7 @@ yyreduce:
 
   case 83:
 #line 279 "parser.y" /* yacc.c:1646  */
-    { libera_val((yyvsp[-2].valor_lexico)); libera_val((yyvsp[0].valor_lexico)); string regFun = geraRegistrador(&ultimoReg);  string rotFun = tabelas.getRotuloFun((yyvsp[-3].valor_lexico)); (yyval.nodo) = insere_nodo_tipo((yyvsp[-1].nodo),(yyvsp[-3].valor_lexico),NO_FUN_CALL); (yyval.nodo)->reg = regFun;list<Instrucao> ListI = tabelas.verificaFuncao((yyvsp[-3].valor_lexico),(yyvsp[-1].nodo),get_line_number(),&instId,&ultimoRotulo,&ultimoReg,regFun,rotFun); int tipo = tabelas.getTipoFuncao((yyvsp[-3].valor_lexico)); atualiza_tipo_semantico((yyval.nodo),tipo); (yyval.nodo)->cod.appendCodigoInicio(ListI); if((yyvsp[-1].nodo) != NULL) (yyval.nodo)->cod.appendCodigoFim((yyvsp[-1].nodo)->cod.getCodigo());}
+    { libera_val((yyvsp[-2].valor_lexico)); libera_val((yyvsp[0].valor_lexico)); string regFun = geraRegistrador(&ultimoReg);  string rotFun = tabelas.getRotuloFun((yyvsp[-3].valor_lexico)); (yyval.nodo) = insere_nodo_tipo((yyvsp[-1].nodo),(yyvsp[-3].valor_lexico),NO_FUN_CALL); (yyval.nodo)->reg = regFun;list<Instrucao> ListI = tabelas.verificaFuncao((yyvsp[-3].valor_lexico),(yyvsp[-1].nodo),get_line_number(),&instId,&ultimoRotulo,&ultimoReg,regFun,rotFun); int tipo = tabelas.getTipoFuncao((yyvsp[-3].valor_lexico)); atualiza_tipo_semantico((yyval.nodo),tipo); (yyval.nodo)->cod.appendCodigoInicio(ListI); if((yyvsp[-1].nodo) != NULL) (yyval.nodo)->cod.appendCodigoInicio((yyvsp[-1].nodo)->cod.getCodigo());}
 #line 1995 "parser.tab.c" /* yacc.c:1646  */
     break;
 

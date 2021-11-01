@@ -276,7 +276,7 @@ shift_right:  var_vet TK_OC_SR pos_int { $$ = insere_nodo($1,$2); insere_filho($
 
 shift_left: var_vet TK_OC_SL pos_int { $$ = insere_nodo($1,$2); insere_filho($$,$3); tabelas.avaliaShift($3->valor_lexico);};
 
-fun_call: TK_IDENTIFICADOR '(' fun_input ')' { libera_val($2); libera_val($4); string regFun = geraRegistrador(&ultimoReg);  string rotFun = tabelas.getRotuloFun($1); $$ = insere_nodo_tipo($3,$1,NO_FUN_CALL); $$->reg = regFun;list<Instrucao> ListI = tabelas.verificaFuncao($1,$3,get_line_number(),&instId,&ultimoRotulo,&ultimoReg,regFun,rotFun); int tipo = tabelas.getTipoFuncao($1); atualiza_tipo_semantico($$,tipo); $$->cod.appendCodigoInicio(ListI); if($3 != NULL) $$->cod.appendCodigoFim($3->cod.getCodigo());} ;
+fun_call: TK_IDENTIFICADOR '(' fun_input ')' { libera_val($2); libera_val($4); string regFun = geraRegistrador(&ultimoReg);  string rotFun = tabelas.getRotuloFun($1); $$ = insere_nodo_tipo($3,$1,NO_FUN_CALL); $$->reg = regFun;list<Instrucao> ListI = tabelas.verificaFuncao($1,$3,get_line_number(),&instId,&ultimoRotulo,&ultimoReg,regFun,rotFun); int tipo = tabelas.getTipoFuncao($1); atualiza_tipo_semantico($$,tipo); $$->cod.appendCodigoInicio(ListI); if($3 != NULL) $$->cod.appendCodigoInicio($3->cod.getCodigo());} ;
 
 lista_arg: id_lit_exp ',' lista_arg { libera_val($2); $$ = insere_filho($1,$3); $1->is_arg = true; $$->cod.appendCodigoFim($3->cod.getCodigo()); }
 | id_lit_exp {$$ = $1; $$->is_arg =true; };

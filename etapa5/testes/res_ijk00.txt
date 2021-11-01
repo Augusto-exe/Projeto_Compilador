@@ -1,0 +1,81 @@
+0 ['loadI', 32, 'rbss']
+1 ['loadI', 1024, 'rsp']
+2 ['loadI', 1024, 'rfp']
+3 ['addI', 'rpc', 5, 'r12']
+4 ['storeAI', 'r12', 'rsp', 0]
+5 ['storeAI', 'rsp', 'rsp', 4]
+6 ['storeAI', 'rfp', 'rsp', 8]
+7 ['jumpI', 10]
+10 ['nop']
+11 ['i2i', 'rsp', 'rfp']
+12 ['addI', 'rsp', 16, 'rsp']
+13 ['addI', 'rsp', 4, 'rsp']
+14 ['addI', 'rsp', 4, 'rsp']
+15 ['loadI', 923, 'r0']
+16 ['storeAI', 'r0', 'rbss', 0]
+17 ['loadI', 456, 'r2']
+18 ['storeAI', 'r2', 'rfp', 20]
+19 ['loadAI', 'rbss', 0, 'r4']
+20 ['loadAI', 'rfp', 20, 'r5']
+21 ['add', 'r4', 'r5', 'r6']
+22 ['storeAI', 'r6', 'rfp', 16]
+23 ['loadI', 0, 'r8']
+24 ['storeAI', 'r8', 'rfp', 12]
+25 ['loadAI', 'rfp', 0, 'r9']
+26 ['loadAI', 'rfp', 4, 'r10']
+27 ['loadAI', 'rfp', 8, 'r11']
+28 ['i2i', 'r10', 'rsp']
+29 ['i2i', 'r11', 'rfp']
+30 ['jump', 'r9']
+8 ['loadAI', 'rsp', 12, 'r0']
+9 ['halt']
+7 storeAI
+6 loadI
+6 loadAI
+4 addI
+3 i2i
+1 jumpI
+1 nop
+1 add
+1 jump
+1 halt
+count	instruction
+    7	storeAI
+    6	loadI
+    6	loadAI
+    4	addI
+    3	i2i
+    1	jumpI
+    1	nop
+    1	add
+    1	jump
+    1	halt
+
+instructions executed:   31
+register         read:   30 write:   51
+memory           read:    6 write:    7
+
+  register    value
+        r0        0
+       r10     1024
+       r11     1024
+       r12        8
+        r2      456
+        r4      923
+        r5      456
+        r6     1379
+        r8        0
+        r9        8
+      rbss       32
+       rfp     1024
+       rpc        9
+       rsp     1024
+
+    memory    value
+00000032      923
+00001024        8
+00001028     1024
+00001032     1024
+00001036        0
+00001040     1379
+00001044      456

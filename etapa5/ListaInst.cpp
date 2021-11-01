@@ -573,7 +573,7 @@ void ListaInst::remendaFalse(list<int> idsRemendo, string rotulo)
 void ListaInst::appendCodigoInicio(list<Instrucao> codigoPref){
     list<Instrucao>::reverse_iterator itList;
 
-    if((codigoPref.back().id != this->codigo.back().id)||(codigoPref.front().id != this->codigo.front().id))
+    if((codigoPref.back().id != this->codigo.back().id)||(codigoPref.front().id != this->codigo.front().id) || (this->codigo.size() == 0))
     {
         for(itList = codigoPref.rbegin();itList !=codigoPref.rend();++itList)
         {
@@ -588,7 +588,7 @@ void ListaInst::appendCodigoInicio(list<Instrucao> codigoPref){
 void ListaInst::appendCodigoFim(list<Instrucao> codigoPos){
     list<Instrucao>::iterator itList;
 
-    if((codigoPos.back().id != this->codigo.back().id)||(codigoPos.front().id != this->codigo.front().id))
+    if((codigoPos.back().id != this->codigo.back().id)||(codigoPos.front().id != this->codigo.front().id) || (this->codigo.size() == 0))
     for(itList = codigoPos.begin();itList !=codigoPos.end();++itList)
     {
         this->codigo.push_back((*itList));

@@ -1,0 +1,169 @@
+0 ['loadI', 44, 'rbss']
+1 ['loadI', 1024, 'rsp']
+2 ['loadI', 1024, 'rfp']
+3 ['addI', 'rpc', 5, 'r19']
+4 ['storeAI', 'r19', 'rsp', 0]
+5 ['storeAI', 'rsp', 'rsp', 4]
+6 ['storeAI', 'rfp', 'rsp', 8]
+7 ['jumpI', 10]
+10 ['nop']
+11 ['i2i', 'rsp', 'rfp']
+12 ['addI', 'rsp', 16, 'rsp']
+13 ['addI', 'rsp', 4, 'rsp']
+14 ['addI', 'rsp', 4, 'rsp']
+15 ['loadI', 10, 'r0']
+16 ['storeAI', 'r0', 'rfp', 16]
+17 ['loadI', 0, 'r2']
+18 ['storeAI', 'r2', 'rfp', 20]
+19 ['nop']
+20 ['loadAI', 'rfp', 16, 'r4']
+21 ['loadI', 5, 'r5']
+22 ['cmp_GT', 'r4', 'r5', 'r6']
+23 ['cbr', 'r6', 24, 34]
+24 ['nop']
+25 ['loadAI', 'rfp', 16, 'r7']
+26 ['loadI', 1, 'r8']
+27 ['sub', 'r7', 'r8', 'r9']
+28 ['storeAI', 'r9', 'rfp', 16]
+29 ['loadAI', 'rfp', 20, 'r11']
+30 ['loadI', 123, 'r12']
+31 ['add', 'r11', 'r12', 'r13']
+32 ['storeAI', 'r13', 'rfp', 20]
+33 ['jumpI', 19]
+19 ['nop']
+20 ['loadAI', 'rfp', 16, 'r4']
+21 ['loadI', 5, 'r5']
+22 ['cmp_GT', 'r4', 'r5', 'r6']
+23 ['cbr', 'r6', 24, 34]
+24 ['nop']
+25 ['loadAI', 'rfp', 16, 'r7']
+26 ['loadI', 1, 'r8']
+27 ['sub', 'r7', 'r8', 'r9']
+28 ['storeAI', 'r9', 'rfp', 16]
+29 ['loadAI', 'rfp', 20, 'r11']
+30 ['loadI', 123, 'r12']
+31 ['add', 'r11', 'r12', 'r13']
+32 ['storeAI', 'r13', 'rfp', 20]
+33 ['jumpI', 19]
+19 ['nop']
+20 ['loadAI', 'rfp', 16, 'r4']
+21 ['loadI', 5, 'r5']
+22 ['cmp_GT', 'r4', 'r5', 'r6']
+23 ['cbr', 'r6', 24, 34]
+24 ['nop']
+25 ['loadAI', 'rfp', 16, 'r7']
+26 ['loadI', 1, 'r8']
+27 ['sub', 'r7', 'r8', 'r9']
+28 ['storeAI', 'r9', 'rfp', 16]
+29 ['loadAI', 'rfp', 20, 'r11']
+30 ['loadI', 123, 'r12']
+31 ['add', 'r11', 'r12', 'r13']
+32 ['storeAI', 'r13', 'rfp', 20]
+33 ['jumpI', 19]
+19 ['nop']
+20 ['loadAI', 'rfp', 16, 'r4']
+21 ['loadI', 5, 'r5']
+22 ['cmp_GT', 'r4', 'r5', 'r6']
+23 ['cbr', 'r6', 24, 34]
+24 ['nop']
+25 ['loadAI', 'rfp', 16, 'r7']
+26 ['loadI', 1, 'r8']
+27 ['sub', 'r7', 'r8', 'r9']
+28 ['storeAI', 'r9', 'rfp', 16]
+29 ['loadAI', 'rfp', 20, 'r11']
+30 ['loadI', 123, 'r12']
+31 ['add', 'r11', 'r12', 'r13']
+32 ['storeAI', 'r13', 'rfp', 20]
+33 ['jumpI', 19]
+19 ['nop']
+20 ['loadAI', 'rfp', 16, 'r4']
+21 ['loadI', 5, 'r5']
+22 ['cmp_GT', 'r4', 'r5', 'r6']
+23 ['cbr', 'r6', 24, 34]
+24 ['nop']
+25 ['loadAI', 'rfp', 16, 'r7']
+26 ['loadI', 1, 'r8']
+27 ['sub', 'r7', 'r8', 'r9']
+28 ['storeAI', 'r9', 'rfp', 16]
+29 ['loadAI', 'rfp', 20, 'r11']
+30 ['loadI', 123, 'r12']
+31 ['add', 'r11', 'r12', 'r13']
+32 ['storeAI', 'r13', 'rfp', 20]
+33 ['jumpI', 19]
+19 ['nop']
+20 ['loadAI', 'rfp', 16, 'r4']
+21 ['loadI', 5, 'r5']
+22 ['cmp_GT', 'r4', 'r5', 'r6']
+23 ['cbr', 'r6', 24, 34]
+34 ['nop']
+35 ['loadI', 0, 'r15']
+36 ['storeAI', 'r15', 'rfp', 12]
+37 ['loadAI', 'rfp', 0, 'r16']
+38 ['loadAI', 'rfp', 4, 'r17']
+39 ['loadAI', 'rfp', 8, 'r18']
+40 ['i2i', 'r17', 'rsp']
+41 ['i2i', 'r18', 'rfp']
+42 ['jump', 'r16']
+8 ['loadAI', 'rsp', 12, 'r0']
+9 ['halt']
+22 loadI
+20 loadAI
+16 storeAI
+13 nop
+6 jumpI
+6 cmp_GT
+6 cbr
+5 sub
+5 add
+4 addI
+3 i2i
+1 jump
+1 halt
+count	instruction
+   22	loadI
+   20	loadAI
+   16	storeAI
+   13	nop
+    6	jumpI
+    6	cmp_GT
+    6	cbr
+    5	sub
+    5	add
+    4	addI
+    3	i2i
+    1	jump
+    1	halt
+
+instructions executed:  108
+register         read:   98 write:  173
+memory           read:   20 write:   16
+
+  register    value
+        r0        0
+       r11      492
+       r12      123
+       r13      615
+       r15        0
+       r16        8
+       r17     1024
+       r18     1024
+       r19        8
+        r2        0
+        r4        5
+        r5        5
+        r6        0
+        r7        6
+        r8        1
+        r9        5
+      rbss       44
+       rfp     1024
+       rpc        9
+       rsp     1024
+
+    memory    value
+00001024        8
+00001028     1024
+00001032     1024
+00001036        0
+00001040        5
+00001044      615

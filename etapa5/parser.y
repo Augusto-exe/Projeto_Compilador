@@ -291,7 +291,7 @@ id_lit_exp: TK_LIT_CHAR { $$ = insere_nodo(NULL,$1);atualiza_tipo_semantico($$,I
 //Definição das expressões
 
 exp: literal_num_bool {$$ = $1;} 
-| var_vet {$$ = $1;$$->reg = geraRegistrador(&ultimoReg);DadoTabelaSimbolos dado = tabelas.getSimboloPorValorLex($1->valor_lexico); $$->cod.appendCodigoInicio(geraLeituraVar($$->reg,dado.deslocamento,dado.escopo,&ultimoReg,&ultimoRotulo,&instId));}
+| var_vet {$$ = $1;$$->reg = geraRegistrador(&ultimoReg);DadoTabelaSimbolos dado = tabelas.getSimboloPorValorLex($1->valor_lexico); list<Instrucao> listaI = list<Instrucao>(); listaI = geraLeituraVar($$->reg,dado.deslocamento,dado.escopo,&ultimoReg,&ultimoRotulo,&instId); $$->cod.appendCodigoInicio(listaI); }
 | fun_call {$$ = $1;} 
 | '(' exp ')' {$$ = $2; libera_val($1); libera_val($3);} 
 | exp_unitaria {$$ = $1;} 

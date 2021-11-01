@@ -1,0 +1,96 @@
+0 ['loadI', 39, 'rbss']
+1 ['loadI', 1024, 'rsp']
+2 ['loadI', 1024, 'rfp']
+3 ['addI', 'rpc', 5, 'r18']
+4 ['storeAI', 'r18', 'rsp', 0]
+5 ['storeAI', 'rsp', 'rsp', 4]
+6 ['storeAI', 'rfp', 'rsp', 8]
+7 ['jumpI', 10]
+10 ['nop']
+11 ['i2i', 'rsp', 'rfp']
+12 ['addI', 'rsp', 16, 'rsp']
+13 ['addI', 'rsp', 4, 'rsp']
+14 ['addI', 'rsp', 4, 'rsp']
+15 ['addI', 'rsp', 4, 'rsp']
+16 ['loadI', 400, 'r0']
+17 ['storeAI', 'r0', 'rfp', 20]
+18 ['loadI', 2, 'r2']
+19 ['storeAI', 'r2', 'rfp', 24]
+20 ['loadAI', 'rfp', 20, 'r4']
+21 ['loadAI', 'rfp', 20, 'r5']
+22 ['loadAI', 'rfp', 24, 'r6']
+23 ['div', 'r5', 'r6', 'r7']
+24 ['add', 'r4', 'r7', 'r8']
+25 ['loadAI', 'rfp', 20, 'r9']
+26 ['loadAI', 'rfp', 24, 'r10']
+27 ['div', 'r9', 'r10', 'r11']
+28 ['add', 'r8', 'r11', 'r12']
+29 ['storeAI', 'r12', 'rfp', 16]
+30 ['loadI', 0, 'r14']
+31 ['storeAI', 'r14', 'rfp', 12]
+32 ['loadAI', 'rfp', 0, 'r15']
+33 ['loadAI', 'rfp', 4, 'r16']
+34 ['loadAI', 'rfp', 8, 'r17']
+35 ['i2i', 'r16', 'rsp']
+36 ['i2i', 'r17', 'rfp']
+37 ['jump', 'r15']
+8 ['loadAI', 'rsp', 12, 'r0']
+9 ['halt']
+9 loadAI
+7 storeAI
+6 loadI
+5 addI
+3 i2i
+2 div
+2 add
+1 jumpI
+1 nop
+1 jump
+1 halt
+count	instruction
+    9	loadAI
+    7	storeAI
+    6	loadI
+    5	addI
+    3	i2i
+    2	div
+    2	add
+    1	jumpI
+    1	nop
+    1	jump
+    1	halt
+
+instructions executed:   38
+register         read:   40 write:   65
+memory           read:    9 write:    7
+
+  register    value
+        r0        0
+       r10        2
+       r11      200
+       r12      800
+       r14        0
+       r15        8
+       r16     1024
+       r17     1024
+       r18        8
+        r2        2
+        r4      400
+        r5      400
+        r6        2
+        r7      200
+        r8      600
+        r9      400
+      rbss       39
+       rfp     1024
+       rpc        9
+       rsp     1024
+
+    memory    value
+00001024        8
+00001028     1024
+00001032     1024
+00001036        0
+00001040      800
+00001044      400
+00001048        2

@@ -1,0 +1,125 @@
+0 ['loadI', 58, 'rbss']
+1 ['loadI', 1024, 'rsp']
+2 ['loadI', 1024, 'rfp']
+3 ['addI', 'rpc', 5, 'r23']
+4 ['storeAI', 'r23', 'rsp', 0]
+5 ['storeAI', 'rsp', 'rsp', 4]
+6 ['storeAI', 'rfp', 'rsp', 8]
+7 ['jumpI', 28]
+28 ['nop']
+29 ['i2i', 'rsp', 'rfp']
+30 ['addI', 'rsp', 16, 'rsp']
+31 ['addI', 'rsp', 4, 'rsp']
+32 ['loadI', 7, 'r8']
+33 ['storeAI', 'r8', 'rfp', 16]
+34 ['loadAI', 'rfp', 16, 'r10']
+35 ['loadAI', 'rfp', 16, 'r11']
+36 ['addI', 'rpc', 7, 'r13']
+37 ['storeAI', 'r13', 'rsp', 0]
+38 ['storeAI', 'rsp', 'rsp', 4]
+39 ['storeAI', 'rfp', 'rsp', 8]
+40 ['storeAI', 'r10', 'rsp', 16]
+41 ['storeAI', 'r11', 'rsp', 20]
+42 ['jumpI', 10]
+10 ['nop']
+11 ['i2i', 'rsp', 'rfp']
+12 ['addI', 'rsp', 16, 'rsp']
+13 ['addI', 'rsp', 4, 'rsp']
+14 ['addI', 'rsp', 4, 'rsp']
+15 ['addI', 'rsp', 4, 'rsp']
+16 ['loadAI', 'rfp', 16, 'r0']
+17 ['loadAI', 'rfp', 20, 'r1']
+18 ['mult', 'r0', 'r1', 'r2']
+19 ['storeAI', 'r2', 'rfp', 24]
+20 ['loadAI', 'rfp', 24, 'r4']
+21 ['storeAI', 'r4', 'rfp', 12]
+22 ['loadAI', 'rfp', 0, 'r5']
+23 ['loadAI', 'rfp', 4, 'r6']
+24 ['loadAI', 'rfp', 8, 'r7']
+25 ['i2i', 'r6', 'rsp']
+26 ['i2i', 'r7', 'rfp']
+27 ['jump', 'r5']
+43 ['loadAI', 'rsp', 12, 'r12']
+44 ['storeAI', 'r12', 'rbss', 0]
+45 ['loadAI', 'rbss', 0, 'r15']
+46 ['loadAI', 'rfp', 16, 'r16']
+47 ['add', 'r15', 'r16', 'r17']
+48 ['storeAI', 'r17', 'rbss', 0]
+49 ['loadI', 0, 'r19']
+50 ['storeAI', 'r19', 'rfp', 12]
+51 ['loadAI', 'rfp', 0, 'r20']
+52 ['loadAI', 'rfp', 4, 'r21']
+53 ['loadAI', 'rfp', 8, 'r22']
+54 ['i2i', 'r21', 'rsp']
+55 ['i2i', 'r22', 'rfp']
+56 ['jump', 'r20']
+8 ['loadAI', 'rsp', 12, 'r0']
+9 ['halt']
+15 loadAI
+14 storeAI
+8 addI
+6 i2i
+5 loadI
+2 jumpI
+2 nop
+2 jump
+1 mult
+1 add
+1 halt
+count	instruction
+   15	loadAI
+   14	storeAI
+    8	addI
+    6	i2i
+    5	loadI
+    2	jumpI
+    2	nop
+    2	jump
+    1	mult
+    1	add
+    1	halt
+
+instructions executed:   57
+register         read:   63 write:   93
+memory           read:   15 write:   14
+
+  register    value
+        r0        0
+        r1        7
+       r10        7
+       r11        7
+       r12       49
+       r13       43
+       r15       49
+       r16        7
+       r17       56
+       r19        0
+        r2       49
+       r20        8
+       r21     1024
+       r22     1024
+       r23        8
+        r4       49
+        r5       43
+        r6     1044
+        r7     1024
+        r8        7
+      rbss       58
+       rfp     1024
+       rpc        9
+       rsp     1024
+
+    memory    value
+00000058       56
+00001024        8
+00001028     1024
+00001032     1024
+00001036        0
+00001040        7
+00001044       43
+00001048     1044
+00001052     1024
+00001056       49
+00001060        7
+00001064        7
+00001068       49

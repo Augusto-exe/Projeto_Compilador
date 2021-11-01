@@ -12,8 +12,7 @@ int gis(int a)
 
 int main()
 {
-  K = gis(3);
+  K = gis(2);
   K = K + 1;
-  printf("%d\n",K );
   return 0;
 }

@@ -54,7 +54,7 @@ jump -> r18
 L3: nop
 i2i rsp => rfp
 addI rsp, 16 => rsp
-loadI 2 => r21
+loadI 3 => r21
 addI rpc, 6 => r23
 storeAI r23 => rsp, 0
 storeAI rsp => rsp, 4

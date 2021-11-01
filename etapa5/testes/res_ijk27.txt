@@ -1,0 +1,265 @@
+0 ['loadI', 133, 'rbss']
+1 ['loadI', 1024, 'rsp']
+2 ['loadI', 1024, 'rfp']
+3 ['addI', 'rpc', 5, 'r65']
+4 ['storeAI', 'r65', 'rsp', 0]
+5 ['storeAI', 'rsp', 'rsp', 4]
+6 ['storeAI', 'rfp', 'rsp', 8]
+7 ['jumpI', 100]
+100 ['nop']
+101 ['i2i', 'rsp', 'rfp']
+102 ['addI', 'rsp', 16, 'rsp']
+103 ['addI', 'rsp', 4, 'rsp']
+104 ['addI', 'rsp', 4, 'rsp']
+105 ['loadI', 7, 'r50']
+106 ['storeAI', 'r50', 'rfp', 16]
+107 ['loadI', 3, 'r52']
+108 ['storeAI', 'r52', 'rfp', 20]
+109 ['loadAI', 'rfp', 16, 'r54']
+110 ['loadAI', 'rfp', 16, 'r55']
+111 ['loadAI', 'rfp', 20, 'r56']
+112 ['loadAI', 'rfp', 20, 'r57']
+113 ['addI', 'rpc', 9, 'r59']
+114 ['storeAI', 'r59', 'rsp', 0]
+115 ['storeAI', 'rsp', 'rsp', 4]
+116 ['storeAI', 'rfp', 'rsp', 8]
+117 ['storeAI', 'r54', 'rsp', 16]
+118 ['storeAI', 'r55', 'rsp', 20]
+119 ['storeAI', 'r56', 'rsp', 24]
+120 ['storeAI', 'r57', 'rsp', 28]
+121 ['jumpI', 28]
+28 ['nop']
+29 ['i2i', 'rsp', 'rfp']
+30 ['addI', 'rsp', 16, 'rsp']
+31 ['addI', 'rsp', 4, 'rsp']
+32 ['addI', 'rsp', 4, 'rsp']
+33 ['addI', 'rsp', 4, 'rsp']
+34 ['addI', 'rsp', 4, 'rsp']
+35 ['addI', 'rsp', 4, 'rsp']
+36 ['addI', 'rsp', 4, 'rsp']
+37 ['addI', 'rsp', 4, 'rsp']
+38 ['addI', 'rsp', 4, 'rsp']
+39 ['addI', 'rsp', 4, 'rsp']
+40 ['addI', 'rsp', 4, 'rsp']
+41 ['addI', 'rsp', 4, 'rsp']
+42 ['loadAI', 'rfp', 16, 'r8']
+43 ['storeAI', 'r8', 'rfp', 32]
+44 ['loadAI', 'rfp', 32, 'r10']
+45 ['loadI', 1, 'r11']
+46 ['add', 'r10', 'r11', 'r12']
+47 ['storeAI', 'r12', 'rfp', 32]
+48 ['loadAI', 'rfp', 20, 'r14']
+49 ['storeAI', 'r14', 'rfp', 36]
+50 ['loadAI', 'rfp', 36, 'r16']
+51 ['loadI', 3, 'r17']
+52 ['add', 'r16', 'r17', 'r18']
+53 ['storeAI', 'r18', 'rfp', 36]
+54 ['loadAI', 'rfp', 24, 'r20']
+55 ['storeAI', 'r20', 'rfp', 40]
+56 ['loadAI', 'rfp', 40, 'r22']
+57 ['loadI', 2, 'r23']
+58 ['add', 'r22', 'r23', 'r24']
+59 ['storeAI', 'r24', 'rfp', 40]
+60 ['loadAI', 'rfp', 28, 'r26']
+61 ['storeAI', 'r26', 'rfp', 44]
+62 ['loadAI', 'rfp', 44, 'r28']
+63 ['loadI', 4, 'r29']
+64 ['add', 'r28', 'r29', 'r30']
+65 ['storeAI', 'r30', 'rfp', 44]
+66 ['loadAI', 'rfp', 32, 'r32']
+67 ['loadAI', 'rfp', 36, 'r33']
+68 ['addI', 'rpc', 7, 'r35']
+69 ['storeAI', 'r35', 'rsp', 0]
+70 ['storeAI', 'rsp', 'rsp', 4]
+71 ['storeAI', 'rfp', 'rsp', 8]
+72 ['storeAI', 'r32', 'rsp', 16]
+73 ['storeAI', 'r33', 'rsp', 20]
+74 ['jumpI', 10]
+10 ['nop']
+11 ['i2i', 'rsp', 'rfp']
+12 ['addI', 'rsp', 16, 'rsp']
+13 ['addI', 'rsp', 4, 'rsp']
+14 ['addI', 'rsp', 4, 'rsp']
+15 ['addI', 'rsp', 4, 'rsp']
+16 ['loadAI', 'rfp', 16, 'r0']
+17 ['loadAI', 'rfp', 20, 'r1']
+18 ['mult', 'r0', 'r1', 'r2']
+19 ['storeAI', 'r2', 'rfp', 24]
+20 ['loadAI', 'rfp', 24, 'r4']
+21 ['storeAI', 'r4', 'rfp', 12]
+22 ['loadAI', 'rfp', 0, 'r5']
+23 ['loadAI', 'rfp', 4, 'r6']
+24 ['loadAI', 'rfp', 8, 'r7']
+25 ['i2i', 'r6', 'rsp']
+26 ['i2i', 'r7', 'rfp']
+27 ['jump', 'r5']
+75 ['loadAI', 'rsp', 12, 'r34']
+76 ['storeAI', 'r34', 'rfp', 48]
+77 ['loadAI', 'rfp', 40, 'r37']
+78 ['loadAI', 'rfp', 44, 'r38']
+79 ['addI', 'rpc', 7, 'r40']
+80 ['storeAI', 'r40', 'rsp', 0]
+81 ['storeAI', 'rsp', 'rsp', 4]
+82 ['storeAI', 'rfp', 'rsp', 8]
+83 ['storeAI', 'r37', 'rsp', 16]
+84 ['storeAI', 'r38', 'rsp', 20]
+85 ['jumpI', 10]
+10 ['nop']
+11 ['i2i', 'rsp', 'rfp']
+12 ['addI', 'rsp', 16, 'rsp']
+13 ['addI', 'rsp', 4, 'rsp']
+14 ['addI', 'rsp', 4, 'rsp']
+15 ['addI', 'rsp', 4, 'rsp']
+16 ['loadAI', 'rfp', 16, 'r0']
+17 ['loadAI', 'rfp', 20, 'r1']
+18 ['mult', 'r0', 'r1', 'r2']
+19 ['storeAI', 'r2', 'rfp', 24]
+20 ['loadAI', 'rfp', 24, 'r4']
+21 ['storeAI', 'r4', 'rfp', 12]
+22 ['loadAI', 'rfp', 0, 'r5']
+23 ['loadAI', 'rfp', 4, 'r6']
+24 ['loadAI', 'rfp', 8, 'r7']
+25 ['i2i', 'r6', 'rsp']
+26 ['i2i', 'r7', 'rfp']
+27 ['jump', 'r5']
+86 ['loadAI', 'rsp', 12, 'r39']
+87 ['storeAI', 'r39', 'rfp', 52]
+88 ['loadAI', 'rfp', 48, 'r42']
+89 ['loadAI', 'rfp', 52, 'r43']
+90 ['add', 'r42', 'r43', 'r44']
+91 ['storeAI', 'r44', 'rfp', 56]
+92 ['loadAI', 'rfp', 56, 'r46']
+93 ['storeAI', 'r46', 'rfp', 12]
+94 ['loadAI', 'rfp', 0, 'r47']
+95 ['loadAI', 'rfp', 4, 'r48']
+96 ['loadAI', 'rfp', 8, 'r49']
+97 ['i2i', 'r48', 'rsp']
+98 ['i2i', 'r49', 'rfp']
+99 ['jump', 'r47']
+122 ['loadAI', 'rsp', 12, 'r58']
+123 ['storeAI', 'r58', 'rbss', 0]
+124 ['loadI', 0, 'r61']
+125 ['storeAI', 'r61', 'rfp', 12]
+126 ['loadAI', 'rfp', 0, 'r62']
+127 ['loadAI', 'rfp', 4, 'r63']
+128 ['loadAI', 'rfp', 8, 'r64']
+129 ['i2i', 'r63', 'rsp']
+130 ['i2i', 'r64', 'rfp']
+131 ['jump', 'r62']
+8 ['loadAI', 'rsp', 12, 'r0']
+9 ['halt']
+41 loadAI
+40 storeAI
+27 addI
+12 i2i
+10 loadI
+5 add
+4 jumpI
+4 nop
+4 jump
+2 mult
+1 halt
+count	instruction
+   41	loadAI
+   40	storeAI
+   27	addI
+   12	i2i
+   10	loadI
+    5	add
+    4	jumpI
+    4	nop
+    4	jump
+    2	mult
+    1	halt
+
+instructions executed:  150
+register         read:  178 write:  247
+memory           read:   41 write:   40
+
+  register    value
+        r0        0
+        r1        7
+       r10        7
+       r11        1
+       r12        8
+       r14        7
+       r16        7
+       r17        3
+       r18       10
+        r2       35
+       r20        3
+       r22        3
+       r23        2
+       r24        5
+       r26        3
+       r28        3
+       r29        4
+       r30        7
+       r32        8
+       r33       10
+       r34       80
+       r35       75
+       r37        5
+       r38        7
+       r39       35
+        r4       35
+       r40       86
+       r42       80
+       r43       35
+       r44      115
+       r46      115
+       r47      122
+       r48     1048
+       r49     1024
+        r5       86
+       r50        7
+       r52        3
+       r54        7
+       r55        7
+       r56        3
+       r57        3
+       r58      115
+       r59      122
+        r6     1108
+       r61        0
+       r62        8
+       r63     1024
+       r64     1024
+       r65        8
+        r7     1048
+        r8        7
+      rbss      133
+       rfp     1024
+       rpc        9
+       rsp     1024
+
+    memory    value
+00000133      115
+00001024        8
+00001028     1024
+00001032     1024
+00001036        0
+00001040        7
+00001044        3
+00001048      122
+00001052     1048
+00001056     1024
+00001060      115
+00001064        7
+00001068        7
+00001072        3
+00001076        3
+00001080        8
+00001084       10
+00001088        5
+00001092        7
+00001096       80
+00001100       35
+00001104      115
+00001108       86
+00001112     1108
+00001116     1048
+00001120       35
+00001124        5
+00001128        7
+00001132       35

@@ -2044,7 +2044,7 @@ yyreduce:
 
   case 92:
 #line 294 "parser.y" /* yacc.c:1646  */
-    {(yyval.nodo) = (yyvsp[0].nodo);(yyval.nodo)->reg = geraRegistrador(&ultimoReg);DadoTabelaSimbolos dado = tabelas.getSimboloPorValorLex((yyvsp[0].nodo)->valor_lexico); (yyval.nodo)->cod.appendCodigoInicio(geraLeituraVar((yyval.nodo)->reg,dado.deslocamento,dado.escopo,&ultimoReg,&ultimoRotulo,&instId));}
+    {(yyval.nodo) = (yyvsp[0].nodo);(yyval.nodo)->reg = geraRegistrador(&ultimoReg);DadoTabelaSimbolos dado = tabelas.getSimboloPorValorLex((yyvsp[0].nodo)->valor_lexico); list<Instrucao> listaI = list<Instrucao>(); listaI = geraLeituraVar((yyval.nodo)->reg,dado.deslocamento,dado.escopo,&ultimoReg,&ultimoRotulo,&instId); (yyval.nodo)->cod.appendCodigoInicio(listaI); }
 #line 2049 "parser.tab.c" /* yacc.c:1646  */
     break;
 

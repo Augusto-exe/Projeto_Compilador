@@ -1,0 +1,99 @@
+0 ['loadI', 48, 'rbss']
+1 ['loadI', 1024, 'rsp']
+2 ['loadI', 1024, 'rfp']
+3 ['addI', 'rpc', 5, 'r20']
+4 ['storeAI', 'r20', 'rsp', 0]
+5 ['storeAI', 'rsp', 'rsp', 4]
+6 ['storeAI', 'rfp', 'rsp', 8]
+7 ['jumpI', 10]
+10 ['nop']
+11 ['i2i', 'rsp', 'rfp']
+12 ['addI', 'rsp', 16, 'rsp']
+13 ['addI', 'rsp', 4, 'rsp']
+14 ['addI', 'rsp', 4, 'rsp']
+15 ['addI', 'rsp', 4, 'rsp']
+16 ['addI', 'rsp', 4, 'rsp']
+17 ['addI', 'rsp', 4, 'rsp']
+18 ['loadI', 0, 'r0']
+19 ['storeAI', 'r0', 'rfp', 16]
+20 ['loadI', 1, 'r2']
+21 ['storeAI', 'r2', 'rfp', 20]
+22 ['loadI', 2, 'r4']
+23 ['storeAI', 'r4', 'rfp', 24]
+24 ['loadI', 3, 'r6']
+25 ['storeAI', 'r6', 'rfp', 28]
+26 ['loadAI', 'rfp', 16, 'r8']
+27 ['loadAI', 'rfp', 20, 'r9']
+28 ['cmp_LT', 'r8', 'r9', 'r10']
+29 ['cbr', 'r10', 35, 30]
+35 ['nop']
+36 ['loadI', 293, 'r14']
+37 ['storeAI', 'r14', 'rfp', 32]
+38 ['nop']
+39 ['loadI', 0, 'r16']
+40 ['storeAI', 'r16', 'rfp', 12]
+41 ['loadAI', 'rfp', 0, 'r17']
+42 ['loadAI', 'rfp', 4, 'r18']
+43 ['loadAI', 'rfp', 8, 'r19']
+44 ['i2i', 'r18', 'rsp']
+45 ['i2i', 'r19', 'rfp']
+46 ['jump', 'r17']
+8 ['loadAI', 'rsp', 12, 'r0']
+9 ['halt']
+9 loadI
+9 storeAI
+7 addI
+6 loadAI
+3 nop
+3 i2i
+1 jumpI
+1 cmp_LT
+1 cbr
+1 jump
+1 halt
+count	instruction
+    9	loadI
+    9	storeAI
+    7	addI
+    6	loadAI
+    3	nop
+    3	i2i
+    1	jumpI
+    1	cmp_LT
+    1	cbr
+    1	jump
+    1	halt
+
+instructions executed:   42
+register         read:   38 write:   68
+memory           read:    6 write:    9
+
+  register    value
+        r0        0
+       r10        1
+       r14      293
+       r16        0
+       r17        8
+       r18     1024
+       r19     1024
+        r2        1
+       r20        8
+        r4        2
+        r6        3
+        r8        0
+        r9        1
+      rbss       48
+       rfp     1024
+       rpc        9
+       rsp     1024
+
+    memory    value
+00001024        8
+00001028     1024
+00001032     1024
+00001036        0
+00001040        0
+00001044        1
+00001048        2
+00001052        3
+00001056      293

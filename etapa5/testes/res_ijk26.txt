@@ -1,0 +1,322 @@
+0 ['loadI', 78, 'rbss']
+1 ['loadI', 1024, 'rsp']
+2 ['loadI', 1024, 'rfp']
+3 ['addI', 'rpc', 5, 'r33']
+4 ['storeAI', 'r33', 'rsp', 0]
+5 ['storeAI', 'rsp', 'rsp', 4]
+6 ['storeAI', 'rfp', 'rsp', 8]
+7 ['jumpI', 50]
+50 ['nop']
+51 ['i2i', 'rsp', 'rfp']
+52 ['addI', 'rsp', 16, 'rsp']
+53 ['addI', 'rsp', 4, 'rsp']
+54 ['loadI', 6, 'r19']
+55 ['storeAI', 'r19', 'rfp', 16]
+56 ['loadAI', 'rfp', 16, 'r21']
+57 ['addI', 'rpc', 6, 'r23']
+58 ['storeAI', 'r23', 'rsp', 0]
+59 ['storeAI', 'rsp', 'rsp', 4]
+60 ['storeAI', 'rfp', 'rsp', 8]
+61 ['storeAI', 'r21', 'rsp', 16]
+62 ['jumpI', 10]
+10 ['nop']
+11 ['i2i', 'rsp', 'rfp']
+12 ['addI', 'rsp', 16, 'rsp']
+13 ['addI', 'rsp', 4, 'rsp']
+14 ['addI', 'rsp', 4, 'rsp']
+15 ['loadAI', 'rfp', 16, 'r0']
+16 ['loadI', 1, 'r1']
+17 ['cmp_EQ', 'r0', 'r1', 'r2']
+18 ['cbr', 'r2', 19, 28]
+28 ['nop']
+29 ['loadAI', 'rfp', 16, 'r7']
+30 ['loadI', 1, 'r8']
+31 ['sub', 'r7', 'r8', 'r9']
+32 ['addI', 'rpc', 6, 'r11']
+33 ['storeAI', 'r11', 'rsp', 0]
+34 ['storeAI', 'rsp', 'rsp', 4]
+35 ['storeAI', 'rfp', 'rsp', 8]
+36 ['storeAI', 'r9', 'rsp', 16]
+37 ['jumpI', 10]
+10 ['nop']
+11 ['i2i', 'rsp', 'rfp']
+12 ['addI', 'rsp', 16, 'rsp']
+13 ['addI', 'rsp', 4, 'rsp']
+14 ['addI', 'rsp', 4, 'rsp']
+15 ['loadAI', 'rfp', 16, 'r0']
+16 ['loadI', 1, 'r1']
+17 ['cmp_EQ', 'r0', 'r1', 'r2']
+18 ['cbr', 'r2', 19, 28]
+28 ['nop']
+29 ['loadAI', 'rfp', 16, 'r7']
+30 ['loadI', 1, 'r8']
+31 ['sub', 'r7', 'r8', 'r9']
+32 ['addI', 'rpc', 6, 'r11']
+33 ['storeAI', 'r11', 'rsp', 0]
+34 ['storeAI', 'rsp', 'rsp', 4]
+35 ['storeAI', 'rfp', 'rsp', 8]
+36 ['storeAI', 'r9', 'rsp', 16]
+37 ['jumpI', 10]
+10 ['nop']
+11 ['i2i', 'rsp', 'rfp']
+12 ['addI', 'rsp', 16, 'rsp']
+13 ['addI', 'rsp', 4, 'rsp']
+14 ['addI', 'rsp', 4, 'rsp']
+15 ['loadAI', 'rfp', 16, 'r0']
+16 ['loadI', 1, 'r1']
+17 ['cmp_EQ', 'r0', 'r1', 'r2']
+18 ['cbr', 'r2', 19, 28]
+28 ['nop']
+29 ['loadAI', 'rfp', 16, 'r7']
+30 ['loadI', 1, 'r8']
+31 ['sub', 'r7', 'r8', 'r9']
+32 ['addI', 'rpc', 6, 'r11']
+33 ['storeAI', 'r11', 'rsp', 0]
+34 ['storeAI', 'rsp', 'rsp', 4]
+35 ['storeAI', 'rfp', 'rsp', 8]
+36 ['storeAI', 'r9', 'rsp', 16]
+37 ['jumpI', 10]
+10 ['nop']
+11 ['i2i', 'rsp', 'rfp']
+12 ['addI', 'rsp', 16, 'rsp']
+13 ['addI', 'rsp', 4, 'rsp']
+14 ['addI', 'rsp', 4, 'rsp']
+15 ['loadAI', 'rfp', 16, 'r0']
+16 ['loadI', 1, 'r1']
+17 ['cmp_EQ', 'r0', 'r1', 'r2']
+18 ['cbr', 'r2', 19, 28]
+28 ['nop']
+29 ['loadAI', 'rfp', 16, 'r7']
+30 ['loadI', 1, 'r8']
+31 ['sub', 'r7', 'r8', 'r9']
+32 ['addI', 'rpc', 6, 'r11']
+33 ['storeAI', 'r11', 'rsp', 0]
+34 ['storeAI', 'rsp', 'rsp', 4]
+35 ['storeAI', 'rfp', 'rsp', 8]
+36 ['storeAI', 'r9', 'rsp', 16]
+37 ['jumpI', 10]
+10 ['nop']
+11 ['i2i', 'rsp', 'rfp']
+12 ['addI', 'rsp', 16, 'rsp']
+13 ['addI', 'rsp', 4, 'rsp']
+14 ['addI', 'rsp', 4, 'rsp']
+15 ['loadAI', 'rfp', 16, 'r0']
+16 ['loadI', 1, 'r1']
+17 ['cmp_EQ', 'r0', 'r1', 'r2']
+18 ['cbr', 'r2', 19, 28]
+28 ['nop']
+29 ['loadAI', 'rfp', 16, 'r7']
+30 ['loadI', 1, 'r8']
+31 ['sub', 'r7', 'r8', 'r9']
+32 ['addI', 'rpc', 6, 'r11']
+33 ['storeAI', 'r11', 'rsp', 0]
+34 ['storeAI', 'rsp', 'rsp', 4]
+35 ['storeAI', 'rfp', 'rsp', 8]
+36 ['storeAI', 'r9', 'rsp', 16]
+37 ['jumpI', 10]
+10 ['nop']
+11 ['i2i', 'rsp', 'rfp']
+12 ['addI', 'rsp', 16, 'rsp']
+13 ['addI', 'rsp', 4, 'rsp']
+14 ['addI', 'rsp', 4, 'rsp']
+15 ['loadAI', 'rfp', 16, 'r0']
+16 ['loadI', 1, 'r1']
+17 ['cmp_EQ', 'r0', 'r1', 'r2']
+18 ['cbr', 'r2', 19, 28]
+19 ['nop']
+20 ['loadAI', 'rfp', 16, 'r3']
+21 ['storeAI', 'r3', 'rfp', 12]
+22 ['loadAI', 'rfp', 0, 'r4']
+23 ['loadAI', 'rfp', 4, 'r5']
+24 ['loadAI', 'rfp', 8, 'r6']
+25 ['i2i', 'r5', 'rsp']
+26 ['i2i', 'r6', 'rfp']
+27 ['jump', 'r4']
+38 ['loadAI', 'rsp', 12, 'r10']
+39 ['loadAI', 'rfp', 16, 'r12']
+40 ['mult', 'r10', 'r12', 'r13']
+41 ['storeAI', 'r13', 'rfp', 20]
+42 ['loadAI', 'rfp', 20, 'r15']
+43 ['storeAI', 'r15', 'rfp', 12]
+44 ['loadAI', 'rfp', 0, 'r16']
+45 ['loadAI', 'rfp', 4, 'r17']
+46 ['loadAI', 'rfp', 8, 'r18']
+47 ['i2i', 'r17', 'rsp']
+48 ['i2i', 'r18', 'rfp']
+49 ['jump', 'r16']
+38 ['loadAI', 'rsp', 12, 'r10']
+39 ['loadAI', 'rfp', 16, 'r12']
+40 ['mult', 'r10', 'r12', 'r13']
+41 ['storeAI', 'r13', 'rfp', 20]
+42 ['loadAI', 'rfp', 20, 'r15']
+43 ['storeAI', 'r15', 'rfp', 12]
+44 ['loadAI', 'rfp', 0, 'r16']
+45 ['loadAI', 'rfp', 4, 'r17']
+46 ['loadAI', 'rfp', 8, 'r18']
+47 ['i2i', 'r17', 'rsp']
+48 ['i2i', 'r18', 'rfp']
+49 ['jump', 'r16']
+38 ['loadAI', 'rsp', 12, 'r10']
+39 ['loadAI', 'rfp', 16, 'r12']
+40 ['mult', 'r10', 'r12', 'r13']
+41 ['storeAI', 'r13', 'rfp', 20]
+42 ['loadAI', 'rfp', 20, 'r15']
+43 ['storeAI', 'r15', 'rfp', 12]
+44 ['loadAI', 'rfp', 0, 'r16']
+45 ['loadAI', 'rfp', 4, 'r17']
+46 ['loadAI', 'rfp', 8, 'r18']
+47 ['i2i', 'r17', 'rsp']
+48 ['i2i', 'r18', 'rfp']
+49 ['jump', 'r16']
+38 ['loadAI', 'rsp', 12, 'r10']
+39 ['loadAI', 'rfp', 16, 'r12']
+40 ['mult', 'r10', 'r12', 'r13']
+41 ['storeAI', 'r13', 'rfp', 20]
+42 ['loadAI', 'rfp', 20, 'r15']
+43 ['storeAI', 'r15', 'rfp', 12]
+44 ['loadAI', 'rfp', 0, 'r16']
+45 ['loadAI', 'rfp', 4, 'r17']
+46 ['loadAI', 'rfp', 8, 'r18']
+47 ['i2i', 'r17', 'rsp']
+48 ['i2i', 'r18', 'rfp']
+49 ['jump', 'r16']
+38 ['loadAI', 'rsp', 12, 'r10']
+39 ['loadAI', 'rfp', 16, 'r12']
+40 ['mult', 'r10', 'r12', 'r13']
+41 ['storeAI', 'r13', 'rfp', 20]
+42 ['loadAI', 'rfp', 20, 'r15']
+43 ['storeAI', 'r15', 'rfp', 12]
+44 ['loadAI', 'rfp', 0, 'r16']
+45 ['loadAI', 'rfp', 4, 'r17']
+46 ['loadAI', 'rfp', 8, 'r18']
+47 ['i2i', 'r17', 'rsp']
+48 ['i2i', 'r18', 'rfp']
+49 ['jump', 'r16']
+63 ['loadAI', 'rsp', 12, 'r22']
+64 ['storeAI', 'r22', 'rbss', 0]
+65 ['loadAI', 'rbss', 0, 'r25']
+66 ['loadI', 1, 'r26']
+67 ['add', 'r25', 'r26', 'r27']
+68 ['storeAI', 'r27', 'rbss', 0]
+69 ['loadI', 0, 'r29']
+70 ['storeAI', 'r29', 'rfp', 12]
+71 ['loadAI', 'rfp', 0, 'r30']
+72 ['loadAI', 'rfp', 4, 'r31']
+73 ['loadAI', 'rfp', 8, 'r32']
+74 ['i2i', 'r31', 'rsp']
+75 ['i2i', 'r32', 'rfp']
+76 ['jump', 'r30']
+8 ['loadAI', 'rsp', 12, 'r0']
+9 ['halt']
+52 loadAI
+42 storeAI
+27 addI
+21 i2i
+17 loadI
+13 nop
+7 jumpI
+7 jump
+6 cmp_EQ
+6 cbr
+5 sub
+5 mult
+1 add
+1 halt
+count	instruction
+   52	loadAI
+   42	storeAI
+   27	addI
+   21	i2i
+   17	loadI
+   13	nop
+    7	jumpI
+    7	jump
+    6	cmp_EQ
+    6	cbr
+    5	sub
+    5	mult
+    1	add
+    1	halt
+
+instructions executed:  210
+register         read:  231 write:  344
+memory           read:   52 write:   42
+
+  register    value
+        r0        0
+        r1        1
+       r10      120
+       r11       38
+       r12        6
+       r13      720
+       r15      720
+       r16       63
+       r17     1044
+       r18     1024
+       r19        6
+        r2        1
+       r21        6
+       r22      720
+       r23       63
+       r25      720
+       r26        1
+       r27      721
+       r29        0
+        r3        1
+       r30        8
+       r31     1024
+       r32     1024
+       r33        8
+        r4       38
+        r5     1164
+        r6     1140
+        r7        2
+        r8        1
+        r9        1
+      rbss       78
+       rfp     1024
+       rpc        9
+       rsp     1024
+
+    memory    value
+00000078      721
+00001024        8
+00001028     1024
+00001032     1024
+00001036        0
+00001040        6
+00001044       63
+00001048     1044
+00001052     1024
+00001056      720
+00001060        6
+00001064      720
+00001068       38
+00001072     1068
+00001076     1044
+00001080      120
+00001084        5
+00001088      120
+00001092       38
+00001096     1092
+00001100     1068
+00001104       24
+00001108        4
+00001112       24
+00001116       38
+00001120     1116
+00001124     1092
+00001128        6
+00001132        3
+00001136        6
+00001140       38
+00001144     1140
+00001148     1116
+00001152        2
+00001156        2
+00001160        2
+00001164       38
+00001168     1164
+00001172     1140
+00001176        1
+00001180        1

@@ -39,5 +39,7 @@ int m(int k)
 	{
 		output a;
 	};
+	main(1);
+	mn(2);
 
 }

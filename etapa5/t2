@@ -1,5 +1,8 @@
-int mn(int j)
+int main(int j,int y)
 {
 	int b,a <= 1,c <= 2,d <= a;
 	b = a +1;
+	//main(1,5);
+
+	return 0;
 }

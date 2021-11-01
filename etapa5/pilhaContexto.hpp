@@ -22,7 +22,7 @@ class PilhaContexto
 		PilhaContexto();
 		void insereContexto();
 		tabelaSimbolos popContexto();
-		void insereSimboloNonVet(int line, int natureza, lexic_val_type *valorLex,int tipo, int escopo = ESC_LOCAL);
+		Instrucao insereSimboloNonVet(int line, int natureza, lexic_val_type *valorLex,int tipo, int*id,int escopo = ESC_LOCAL);
 		void insereSimboloVet(int line, int natureza, lexic_val_type *valorLex,int tipo,int tamanho,int escopo = ESC_LOCAL);
 		list<Instrucao> atualizaTipoTamanho(int tipo, int*id);
 		void adicionaParametro(string nome,string nome_par);
@@ -36,12 +36,13 @@ class PilhaContexto
 		void atualizaFunTipoPar(lexic_val_type *valorLex,int tipo );
 		void empilhaParametro(lexic_val_type *valorLex);
 		int infereTipo(a_nodo* nodoEsq,a_nodo* nodoDir);
-		int verificaFuncao(lexic_val_type *valorLex, a_nodo * nodo,int linha);
+		list<Instrucao> verificaFuncao(lexic_val_type *valorLex, a_nodo * nodo,int linha,int *id,int* ultimoRotulo,int*ultimoReg,string regFun,string rotFun);
+		int getTipoFuncao(lexic_val_type *valorLex);
 		int verificaVetor(lexic_val_type *valorLex, a_nodo * vetIndex);
 		int verificaVar(lexic_val_type *valorLex);
 		int infereTipoTern(a_nodo* nodoEsq,a_nodo* nodoMeio,a_nodo* nodoDir);
 		DadoTabelaSimbolos retornaSimbolo(string nome);
-		bool comparaParams(list<DadoTabelaSimbolos> listParam,a_nodo* nodo, int linha,string nomeFunc );
+		list<Instrucao> comparaParams(list<DadoTabelaSimbolos> listParam,a_nodo* nodo, int linha,string nomeFunc,int *id );
 		void verificaAtrib(a_nodo* nodoDst,a_nodo* nodoOrig);
 		int getTipoPorValorLex(lexic_val_type *valorLex);
 		DadoTabelaSimbolos getSimboloPorValorLex(lexic_val_type *valorLex);
@@ -54,6 +55,8 @@ class PilhaContexto
 		list<Instrucao> fazInic(int *ultimoReg,int *ultimoRotulo,int*id);
 		int getDeslocamentoAtual();
 		void setDeslocamentoAtual(int desloc);
+		void setRotuloFun(lexic_val_type *valorLex,string rotFun);
+		string getRotuloFun(lexic_val_type *valorLex);
 		
 	private:
 		PilhaMapas contextos;

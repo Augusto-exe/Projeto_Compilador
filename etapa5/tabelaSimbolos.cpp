@@ -95,6 +95,15 @@ void tabelaSimbolos::setTipoTamanhoPorNome(string nome,int tipo, int tamanho)
 		this->deslocTab += tamanho;
 	}
 }
+void tabelaSimbolos::setRotuloPorNome(string nomeFunc,string rotulo)
+{
+	this->tabSimbolos[nomeFunc].rot_reg =rotulo;
+}
+string tabelaSimbolos::getRotuloPorNome(string nomeFunc)
+{
+	return this->tabSimbolos[nomeFunc].rot_reg;
+}
+
 MapaSimbolos tabelaSimbolos::getTabela()
 {
 	return this->tabSimbolos;

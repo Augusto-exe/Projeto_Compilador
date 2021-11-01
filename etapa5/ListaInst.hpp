@@ -47,9 +47,9 @@ list<Instrucao> geraBoolFromArit(int *ultimoReg,string regOrg,string rotT,string
 list<Instrucao> geraInstWhile(int tipo,string regOrg,ListaInst *exp,ListaInst listaT,list<int> idRemendoTrue,list<int> idRemendoFalse,int *ultimoReg,int *ultimoRotulo,int *id, string rotT,string rotEnd);
 list<Instrucao> geraInit(int deslocDst,int escopoDst, int natureza, string nomeValue,int deslocOrig,int escopoOrig, int *ultimoReg, int* ultimoRotulo,int *id);
 list<Instrucao> geraLeituraVar(string regDst, int deslocamento, int escopo, int* ultimoReg,int* ultimoRotulo,int* id);
-list<Instrucao> geraCodigoInicial(string rotMain,int *id );
+list<Instrucao> geraCodigoInicial(string rotMain,string regAux,int *id );
 list<Instrucao> geraInstFor(int tipo,string regOrg,ListaInst *exp,ListaInst listaT,ListaInst listaIni,ListaInst listaAtrib,list<int> idRemendoTrue,list<int> idRemendoFalse,int *ultimoReg,int *ultimoRotulo,int *id, string rotT,string rotEnd);
 list<Instrucao> geraInstFunc(string regPilha, int* ultimoReg, int* id, ListaInst listaT, string rotulo);
 list<Instrucao> geraDeclaFunc(string regPilha, int* ultimoReg, int* id, ListaInst listaT);
-list<Instrucao> geraInstReturn(string regPilha, int* ultimoReg, int* id);
+list<Instrucao> geraInstReturn(string regExp, int* ultimoReg, int* id);
 list<Instrucao> geraInstList(int* ultimoReg, int* id, string regDst);

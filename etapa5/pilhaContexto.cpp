@@ -59,10 +59,11 @@ string getNomeValorLexico(lexic_val_type* valorLex)
 
 
 
-void PilhaContexto::insereSimboloNonVet(int line, int natureza, lexic_val_type *valorLex, int tipo,int escopo)
+Instrucao PilhaContexto::insereSimboloNonVet(int line, int natureza, lexic_val_type *valorLex, int tipo,int*id,int escopo)
 {
 	DadoTabelaSimbolos novoSimbolo;
 	list<DadoTabelaSimbolos> parametros;
+	Instrucao inst;
 	string nomeChave,nomeOrg;
 	novoSimbolo.linha = line;
 	novoSimbolo.natureza = natureza;
@@ -110,6 +111,10 @@ void PilhaContexto::insereSimboloNonVet(int line, int natureza, lexic_val_type *
 		{
 			this->varTipoPend.push_back(nomeChave);
 		}
+		else
+		{
+			inst = geraInst3op("addI","rsp",to_string( getTamanhoTipo(tipo)),"rsp",INST_ARITLOG,id);;
+		}
 		if(this->existeSimboloContextoAtual(nomeChave))
 			this->emitirErro(ERR_DECLARED,line,nomeOrg,nomeChave);
 	}
@@ -117,7 +122,11 @@ void PilhaContexto::insereSimboloNonVet(int line, int natureza, lexic_val_type *
 	novoSimbolo.valorLexico = *valorLex;
 	novoSimbolo.parametros = parametros;
 
+
+
 	this->insereSimboloContextoAtual(nomeChave, novoSimbolo);
+
+	return inst;
 }
 void PilhaContexto::insereSimboloVet(int line, int natureza, lexic_val_type *valorLex,int tipo,int tamanho, int escopo)
 {
@@ -318,14 +327,22 @@ bool checaConversaoImplicita(int tipoOrig,int tipoDst)
 	return ret;
 }
 
-bool PilhaContexto::comparaParams(list<DadoTabelaSimbolos> listParam,a_nodo* nodo,int linha, string nomeFunc )
+list<Instrucao> PilhaContexto::comparaParams(list<DadoTabelaSimbolos> listParam,a_nodo* nodo,int linha, string nomeFunc,int *id)
 {
 	int inputSize = 0;
 	list<int> inputTipeList;
+	list<string> regList;
+	list<int> tamList;
+	list<Instrucao> retList;
+	Instrucao inst;
+	int offset = 16;
+
 	while(nodo !=NULL)
 	{
 		inputSize++;
 		inputTipeList.push_back(nodo->tipo_valor_semantico);
+		regList.push_back(nodo->reg);
+		tamList.push_back(getTamanhoTipo(getTipoPorValorLex(nodo->valor_lexico)));
 		nodo = nodo->filho;
 		if(nodo!=NULL)
 		{
@@ -349,7 +366,9 @@ bool PilhaContexto::comparaParams(list<DadoTabelaSimbolos> listParam,a_nodo* nod
 	int iteration = 0;
 	list<int>::iterator it1 = inputTipeList.begin();
 	list<DadoTabelaSimbolos>::iterator it2 =listParam.begin();
-	for(; it1 != inputTipeList.end() && it2 != listParam.end(); ++it1, ++it2)
+	list<string>::iterator it3 = regList.begin();
+	list<int>::iterator it4 = tamList.begin();
+	for(; it1 != inputTipeList.end() && it2 != listParam.end() && it3!=regList.end(); ++it1, ++it2,++it3,++it4)
 	{
 
 		iteration++;
@@ -366,17 +385,40 @@ bool PilhaContexto::comparaParams(list<DadoTabelaSimbolos> listParam,a_nodo* nod
 			msg= "received argument number " + to_string(iteration) +" with incopatible type.";
 			this->emitirErro(ERR_WRONG_TYPE_ARGS,linha,nomeFunc,msg);
 		}
-
+		inst = geraInst3op("storeAI","rsp",to_string(offset),(*it3),INST_MEM,id);
+		retList.push_back(inst);
+		offset = offset + 4;//mudar para ficar pelo tamanho da entrada
+		
 	}
-	return true;
+	return retList;
 
 }
-//retornar o tipo da função
-int PilhaContexto::verificaFuncao(lexic_val_type *valorLex, a_nodo* nodo,int linha)
+
+int PilhaContexto::getTipoFuncao(lexic_val_type *valorLex)
 {
 	string nomeFunc = string(valorLex->tk_value.vStr);
 	bool existe = this->existeSimboloContextos(nomeFunc);
 	DadoTabelaSimbolos dadoFunc;
+	if(!existe)
+	{
+		emitirErro(ERR_UNDECLARED,valorLex->lineno,nomeFunc,nomeFunc);
+	}
+	dadoFunc = this->retornaSimbolo(nomeFunc);
+
+	return dadoFunc.tipo;
+}
+
+//retornar intruções para chamada da função
+list<Instrucao> PilhaContexto::verificaFuncao(lexic_val_type *valorLex, a_nodo* nodo,int linha,int *id,int* ultimoRotulo,int*ultimoReg,string regFun,string rotFun)
+{
+	string nomeFunc = string(valorLex->tk_value.vStr);
+	bool existe = this->existeSimboloContextos(nomeFunc);
+	list<Instrucao> retList,auxList;
+	Instrucao inst;
+	int countInst =5;
+	string auxReg =geraRegistrador(ultimoReg);
+	DadoTabelaSimbolos dadoFunc;
+
 	if(!existe)
 	{
 		emitirErro(ERR_UNDECLARED,valorLex->lineno,nomeFunc,nomeFunc);
@@ -392,9 +434,31 @@ int PilhaContexto::verificaFuncao(lexic_val_type *valorLex, a_nodo* nodo,int lin
 			this->emitirErro(ERR_VECTOR,valorLex->lineno,nomeFunc,"Function");
 
 	}
-	this->comparaParams(dadoFunc.parametros,nodo,linha,nomeFunc);
 
-	return dadoFunc.tipo;
+	inst = geraInst3op("loadAI","rsp","12",regFun,INST_ARITLOG,id);
+	retList.push_front(inst);
+	inst = geraInst2op("jumpI","",rotFun,INST_JMP,id);
+	retList.push_front(inst);
+
+	auxList = this->comparaParams(dadoFunc.parametros,nodo,linha,nomeFunc,id);
+
+
+	countInst = countInst+auxList.size();
+    list<Instrucao>::reverse_iterator itList;
+    for(itList = auxList.rbegin();itList !=auxList.rend();++itList)
+    {
+        retList.push_front((*itList));
+    }
+	inst = geraInst3op("storeAI","rsp","8","rfp",INST_MEM,id);
+	retList.push_front(inst);
+	inst = geraInst3op("storeAI","rsp","4","rsp",INST_MEM,id);
+	retList.push_front(inst);
+	inst = geraInst3op("storeAI","rsp","0",auxReg,INST_MEM,id);
+	retList.push_front(inst);
+	inst = geraInst3op("addI","rpc",to_string(countInst),auxReg,INST_ARITLOG,id);
+	retList.push_front(inst);
+
+	return  retList;
 }
 
 //retornar o tipo da função
@@ -470,6 +534,18 @@ void PilhaContexto::atualizaFunTipoPar(lexic_val_type *valorLex,int tipo)
 	this->contextos.front().adicionaParametrosParaFunc(nomeChave,this->parametrosPendentes);
 	this->contextos.front().setTipoTamanhoPorNome(nomeChave,tipo,getTamanhoTipo(tipo));
 	this->parametrosPendentes.clear();
+}
+
+void PilhaContexto::setRotuloFun(lexic_val_type *valorLex,string rotFun)
+{
+	string nomeChave = string(valorLex->tk_value.vStr);
+
+	this->contextos.front().setRotuloPorNome(nomeChave,rotFun);
+}
+string PilhaContexto::getRotuloFun(lexic_val_type *valorLex){
+	
+	string nomeChave = string(valorLex->tk_value.vStr);
+	return this->contextos.front().getRotuloPorNome(nomeChave);
 }
 
 
@@ -610,7 +686,7 @@ list<Instrucao> PilhaContexto::atualizaTipoTamanho(int tipo, int*id)
 		}
 		if(mapa[nome].escopo == ESC_LOCAL)
 		{
-			inst = geraInst3op("addI","rps",to_string( mapa[nome].tamanho*getTamanhoTipo(tipo)),"rps",INST_ARITLOG,id);
+			inst = geraInst3op("addI","rsp",to_string( mapa[nome].tamanho*getTamanhoTipo(tipo)),"rsp",INST_ARITLOG,id);
 			retList.push_back(inst);
 		}
 	

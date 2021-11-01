@@ -326,7 +326,6 @@ list<Instrucao> geraDeclaFunc(string regPilha, int* ultimoReg, int* id, ListaIns
     list<Instrucao> retList = list<Instrucao>();
     list<Instrucao>::reverse_iterator itList;
     list<Instrucao> listInstCod;
-    string regRetorno = geraRegistrador(ultimoReg);
 
 
     listInstCod = listaT.getCodigo();
@@ -335,26 +334,35 @@ list<Instrucao> geraDeclaFunc(string regPilha, int* ultimoReg, int* id, ListaIns
         retList.push_front((*itList));
     }
 
-    inst = geraInst3op("addi",  to_string(*id),"rsp", "rsp", INST_MEM, id);
+    inst = geraInst3op("addI","rsp","16", "rsp", INST_ARITLOG, id);
     retList.push_front(inst);
 
+    inst = geraInst2op("i2i","rsp","rfp",INST_I2I,id);
+    retList.push_front(inst);
     return retList;
 }
 
-list<Instrucao> geraInstReturn(string regPilha, int* ultimoReg, int* id) {
+list<Instrucao> geraInstReturn(string regExp, int* ultimoReg, int* id) {
     Instrucao inst;
     list<Instrucao> retList = list<Instrucao>();
     string regRetorno = geraRegistrador(ultimoReg);
-    string regAux2 = geraRegistrador(ultimoReg);
-    inst = geraInst2op("jump","",regAux2,INST_JMP,id);
-    retList.push_front(inst);
-    inst = geraInst3op("loadAI", regRetorno, "rfp", to_string(*id + 8), INST_MEM,id);
-    retList.push_front(inst);
     string regAux1 = geraRegistrador(ultimoReg);
-    inst = geraInst3op("loadAI", regAux1, "rfp", to_string(*id + 4), INST_MEM, id);
+    string regAux2 = geraRegistrador(ultimoReg);
+    inst = geraInst2op("jump","",regRetorno,INST_JMP,id);
     retList.push_front(inst);
-    inst = geraInst3op("loadAI", regAux2, "rfp", to_string(*id), INST_MEM, id);
+    inst = geraInst2op("i2i",regAux2,"rfp",INST_I2I,id);
     retList.push_front(inst);
+    inst = geraInst2op("i2i",regAux1,"rsp",INST_I2I,id);
+    retList.push_front(inst);
+    inst = geraInst3op("loadAI", "rfp", "8", regAux2, INST_ARITLOG,id);
+    retList.push_front(inst);
+    inst = geraInst3op("loadAI", "rfp","4", regAux1, INST_ARITLOG, id);
+    retList.push_front(inst);
+    inst = geraInst3op("loadAI", "rfp", "0", regRetorno, INST_ARITLOG, id);
+    retList.push_front(inst);
+    inst = geraInst3op("storeAI","rfp","12",regExp,INST_MEM,id);
+    retList.push_front(inst);
+
     return retList;
 }
 
@@ -366,7 +374,7 @@ list<Instrucao> geraInstList(int* ultimoReg, int* id, string regDst)
     string regAux = geraRegistrador(ultimoReg);
     inst = geraInst3op("storeAI", regDst,to_string(*id), regAux,  INST_MEM,id);
     retList.push_front(inst);
-    inst = geraInst3op("loadAI", "rfp", regAux, to_string(*id), INST_MEM, id);
+    inst = geraInst3op("loadAI", "rfp", regAux, to_string(*id), INST_LOADI, id);
     retList.push_front(inst);
     
     return retList;
@@ -395,17 +403,31 @@ list<Instrucao> geraInstFunc(string regPilha, int* ultimoReg, int* id, ListaInst
     retList.push_front(inst);
     inst = geraInst3op("storeAI", "rsp", to_string(*id), regPilha,  INST_MEM, id);
     retList.push_front(inst);
-    inst = geraInst3op("addi", regPilha, "rpc", to_string(*id), INST_MEM, id);
+    inst = geraInst3op("addI", regPilha, "rpc", to_string(*id), INST_ARITLOG, id);
     retList.push_front(inst);
     return retList;
 }
 
-list<Instrucao> geraCodigoInicial(string rotMain,int *id )
+list<Instrucao> geraCodigoInicial(string rotMain,string regAux,int *id )
 {
     Instrucao inst;
     list<Instrucao> retList;
-    inst = geraInst2op("jumpI","",rotMain,INST_JMP,id);
-    retList.push_front(inst);
+
+	inst = geraInst3op("loadAI","rsp","12","r0",INST_ARITLOG,id);
+	retList.push_front(inst);
+	inst = geraInst2op("jumpI","",rotMain,INST_JMP,id);
+	retList.push_front(inst);
+	inst = geraInst3op("storeAI","rsp","8","rfp",INST_MEM,id);
+	retList.push_front(inst);
+	inst = geraInst3op("storeAI","rsp","4","rsp",INST_MEM,id);
+	retList.push_front(inst);
+	inst = geraInst3op("storeAI","rsp","0",regAux,INST_MEM,id);
+	retList.push_front(inst);
+	inst = geraInst3op("addI","rpc","5",regAux,INST_ARITLOG,id);
+	retList.push_front(inst);
+
+
+
     inst = geraInst2op("loadI","1024","rfp",INST_LOADI,id);
     retList.push_front(inst);
     inst = geraInst2op("loadI","1024","rsp",INST_LOADI,id);
@@ -622,6 +644,10 @@ void printaInst(Instrucao inst)
             break;
         case INST_HALT:
             cout << "halt" << endl;
+            break;
+        case INST_I2I:
+            cout <<inst.operacao << " "<< inst.op1 <<" => "<< inst.dst   << endl;
+            break;
         default:
             break;
         }

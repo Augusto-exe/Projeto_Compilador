@@ -24,6 +24,7 @@
 	int ultimoReg=-1;
 	int instId =-1;
 	string rotMain;
+	lexic_val_type* val_lex_main;
 	
 
 		
@@ -161,7 +162,7 @@
 
 %%
 //Definição básica de um programa
-prog: programa {if(arvore != NULL) ((a_nodo*)arvore)->cod.appendCodigoInicio(geraCodigoInicial(rotMain,&instId));};
+prog: programa {if(arvore != NULL){ string regAux = geraRegistrador(&ultimoReg); ((a_nodo*)arvore)->cod.appendInstCodigo(geraInst2op("","","",INST_HALT,&instId)); ((a_nodo*)arvore)->cod.appendCodigoInicio(geraCodigoInicial(rotMain,regAux,&instId));}};
 programa:  {$$ = NULL; arvore = $$;}
 | programa func  { if ($1 == NULL){ $$ = $2; arvore = $2;} else{insere_filho($1,$2);((a_nodo*)arvore)->cod.appendCodigoFim($2->cod.getCodigo()); $$=$2; }}
 | programa decla {$$ = $1;};
@@ -189,7 +190,7 @@ tipo_stat_cons: TK_PR_STATIC TK_PR_CONST tipo_nome {$$ = $3;}
 lista_var: lista_var ',' var 
 | var ;
 var: TK_IDENTIFICADOR'[' pos_int ']' {tabelas.insereSimboloVet(get_line_number(),NAT_VET,$1,INDEF,$3->valor_lexico->tk_value.vInt,ESC_GLOBAL);libera_val($1); libera_val($2); libera($3);libera_val($4);}
-| TK_IDENTIFICADOR {tabelas.insereSimboloNonVet(get_line_number(),NAT_VAR,$1,INDEF,ESC_GLOBAL);libera_val($1);};
+| TK_IDENTIFICADOR {tabelas.insereSimboloNonVet(get_line_number(),NAT_VAR,$1,INDEF,&instId,ESC_GLOBAL);libera_val($1);};
 
 bloco_fun: '{' fim_bloco { $$ =NULL; }
 | '{' seq_comando fim_bloco { $$ = $2;} ;
@@ -197,16 +198,16 @@ bloco_fun: '{' fim_bloco { $$ =NULL; }
 lista_par_begin: '(' {tabelas.insereContexto(); tabelas.setDeslocamentoAtual(16); libera_val($1);};
 lista_par_end: ')'{libera_val($1);};
 
-func_header:  tipo_stat  TK_IDENTIFICADOR lista_par_begin lista_par lista_par_end{$$ = insere_nodo(NULL,$2);$$->reg = geraRotulo(&ultimoRotulo);tabelas.insereFun(get_line_number(),$2,ultimoRotulo);tabelas.atualizaFunTipoPar($2,$1); ListaInst ListI; if($4==NULL){ListI = ListaInst();}else{ListI = $4->cod;} $$->cod.appendCodigoInicio(geraDeclaFunc($$->reg,&ultimoReg,&instId,ListI)); atualiza_tipo_semantico($$,$1);}
-|tipo_stat  TK_IDENTIFICADOR lista_par_begin lista_par_end{$$ = insere_nodo(NULL,$2);$$->reg = geraRotulo(&ultimoRotulo);tabelas.insereFun(get_line_number(),$2,ultimoRotulo);tabelas.atualizaFunTipoPar($2,$1); $$->cod.appendCodigoInicio(geraDeclaFunc($$->reg,&ultimoReg,&instId,ListaInst())); atualiza_tipo_semantico($$,$1);};
-func: func_header bloco_fun {string rotTemp = geraRotulo(&ultimoRotulo); $$ = insere_filho( $1,$2); $$->cod.appendInstCodigo(geraInst2op(rotTemp,"","",INST_NOP_ROT,&instId)); if("main" == string($$->valor_lexico->tk_value.vStr)) rotMain = rotTemp; if($2 != NULL){$$->cod.appendCodigoFim($2->cod.getCodigo()); if("main" == string($$->valor_lexico->tk_value.vStr))$$->cod.appendInstFimCodigo(geraInst2op("","","",INST_HALT,&instId));}}
+func_header:  tipo_stat  TK_IDENTIFICADOR lista_par_begin lista_par lista_par_end{$$ = insere_nodo(NULL,$2);$$->reg = geraRotulo(&ultimoRotulo);tabelas.insereFun(get_line_number(),$2,ultimoRotulo);tabelas.atualizaFunTipoPar($2,$1);tabelas.setRotuloFun($2,$$->reg); ListaInst ListI; if($4==NULL){ListI = ListaInst();}else{ListI = $4->cod;} $$->cod.appendCodigoInicio(geraDeclaFunc($$->reg,&ultimoReg,&instId,ListI)); atualiza_tipo_semantico($$,$1); }
+|tipo_stat  TK_IDENTIFICADOR lista_par_begin lista_par_end{$$ = insere_nodo(NULL,$2);$$->reg = geraRotulo(&ultimoRotulo);tabelas.insereFun(get_line_number(),$2,ultimoRotulo);tabelas.atualizaFunTipoPar($2,$1); tabelas.setRotuloFun($2,$$->reg); $$->cod.appendCodigoInicio(geraDeclaFunc($$->reg,&ultimoReg,&instId,ListaInst())); atualiza_tipo_semantico($$,$1);};
+func: func_header bloco_fun { $$ = insere_filho( $1,$2); $$->cod.appendInstCodigo(geraInst2op($1->reg,"","",INST_NOP_ROT,&instId)); if("main" == string($$->valor_lexico->tk_value.vStr)) {rotMain = $1->reg; val_lex_main = $$->valor_lexico;} if($2 != NULL){$$->cod.appendCodigoFim($2->cod.getCodigo()); }};
 
 
-lista_par: lista_par ',' tipo_cons TK_IDENTIFICADOR {$$ = $1; tabelas.insereSimboloNonVet(get_line_number(),NAT_VAR,$4,$3);tabelas.empilhaParametro($4);libera_val($2); libera_val($4); $$->cod.appendCodigoInicio(geraInstList(&ultimoReg,&instId,"rfp"));}
-| tipo_cons TK_IDENTIFICADOR {tabelas.insereSimboloNonVet(get_line_number(),NAT_VAR,$2,$1); tabelas.empilhaParametro($2); $$=insere_nodo(NULL,$2); libera_val($2); $$->cod.appendCodigoInicio(geraInstList(&ultimoReg,&instId,"rfp"));}; 
+lista_par: lista_par ',' tipo_cons TK_IDENTIFICADOR {$$ = $1; Instrucao instAux = tabelas.insereSimboloNonVet(get_line_number(),NAT_VAR,$4,$3,&instId); $$->cod.appendInstCodigo(instAux); tabelas.empilhaParametro($4);libera_val($2); libera_val($4);/* $$->cod.appendCodigoInicio(geraInstList(&ultimoReg,&instId,"rfp"));*/}
+| tipo_cons TK_IDENTIFICADOR {Instrucao instAux =tabelas.insereSimboloNonVet(get_line_number(),NAT_VAR,$2,$1,&instId); tabelas.empilhaParametro($2); $$=insere_nodo(NULL,$2); libera_val($2);$$->cod.appendInstCodigo(instAux);/* $$->cod.appendCodigoInicio(geraInstList(&ultimoReg,&instId,"rfp"));*/}; 
 
 com_bloco: '{' {int desloc = tabelas.getDeslocamentoAtual(); tabelas.insereContexto();tabelas.setDeslocamentoAtual(desloc);libera_val($1);};
-fim_bloco: '}' {libera_val($1);  int desloc = tabelas.getDeslocamentoAtual();tabelas.popContexto();tabelas.setDeslocamentoAtual(desloc);};
+fim_bloco: '}' {libera_val($1); int desloc = tabelas.getDeslocamentoAtual();tabelas.popContexto();tabelas.setDeslocamentoAtual(desloc);};
 bloco: com_bloco fim_bloco   { $$ =NULL; }
 | com_bloco seq_comando fim_bloco { $$ = $2;} ;
 
@@ -229,34 +230,34 @@ decla_loc: tipo_stat_cons lista_var_loc { $$ = $2;list<Instrucao> listaI = tabel
 lista_var_loc: lista_var_loc ',' var_loc {libera_val($2); $$ = insere_filho($1,$3);}
 | var_loc { $$ = $1;};
 
-var_loc: TK_IDENTIFICADOR TK_OC_LE id_lit { $$ = insere_nodo(NULL,$2); $$= insere_filho($$,insere_nodo(NULL,$1));$$= insere_filho($$,$3);tabelas.insereSimboloNonVet(get_line_number(),NAT_VAR,$1,INDEF);tabelas.insereInicPendente($1,$3->valor_lexico);}
-| TK_IDENTIFICADOR { $$ = NULL;tabelas.insereSimboloNonVet(get_line_number(),NAT_VAR,$1,INDEF); libera_val($1);};
+var_loc: TK_IDENTIFICADOR TK_OC_LE id_lit { $$ = insere_nodo(NULL,$2); $$= insere_filho($$,insere_nodo(NULL,$1));$$= insere_filho($$,$3);tabelas.insereSimboloNonVet(get_line_number(),NAT_VAR,$1,INDEF,&instId);tabelas.insereInicPendente($1,$3->valor_lexico);}
+| TK_IDENTIFICADOR { $$ = NULL;tabelas.insereSimboloNonVet(get_line_number(),NAT_VAR,$1,INDEF,&instId); libera_val($1);};
 
 id_lit: literal {$$ = $1;}
 | TK_IDENTIFICADOR {$$ = insere_nodo(NULL,$1);atualiza_tipo_semantico($$,tabelas.getTipoPorValorLex($1));};
 
 literal: all_int {$$ = $1;atualiza_tipo_semantico($$,ID_INT);}
 | all_float {$$ = $1;atualiza_tipo_semantico($$,ID_FLOAT);}
-| TK_LIT_FALSE {$$ = insere_nodo(NULL,$1);atualiza_tipo_semantico($$,ID_BOOL);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$1,ID_BOOL);}
-| TK_LIT_TRUE  {$$ = insere_nodo(NULL,$1);atualiza_tipo_semantico($$,ID_BOOL);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$1,ID_BOOL);}
-| TK_LIT_CHAR {$$ = insere_nodo(NULL,$1);atualiza_tipo_semantico($$,ID_CHAR);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$1,ID_CHAR);}
-| TK_LIT_STRING {$$ = insere_nodo(NULL,$1);atualiza_tipo_semantico($$,ID_STRING);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$1,ID_STRING);};
+| TK_LIT_FALSE {$$ = insere_nodo(NULL,$1);atualiza_tipo_semantico($$,ID_BOOL);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$1,ID_BOOL,&instId);}
+| TK_LIT_TRUE  {$$ = insere_nodo(NULL,$1);atualiza_tipo_semantico($$,ID_BOOL);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$1,ID_BOOL,&instId);}
+| TK_LIT_CHAR {$$ = insere_nodo(NULL,$1);atualiza_tipo_semantico($$,ID_CHAR);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$1,ID_CHAR,&instId);}
+| TK_LIT_STRING {$$ = insere_nodo(NULL,$1);atualiza_tipo_semantico($$,ID_STRING);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$1,ID_STRING,&instId);};
 
-literal_num_bool: TK_LIT_INT {$$ = insere_nodo(NULL,$1);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$1,ID_INT);atualiza_tipo_semantico($$,ID_INT);$$->reg =geraRegistrador(&ultimoReg);$$->cod.appendInstCodigo(geraInst2op("loadI",to_string($$->valor_lexico->tk_value.vInt),$$->reg,INST_LOADI,&instId));}
-| TK_LIT_FLOAT {$$ = insere_nodo(NULL,$1);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$1,ID_FLOAT);atualiza_tipo_semantico($$,ID_FLOAT);}
-| TK_LIT_FALSE {$$ = insere_nodo(NULL,$1);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$1,ID_BOOL);atualiza_tipo_semantico($$,ID_BOOL);}
-| TK_LIT_TRUE {$$ = insere_nodo(NULL,$1);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$1,ID_BOOL);atualiza_tipo_semantico($$,ID_BOOL);};
+literal_num_bool: TK_LIT_INT {$$ = insere_nodo(NULL,$1);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$1,ID_INT,&instId);atualiza_tipo_semantico($$,ID_INT);$$->reg =geraRegistrador(&ultimoReg);$$->cod.appendInstCodigo(geraInst2op("loadI",to_string($$->valor_lexico->tk_value.vInt),$$->reg,INST_LOADI,&instId));}
+| TK_LIT_FLOAT {$$ = insere_nodo(NULL,$1);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$1,ID_FLOAT,&instId);atualiza_tipo_semantico($$,ID_FLOAT);}
+| TK_LIT_FALSE {$$ = insere_nodo(NULL,$1);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$1,ID_BOOL,&instId);atualiza_tipo_semantico($$,ID_BOOL);}
+| TK_LIT_TRUE {$$ = insere_nodo(NULL,$1);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$1,ID_BOOL,&instId);atualiza_tipo_semantico($$,ID_BOOL);};
 
-pos_int: '+' TK_LIT_INT {$$ = insere_nodo(NULL,$2); libera_val($1);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$2,ID_INT);atualiza_tipo_semantico($$,ID_INT);}
-| TK_LIT_INT {$$ = insere_nodo(NULL,$1);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$1,ID_INT);atualiza_tipo_semantico($$,ID_INT);};
+pos_int: '+' TK_LIT_INT {$$ = insere_nodo(NULL,$2); libera_val($1);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$2,ID_INT,&instId);atualiza_tipo_semantico($$,ID_INT);}
+| TK_LIT_INT {$$ = insere_nodo(NULL,$1);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$1,ID_INT,&instId);atualiza_tipo_semantico($$,ID_INT);};
 
-all_int: '-' TK_LIT_INT { $$ = insere_nodo(NULL,inverte_sinal($2)); libera_val($1);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,inverte_sinal($2),ID_INT);atualiza_tipo_semantico($$,ID_INT);}
-| TK_LIT_INT {$$ = insere_nodo(NULL,$1);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$1,ID_INT);atualiza_tipo_semantico($$,ID_INT);}
-| '+' TK_LIT_INT {$$ = insere_nodo(NULL,$2); libera_val($1);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$2,ID_INT);atualiza_tipo_semantico($$,ID_INT);};
+all_int: '-' TK_LIT_INT { $$ = insere_nodo(NULL,inverte_sinal($2)); libera_val($1);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,inverte_sinal($2),ID_INT,&instId);atualiza_tipo_semantico($$,ID_INT);}
+| TK_LIT_INT {$$ = insere_nodo(NULL,$1);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$1,ID_INT,&instId);atualiza_tipo_semantico($$,ID_INT);}
+| '+' TK_LIT_INT {$$ = insere_nodo(NULL,$2); libera_val($1);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$2,ID_INT,&instId);atualiza_tipo_semantico($$,ID_INT);};
 
-all_float: '-' TK_LIT_FLOAT { $$ = insere_nodo(NULL,inverte_sinal($2));libera_val($1);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,inverte_sinal($2),ID_FLOAT);atualiza_tipo_semantico($$,ID_FLOAT);}
-| TK_LIT_FLOAT {$$ = insere_nodo(NULL,$1);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$1,ID_FLOAT);atualiza_tipo_semantico($$,ID_FLOAT);}
-| '+' TK_LIT_FLOAT {$$ = insere_nodo(NULL,$2); libera_val($1);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$2,ID_FLOAT);atualiza_tipo_semantico($$,ID_FLOAT);};
+all_float: '-' TK_LIT_FLOAT { $$ = insere_nodo(NULL,inverte_sinal($2));libera_val($1);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,inverte_sinal($2),ID_FLOAT,&instId);atualiza_tipo_semantico($$,ID_FLOAT);}
+| TK_LIT_FLOAT {$$ = insere_nodo(NULL,$1);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$1,ID_FLOAT,&instId);atualiza_tipo_semantico($$,ID_FLOAT);}
+| '+' TK_LIT_FLOAT {$$ = insere_nodo(NULL,$2); libera_val($1);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$2,ID_FLOAT,&instId);atualiza_tipo_semantico($$,ID_FLOAT);};
 
 atrib: var_vet '=' exp { $$ = insere_nodo(NULL,$2); insere_filho($$,$1); insere_filho($$,$3);tabelas.verificaAtrib($1,$3);atualiza_tipo_semantico($$,$1->tipo_valor_semantico);DadoTabelaSimbolos dado = tabelas.getSimboloPorValorLex($1->valor_lexico); $$->cod.appendCodigoInicio(geraInstAtribTipoDesloc(dado.deslocamento, dado.escopo ,$3->tipo_valor_semantico,$3->reg ,&($3->cod),$3->idRemendosTrue,$3->idRemendosFalse,&ultimoReg,&ultimoRotulo,&instId));};
 
@@ -264,7 +265,7 @@ var_vet: TK_IDENTIFICADOR { $$= insere_nodo(NULL,$1);atualiza_tipo_semantico($$,
 | TK_IDENTIFICADOR '[' exp ']' { libera_val($2);libera_val($4);
 $$ = insere_nodo(NULL,geraVal(TIPO_VET,NOT_LIT,get_line_number(),(char*)"[]")); insere_filho($$,insere_nodo(NULL,$1)); insere_filho($$,$3);atualiza_tipo_semantico($$,tabelas.getTipoPorValorLex($1));tabelas.verificaVetor($1,$3);};
 
-ret_cont_break: TK_PR_RETURN exp {$$ = insere_nodo($2,geraVal(TIPO_RSV_WRD,NOT_LIT,get_line_number(),(char*)"return"));tabelas.verificaReturn($2->tipo_valor_semantico,get_line_number());$$->cod.appendCodigoInicio(geraInstReturn($$->reg,&ultimoReg,&instId));}
+ret_cont_break: TK_PR_RETURN exp {$$ = insere_nodo($2,geraVal(TIPO_RSV_WRD,NOT_LIT,get_line_number(),(char*)"return"));tabelas.verificaReturn($2->tipo_valor_semantico,get_line_number());$$->cod.appendCodigoInicio(geraInstReturn($2->reg,&ultimoReg,&instId)); $$->cod.appendCodigoInicio($2->cod.getCodigo());}
 | TK_PR_BREAK  {$$ = insere_nodo(NULL,geraVal(TIPO_RSV_WRD,NOT_LIT,get_line_number(),(char*)"break"));}
 | TK_PR_CONTINUE  {$$ = insere_nodo(NULL,geraVal(TIPO_RSV_WRD,NOT_LIT,get_line_number(),(char*)"continue"));};
 
@@ -275,16 +276,16 @@ shift_right:  var_vet TK_OC_SR pos_int { $$ = insere_nodo($1,$2); insere_filho($
 
 shift_left: var_vet TK_OC_SL pos_int { $$ = insere_nodo($1,$2); insere_filho($$,$3); tabelas.avaliaShift($3->valor_lexico);};
 
-fun_call: TK_IDENTIFICADOR '(' fun_input ')' { libera_val($2); libera_val($4); $$ = insere_nodo_tipo($3,$1,NO_FUN_CALL);int tipo = tabelas.verificaFuncao($1,$3,get_line_number()); atualiza_tipo_semantico($$,tipo); ListaInst ListI; if($3==NULL){ListI = ListaInst();}else{ListI = $3->cod;} $$->cod.appendCodigoInicio(geraInstFunc($$->reg,&ultimoReg,&instId,ListI, geraRotulo(&ultimoRotulo)));} ;
+fun_call: TK_IDENTIFICADOR '(' fun_input ')' { libera_val($2); libera_val($4); string regFun = geraRegistrador(&ultimoReg);  string rotFun = tabelas.getRotuloFun($1); $$ = insere_nodo_tipo($3,$1,NO_FUN_CALL); $$->reg = regFun;list<Instrucao> ListI = tabelas.verificaFuncao($1,$3,get_line_number(),&instId,&ultimoRotulo,&ultimoReg,regFun,rotFun); int tipo = tabelas.getTipoFuncao($1); atualiza_tipo_semantico($$,tipo); $$->cod.appendCodigoInicio(ListI); if($3 != NULL) $$->cod.appendCodigoFim($3->cod.getCodigo());} ;
 
-lista_arg: id_lit_exp ',' lista_arg { libera_val($2); $$ = insere_filho($1,$3); $1->is_arg = true; }
+lista_arg: id_lit_exp ',' lista_arg { libera_val($2); $$ = insere_filho($1,$3); $1->is_arg = true; $$->cod.appendCodigoFim($3->cod.getCodigo()); }
 | id_lit_exp {$$ = $1; $$->is_arg =true; };
 
 fun_input: {$$=NULL;}
-|lista_arg {$$=$1; $$->cod.appendCodigoInicio(geraInstList(&ultimoReg,&instId,"rsp"));};
+|lista_arg {$$=$1; /*$$->cod.appendCodigoInicio(geraInstList(&ultimoReg,&instId,"rsp"));*/};
 
-id_lit_exp: TK_LIT_CHAR { $$ = insere_nodo(NULL,$1);atualiza_tipo_semantico($$,ID_CHAR);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$1,ID_CHAR);}
-| TK_LIT_STRING { $$ = insere_nodo(NULL,$1);atualiza_tipo_semantico($$,ID_STRING);tabelas.insereSimboloNonVet(get_line_number(),NAT_VAR,$1,ID_STRING);} 
+id_lit_exp: TK_LIT_CHAR { $$ = insere_nodo(NULL,$1);atualiza_tipo_semantico($$,ID_CHAR);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,$1,ID_CHAR,&instId);}
+| TK_LIT_STRING { $$ = insere_nodo(NULL,$1);atualiza_tipo_semantico($$,ID_STRING);tabelas.insereSimboloNonVet(get_line_number(),NAT_VAR,$1,ID_STRING,&instId);} 
 | exp { $$ = $1;};
 
 //Definição das expressões

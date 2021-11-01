@@ -15,7 +15,7 @@ struct dadoTabelaSimbolos
 	lexic_val_type valorLexico;
 	int deslocamento;
 	int escopo;
-	int rot_reg;
+	string rot_reg;
 };
 
 typedef struct dadoTabelaSimbolos DadoTabelaSimbolos; 
@@ -35,6 +35,8 @@ class tabelaSimbolos{
 		void atualizaTamanhoString(string nome, int tamanho);
 		void setDeslocamento(int desloc);
 		int getDeslocamento();
+		void setRotuloPorNome(string nomeFunc,string rotulo);
+		string getRotuloPorNome(string nomeFunc);
 	private:
 		int deslocTab;
 		MapaSimbolos tabSimbolos;

@@ -65,6 +65,17 @@
 #define	GERA_RET		1
 #define GERA_ATRIB 		2
 #define GERA_DEC_GLB	3
+#define GERA_HALT		4
+#define GERA_INI		5
+#define GERA_SIMPLE		6
+#define GERA_LEIT		7
+#define GERA_ARIT		8
+#define	GERA_REL		9
+#define	GERA_ROT		10
+#define GERA_FLUX		11
+#define GERA_DEC_LOC	12
+#define GERA_PARAM 		13
+#define GERA_FUN_CALL		13
 
 struct lexic_val_type{
 int lineno;

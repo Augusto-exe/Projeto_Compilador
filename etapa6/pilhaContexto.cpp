@@ -113,7 +113,7 @@ Instrucao PilhaContexto::insereSimboloNonVet(int line, int natureza, lexic_val_t
 		}
 		else
 		{
-			inst = geraInst3op("addI","rsp",to_string( getTamanhoTipo(tipo)),"rsp",INST_ARITLOG,id);;
+			inst = geraInst3op("addI","rsp",to_string( getTamanhoTipo(tipo)),"rsp",INST_ARITLOG,id,GERA_DEC_LOC,"");;
 		}
 		if(this->existeSimboloContextoAtual(nomeChave))
 			this->emitirErro(ERR_DECLARED,line,nomeOrg,nomeChave);
@@ -227,7 +227,7 @@ list<Instrucao> PilhaContexto::fazInic(int *ultimoReg,int *ultimoRotulo,int *id)
 			this->contextos.back().atualizaTamanhoString(nome,value.tamanho);
 		}
 		string nomeValue = getNomeValorLexico(ini.value);
-		auxList = geraInit(var.deslocamento,var.escopo,value.natureza, nomeValue ,value.deslocamento,value.escopo,ultimoReg,ultimoRotulo,id);
+		auxList = geraInit(var.deslocamento,var.escopo,value.natureza, nomeValue ,value.deslocamento,value.escopo,ultimoReg,ultimoRotulo,id,GERA_INI,nome);
 		for(list<Instrucao>::reverse_iterator itList = auxList.rbegin();itList !=auxList.rend();++itList)
         {
             retList.push_front((*itList));
@@ -385,7 +385,7 @@ list<Instrucao> PilhaContexto::comparaParams(list<DadoTabelaSimbolos> listParam,
 			msg= "received argument number " + to_string(iteration) +" with incopatible type.";
 			this->emitirErro(ERR_WRONG_TYPE_ARGS,linha,nomeFunc,msg);
 		}
-		inst = geraInst3op("storeAI","rsp",to_string(offset),(*it3),INST_MEM,id);
+		inst = geraInst3op("storeAI","rsp",to_string(offset),(*it3),INST_MEM,id,GERA_FUN_CALL,nomeFunc);
 		retList.push_back(inst);
 		offset = offset + 4;//mudar para ficar pelo tamanho da entrada
 		
@@ -435,9 +435,9 @@ list<Instrucao> PilhaContexto::verificaFuncao(lexic_val_type *valorLex, a_nodo* 
 
 	}
 
-	inst = geraInst3op("loadAI","rsp","12",regFun,INST_ARITLOG,id);
+	inst = geraInst3op("loadAI","rsp","12",regFun,INST_ARITLOG,id,GERA_FUN_CALL,nomeFunc);
 	retList.push_front(inst);
-	inst = geraInst2op("jumpI","",rotFun,INST_JMP,id);
+	inst = geraInst2op("jumpI","",rotFun,INST_JMP,id,GERA_FUN_CALL,nomeFunc);
 	retList.push_front(inst);
 
 	auxList = this->comparaParams(dadoFunc.parametros,nodo,linha,nomeFunc,id);
@@ -449,13 +449,13 @@ list<Instrucao> PilhaContexto::verificaFuncao(lexic_val_type *valorLex, a_nodo* 
     {
         retList.push_front((*itList));
     }
-	inst = geraInst3op("storeAI","rsp","8","rfp",INST_MEM,id);
+	inst = geraInst3op("storeAI","rsp","8","rfp",INST_MEM,id,GERA_FUN_CALL,nomeFunc);
 	retList.push_front(inst);
-	inst = geraInst3op("storeAI","rsp","4","rsp",INST_MEM,id);
+	inst = geraInst3op("storeAI","rsp","4","rsp",INST_MEM,id,GERA_FUN_CALL,nomeFunc);
 	retList.push_front(inst);
-	inst = geraInst3op("storeAI","rsp","0",auxReg,INST_MEM,id);
+	inst = geraInst3op("storeAI","rsp","0",auxReg,INST_MEM,id,GERA_FUN_CALL,nomeFunc);
 	retList.push_front(inst);
-	inst = geraInst3op("addI","rpc",to_string(countInst),auxReg,INST_ARITLOG,id);
+	inst = geraInst3op("addI","rpc",to_string(countInst),auxReg,INST_ARITLOG,id,GERA_FUN_CALL,nomeFunc);
 	retList.push_front(inst);
 
 	return  retList;
@@ -686,7 +686,7 @@ list<Instrucao> PilhaContexto::atualizaTipoTamanho(int tipo, int*id)
 		}
 		if(mapa[nome].escopo == ESC_LOCAL)
 		{
-			inst = geraInst3op("addI","rsp",to_string( mapa[nome].tamanho*getTamanhoTipo(tipo)),"rsp",INST_ARITLOG,id);
+			inst = geraInst3op("addI","rsp",to_string( mapa[nome].tamanho*getTamanhoTipo(tipo)),"rsp",INST_ARITLOG,id,GERA_DEC_LOC,"");
 			retList.push_back(inst);
 		}
 	

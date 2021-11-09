@@ -60,6 +60,12 @@
 #define INST_HALT		9
 #define INST_I2I		10
 
+
+#define GERA_FUN		0
+#define	GERA_RET		1
+#define GERA_ATRIB 		2
+#define GERA_DEC_GLB	3
+
 struct lexic_val_type{
 int lineno;
 int type;

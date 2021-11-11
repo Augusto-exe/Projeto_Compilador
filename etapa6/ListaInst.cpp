@@ -658,6 +658,20 @@ void printaInst(Instrucao inst)
         }
         cout <<"  -> details: " << inst.nomeAux << " , " << inst.tipoGerador << endl;
 }
+//tava tendo problemas para dar push no eax entao resolvi fazer o push manualmente
+void geraPush(string reg)
+{
+    cout <<"\tsubq $4, \%rsp" << endl;
+    cout <<"\tmovl "<< reg <<", (\%rsp)" << endl;
+}
+//tava tendo problemas para dar pop pro eax entao resolvi fazer o push manualmente
+void geraPop(string reg)
+{
+    
+    cout <<"\tmovl " <<"(\%rsp), "<< reg << endl;
+    cout <<"\taddq $4, \%rsp" << endl;
+}
+
 void geraDeclGlob(MapaSimbolos tabSimbGlobal)
 {
     for( auto it : tabSimbGlobal)
@@ -667,6 +681,28 @@ void geraDeclGlob(MapaSimbolos tabSimbGlobal)
             cout << "\t.comm  "<< it.first <<","<<it.second.tamanho<<","<<it.second.tamanho << endl;
         }
     }
+}
+void geraAritAsm(Instrucao inst)
+{
+    string asm_operation;
+    geraPop("\%eax");
+    geraPop("\%edx");
+    if(inst.operacao == "add" || inst.operacao == "sub")
+    {
+
+        cout << "\t" << inst.operacao << "  \%edx, \%eax"<<endl;
+        
+    }
+    else
+    {
+        if(inst.operacao == "mult")
+        {
+            cout << "\timult  \%eax, \%eax, \%edx"<<endl;
+        }
+    }
+    geraPush("\%eax");
+
+    
 }
 void converteFunDec(Instrucao inst, MapaSimbolos tabSimbolosGlobal)
 {
@@ -699,7 +735,7 @@ void geraCodigoAsm(list<Instrucao> ilocCode,MapaSimbolos tabSimbGlobal)
         case GERA_RET:
             if(inst.tipoInst == INST_JMP)
             {
-                cout << "\tpopl \%eax"<<endl;
+                geraPop("\%eax");
                 if(currFun == "main")
                     cout << "\tleave"<<endl;
                 cout << "\t.cfi_def_cfa 7, 8"<<endl;
@@ -707,7 +743,6 @@ void geraCodigoAsm(list<Instrucao> ilocCode,MapaSimbolos tabSimbGlobal)
                 cout << "\t.cfi_endproc"<<endl;
                 cout << endl;
             }
-            /* code */
             break;
         case GERA_ATRIB:
             /* code */
@@ -725,10 +760,19 @@ void geraCodigoAsm(list<Instrucao> ilocCode,MapaSimbolos tabSimbGlobal)
             /* code */
             break;
         case GERA_LEIT:
-            /* code */
+                if(inst.op1 == "rbss")
+                {
+                    cout << "\tmovl " << inst.nomeAux <<"(%rip), \%eax" << endl;
+                    
+                }
+                else
+                {
+                    cout << "\tmovl -" << to_string(atoi(inst.op2.c_str())+4) <<"(%rbp), \%eax" << endl;
+                }
+                geraPush("\%eax");
             break;
         case GERA_ARIT:
-            /* code */
+            geraAritAsm(inst);
             break;
         case GERA_REL:
             /* code */
@@ -740,13 +784,14 @@ void geraCodigoAsm(list<Instrucao> ilocCode,MapaSimbolos tabSimbGlobal)
             /* code */
             break;
         case GERA_DEC_LOC:
+            cout <<"\tsubq $4, \%rsp" << endl;
             /* code */
             break;
         case GERA_PARAM :
             /* code */
             break;
         case GERA_FUN_CALL:
-            /* code */
+            
             break;
         case GERA_INIT_C:
             /* code */
@@ -760,47 +805,6 @@ void generateAsm(list<Instrucao> ilocCode, MapaSimbolos tabSimbGlobal)
 {
     geraDeclGlob(tabSimbGlobal);
     geraCodigoAsm(ilocCode,tabSimbGlobal);
-
-}
-void converteIlocAsm(Instrucao inst)
-{
-
-        switch (inst.tipoInst)
-        {
-        case INST_ARITLOG:
-        
-            cout <<inst.operacao << " "<< inst.op1 <<", " << inst.op2 <<" => "<< inst.dst  << endl;
-            break;
-        case INST_MEM:
-            cout <<inst.operacao << " " <<inst.dst << " => "<< inst.op1 <<", " << inst.op2 <<  endl;
-            break;
-        case INST_MEM_READ:
-            cout <<inst.operacao << " " << inst.op1 <<", " << inst.op2  <<" => "<<  inst.dst << endl;
-            break;
-        case INST_REL:
-            cout <<inst.operacao << " "<< inst.op1 <<", " << inst.op2 <<" -> "<< inst.dst  << endl;
-            break;
-        case INST_CBR:
-            cout <<inst.operacao << " "<<  inst.dst <<" -> " << inst.op1 <<", " << inst.op2  << endl;
-            break;
-        case INST_JMP:
-            cout <<inst.operacao << " -> "<< inst.dst  << endl;
-            break;
-        case INST_LOADI:
-            cout <<inst.operacao << " "<< inst.op1 <<" => "<< inst.dst   << endl;
-            break;
-        case INST_NOP_ROT:
-            cout <<inst.operacao << ": "<< "nop" << endl;
-            break;
-        case INST_HALT:
-            cout << "halt" << endl;
-            break;
-        case INST_I2I:
-            cout <<inst.operacao << " "<< inst.op1 <<" => "<< inst.dst   << endl;
-            break;
-        default:
-            break;
-        }
 
 }
 

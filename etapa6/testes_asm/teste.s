@@ -1,8 +1,11 @@
+	.file	"teste.c"
+	.text
 	.comm	suahsua,4,4
 	.comm	euhauhuh,4,4
 	.globl	mult
 	.type	mult, @function
 mult:
+.LFB0:
 	.cfi_startproc
 	pushq	%rbp
 	.cfi_def_cfa_offset 16
@@ -31,10 +34,12 @@ mult:
 	.cfi_def_cfa 7, 8
 	ret
 	.cfi_endproc
-
+.LFE0:
+	.size	mult, .-mult
 	.globl	main
 	.type	main, @function
 main:
+.LFB1:
 	.cfi_startproc
 	pushq	%rbp
 	.cfi_def_cfa_offset 16
@@ -51,12 +56,15 @@ main:
 	movl	%eax, -4(%rbp)
 	movl	-4(%rbp), %eax
 	leave
+	.cfi_def_cfa 7, 8
 	ret
-
-
+	.cfi_endproc
+.LFE1:
+	.size	main, .-main
 	.globl	m
 	.type	m, @function
 m:
+.LFB2:
 	.cfi_startproc
 	pushq	%rbp
 	.cfi_def_cfa_offset 16
@@ -78,4 +86,7 @@ m:
 	.cfi_def_cfa 7, 8
 	ret
 	.cfi_endproc
-
+.LFE2:
+	.size	m, .-m
+	.ident	"GCC: (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0"
+	.section	.note.GNU-stack,"",@progbits

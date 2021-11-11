@@ -19,8 +19,10 @@ int main (int argc, char **argv)
   //exporta ((a_nodo*)arvore);
   if(ret ==0)
   {
+      ((a_nodo*)arvore)->cod.exportaCod();
+      cout << endl << endl;
       generateAsm(((a_nodo*)arvore)->cod.getCodigo(),tabelas.getContexto());
-      //((a_nodo*)arvore)->cod.exportaCod();
+      
   }
 
   libera((a_nodo*)arvore);

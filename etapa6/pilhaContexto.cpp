@@ -385,7 +385,7 @@ list<Instrucao> PilhaContexto::comparaParams(list<DadoTabelaSimbolos> listParam,
 			msg= "received argument number " + to_string(iteration) +" with incopatible type.";
 			this->emitirErro(ERR_WRONG_TYPE_ARGS,linha,nomeFunc,msg);
 		}
-		inst = geraInst3op("storeAI","rsp",to_string(offset),(*it3),INST_MEM,id,GERA_FUN_CALL,nomeFunc);
+		inst = geraInst3op("storeAI","rsp",to_string(offset),(*it3),INST_MEM,id,GERA_PARAM,nomeFunc);
 		retList.push_back(inst);
 		offset = offset + 4;//mudar para ficar pelo tamanho da entrada
 		

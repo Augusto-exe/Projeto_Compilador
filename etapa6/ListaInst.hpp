@@ -3,7 +3,7 @@
 #include <list>
 #include <iostream>
 #include <map>
-#include "common.h"
+#include "common.hpp"
 
 using namespace std;
 
@@ -26,7 +26,7 @@ string geraRegistrador(int *ultimoReg);
 Instrucao geraInst3op(string operacao,string op1,string op2, string dst, int tipoInst, int *id,int tipoGerador,string nomeAux);
 Instrucao geraInst2op(string operacao,string op1, string dst, int tipoInst, int *id,int tipoGerador,string nomeAux);
 void printaInst(Instrucao inst);
-
+void generateAsm(list<Instrucao> ilocCode, MapaSimbolos tabSimbGlobal);
 class ListaInst
 {
 

@@ -3,7 +3,7 @@
 %option yylineno
 %{
 	#include "parser.tab.h"
-	#include "common.h"
+	#include "common.hpp"
 	#include  <string.h>
 
 	int get_line_number();

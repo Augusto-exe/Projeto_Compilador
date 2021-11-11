@@ -563,7 +563,9 @@ void PilhaContexto::exportaTabelas()
 	}
 		
 }
-
+MapaSimbolos PilhaContexto::getContexto(){
+	return this->contextos.back().getTabela();
+}
 int PilhaContexto::getTipoPorValorLex(lexic_val_type *valorLex)
 {
 	string nomeChave ;

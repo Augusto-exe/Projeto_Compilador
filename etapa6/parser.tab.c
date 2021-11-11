@@ -1515,7 +1515,7 @@ yyreduce:
     {
         case 2:
 #line 165 "parser.y" /* yacc.c:1646  */
-    {if(arvore != NULL){ string regAux = geraRegistrador(&ultimoReg); ((a_nodo*)arvore)->cod.appendInstCodigo(geraInst2op("","","",INST_HALT,&instId,GERA_HALT,"")); ((a_nodo*)arvore)->cod.appendCodigoInicio(geraCodigoInicial(rotMain,regAux,&instId,GERA_INI,""));}}
+    {if(arvore != NULL){ string regAux = geraRegistrador(&ultimoReg); ((a_nodo*)arvore)->cod.appendInstCodigo(geraInst2op("","","",INST_HALT,&instId,GERA_HALT,"")); ((a_nodo*)arvore)->cod.appendCodigoInicio(geraCodigoInicial(rotMain,regAux,&instId,GERA_INIT_C,""));}}
 #line 1520 "parser.tab.c" /* yacc.c:1646  */
     break;
 

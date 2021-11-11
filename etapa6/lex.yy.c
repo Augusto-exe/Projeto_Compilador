@@ -582,7 +582,7 @@ char *yytext;
 #line 2 "scanner.l"
 	/* Grupo C -Augusto Exenberger Becker e Vitória Lentz */
 	#include "parser.tab.h"
-	#include "common.h"
+	#include "common.hpp"
 	#include  <string.h>
 
 	int get_line_number();

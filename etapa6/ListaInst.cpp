@@ -617,19 +617,19 @@ void printaInst(Instrucao inst)
         switch (inst.tipoInst)
         {
         case INST_ARITLOG:
-            cout <<inst.operacao << " "<< inst.op1 <<", " << inst.op2 <<" => "<< inst.dst  << endl;
+            cout <<inst.operacao << " "<< inst.op1 <<", " << inst.op2 <<" => "<< inst.dst ; //<< endl;
             break;
         case INST_MEM:
-            cout <<inst.operacao << " " <<inst.dst << " => "<< inst.op1 <<", " << inst.op2 <<  endl;
+            cout <<inst.operacao << " " <<inst.dst << " => "<< inst.op1 <<", " << inst.op2; //<<  endl;
             break;
         case INST_MEM_READ:
-            cout <<inst.operacao << " " << inst.op1 <<", " << inst.op2  <<" => "<<  inst.dst << endl;
+            cout <<inst.operacao << " " << inst.op1 <<", " << inst.op2  <<" => "<<  inst.dst; //<< endl;
             break;
         case INST_REL:
-            cout <<inst.operacao << " "<< inst.op1 <<", " << inst.op2 <<" -> "<< inst.dst  << endl;
+            cout <<inst.operacao << " "<< inst.op1 <<", " << inst.op2 <<" -> "<< inst.dst ; //<< endl;
             break;
         case INST_CBR:
-            cout <<inst.operacao << " "<<  inst.dst <<" -> " << inst.op1 <<", " << inst.op2  << endl;
+            cout <<inst.operacao << " "<<  inst.dst <<" -> " << inst.op1 <<", " << inst.op2 ; //<< endl;
             break;
         default:
             break;
@@ -639,26 +639,129 @@ void printaInst(Instrucao inst)
     switch (inst.tipoInst)
         {
         case INST_JMP:
-            cout <<inst.operacao << " -> "<< inst.dst  << endl;
+            cout <<inst.operacao << " -> "<< inst.dst; // << endl;
             break;
         case INST_LOADI:
-            cout <<inst.operacao << " "<< inst.op1 <<" => "<< inst.dst   << endl;
+            cout <<inst.operacao << " "<< inst.op1 <<" => "<< inst.dst  ; //<< endl;
             break;
         case INST_NOP_ROT:
-            cout <<inst.operacao << ": "<< "nop" << endl;
+            cout <<inst.operacao << ": "<< "nop";// << endl;
             break;
         case INST_HALT:
             cout << "halt" << endl;
             break;
         case INST_I2I:
-            cout <<inst.operacao << " "<< inst.op1 <<" => "<< inst.dst   << endl;
+            cout <<inst.operacao << " "<< inst.op1 <<" => "<< inst.dst;  // << endl;
             break;
         default:
             break;
         }
-        
+        cout <<"  -> details: " << inst.nomeAux << " , " << inst.tipoGerador << endl;
 }
+void geraDeclGlob(MapaSimbolos tabSimbGlobal)
+{
+    for( auto it : tabSimbGlobal)
+    {
+        if(it.second.natureza == NAT_VAR)
+        {
+            cout << "\t.comm  "<< it.first <<","<<it.second.tamanho<<","<<it.second.tamanho << endl;
+        }
+    }
+}
+void converteFunDec(Instrucao inst, MapaSimbolos tabSimbolosGlobal)
+{
+    switch (inst.tipoInst)
+    {
+    case INST_NOP_ROT:
+        cout << "\t.globl " << inst.nomeAux << endl;
+        cout << "\t.type " << inst.nomeAux <<", @function" <<endl;
+        cout << inst.nomeAux <<":" << endl;
+        cout << "\t.cfi_startproc \n\tpushq	%rbp \n\t.cfi_def_cfa_offset 16	\n\t.cfi_offset 6, -16\n\tmovq	%rsp, %rbp \n\t.cfi_def_cfa_register 6" << endl;
+        break;
 
+    default:
+        break;
+    }
+
+}
+void geraCodigoAsm(list<Instrucao> ilocCode,MapaSimbolos tabSimbGlobal)
+{
+    string currFun= "";
+
+    for(auto inst : ilocCode)
+    {
+        switch (inst.tipoGerador)
+        {
+        case GERA_FUN:
+            currFun = inst.nomeAux;
+            converteFunDec(inst, tabSimbGlobal);
+            break;
+        case GERA_RET:
+            if(inst.tipoInst == INST_JMP)
+            {
+                cout << "\tpopl \%eax"<<endl;
+                if(currFun == "main")
+                    cout << "\tleave"<<endl;
+                cout << "\t.cfi_def_cfa 7, 8"<<endl;
+                cout << "\tret"<<endl;
+                cout << "\t.cfi_endproc"<<endl;
+                cout << endl;
+            }
+            /* code */
+            break;
+        case GERA_ATRIB:
+            /* code */
+            break;
+        case GERA_DEC_GLB:
+            /* code */
+            break;
+        case GERA_HALT:
+            /* code */
+            break;
+        case GERA_INI:
+            /* code */
+            break;
+        case GERA_SIMPLE:
+            /* code */
+            break;
+        case GERA_LEIT:
+            /* code */
+            break;
+        case GERA_ARIT:
+            /* code */
+            break;
+        case GERA_REL:
+            /* code */
+            break;
+        case GERA_ROT:
+            /* code */
+            break;
+        case GERA_FLUX:
+            /* code */
+            break;
+        case GERA_DEC_LOC:
+            /* code */
+            break;
+        case GERA_PARAM :
+            /* code */
+            break;
+        case GERA_FUN_CALL:
+            /* code */
+            break;
+        case GERA_INIT_C:
+            /* code */
+            break;
+        default:
+            break;
+        }
+    }
+}
+void generateAsm(list<Instrucao> ilocCode, MapaSimbolos tabSimbGlobal)
+{
+    geraDeclGlob(tabSimbGlobal);
+    geraCodigoAsm(ilocCode,tabSimbGlobal);
+
+}
 void converteIlocAsm(Instrucao inst)
 {
 

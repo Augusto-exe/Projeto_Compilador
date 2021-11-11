@@ -162,7 +162,7 @@
 
 %%
 //Definição básica de um programa
-prog: programa {if(arvore != NULL){ string regAux = geraRegistrador(&ultimoReg); ((a_nodo*)arvore)->cod.appendInstCodigo(geraInst2op("","","",INST_HALT,&instId,GERA_HALT,"")); ((a_nodo*)arvore)->cod.appendCodigoInicio(geraCodigoInicial(rotMain,regAux,&instId,GERA_INI,""));}};
+prog: programa {if(arvore != NULL){ string regAux = geraRegistrador(&ultimoReg); ((a_nodo*)arvore)->cod.appendInstCodigo(geraInst2op("","","",INST_HALT,&instId,GERA_HALT,"")); ((a_nodo*)arvore)->cod.appendCodigoInicio(geraCodigoInicial(rotMain,regAux,&instId,GERA_INIT_C,""));}};
 programa:  {$$ = NULL; arvore = $$;}
 | programa func  { if ($1 == NULL){ $$ = $2; arvore = $2;} else{insere_filho($1,$2);((a_nodo*)arvore)->cod.appendCodigoFim($2->cod.getCodigo()); $$=$2; }}
 | programa decla {$$ = $1;};

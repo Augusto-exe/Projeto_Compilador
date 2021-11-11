@@ -4,7 +4,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-
+#include<list>
+#include<string>
+#include <unordered_map>
+using namespace std;
 
 
 #define TIPO_LIT		1
@@ -75,7 +78,13 @@
 #define GERA_FLUX		11
 #define GERA_DEC_LOC	12
 #define GERA_PARAM 		13
-#define GERA_FUN_CALL		13
+#define GERA_FUN_CALL	14
+#define GERA_INIT_C		15
+
+
+#define ASM_PUSH		0
+#define ASM_POP 		1
+#define ASM_ARIT		2
 
 struct lexic_val_type{
 int lineno;
@@ -96,4 +105,21 @@ typedef struct lexic_val_type lexic_val_type;
 struct lexic_val_type* geraVal(int tipo_token, int tipo_lit, int lineno, char* yytext);
 lexic_val_type* inverte_sinal( lexic_val_type* valor_lexico);
 int getValSize(lexic_val_type* valor_lexico);
+
+
+struct dadoTabelaSimbolos
+{
+	int linha;
+	int natureza;
+	int tipo;
+	int tamanho;
+	list<struct dadoTabelaSimbolos> parametros;
+	lexic_val_type valorLexico;
+	int deslocamento;
+	int escopo;
+	string rot_reg;
+};
+
+typedef struct dadoTabelaSimbolos DadoTabelaSimbolos; 
+typedef unordered_map<string,DadoTabelaSimbolos> MapaSimbolos;
 

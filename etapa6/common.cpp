@@ -1,6 +1,6 @@
 /* Grupo C -Augusto Exenberger Becker e Vitória Lentz */
 
-#include "common.h"
+#include "common.hpp"
 
 lexic_val_type* geraVal(int tipo_token, int tipo_lit, int lineno, char* yytext){
 	lexic_val_type* ret_lex_val;

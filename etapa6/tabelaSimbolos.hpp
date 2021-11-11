@@ -5,21 +5,6 @@
 #include <unordered_map>
 using namespace std;
 
-struct dadoTabelaSimbolos
-{
-	int linha;
-	int natureza;
-	int tipo;
-	int tamanho;
-	list<struct dadoTabelaSimbolos> parametros;
-	lexic_val_type valorLexico;
-	int deslocamento;
-	int escopo;
-	string rot_reg;
-};
-
-typedef struct dadoTabelaSimbolos DadoTabelaSimbolos; 
-typedef unordered_map<string,DadoTabelaSimbolos> MapaSimbolos;
 int getTamanhoTipo(int tipo);
 class tabelaSimbolos{
 	public:

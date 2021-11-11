@@ -690,14 +690,17 @@ void geraAritAsm(Instrucao inst)
     if(inst.operacao == "add" || inst.operacao == "sub")
     {
 
-        cout << "\t" << inst.operacao << "  \%edx, \%eax"<<endl;
+        cout << "\t" << inst.operacao<<"l"<< "  \%edx, \%eax"<<endl;
         
     }
     else
     {
         if(inst.operacao == "mult")
         {
-            cout << "\timult  \%eax, \%eax, \%edx"<<endl;
+            cout << "\timull  \%edx, \%eax"<<endl;
+        }
+        else{
+            cout << "\tidivl  \%edx, \%eax"<<endl;
         }
     }
     geraPush("\%eax");
@@ -745,7 +748,16 @@ void geraCodigoAsm(list<Instrucao> ilocCode,MapaSimbolos tabSimbGlobal)
             }
             break;
         case GERA_ATRIB:
-            /* code */
+                geraPop("\%eax");
+                if(inst.op1 == "rbss")
+                {
+                    cout << "\tmovl \%eax, " << inst.nomeAux <<"(%rip) " << endl;
+                    
+                }
+                else
+                {
+                    cout << "\tmovl \%eax, -" << to_string(atoi(inst.op2.c_str())+4) <<"(%rbp)" << endl;
+                }
             break;
         case GERA_DEC_GLB:
             /* code */
@@ -757,7 +769,11 @@ void geraCodigoAsm(list<Instrucao> ilocCode,MapaSimbolos tabSimbGlobal)
             /* code */
             break;
         case GERA_SIMPLE:
-            /* code */
+            if(inst.operacao =="loadI")
+            {
+                cout << "\tmovl $" << inst.op1<<", \%eax "<<endl;
+                geraPush("\%eax");
+            }
             break;
         case GERA_LEIT:
                 if(inst.op1 == "rbss")

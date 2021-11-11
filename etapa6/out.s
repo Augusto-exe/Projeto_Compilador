@@ -1,8 +1,8 @@
-loadI 58 => rbss  -> details:  , 15
+loadI 49 => rbss  -> details:  , 15
 loadI 1024 => rsp  -> details:  , 15
 loadI 1024 => rfp  -> details:  , 15
-addI rpc, 5 => r23  -> details:  , 15
-storeAI r23 => rsp, 0  -> details:  , 15
+addI rpc, 5 => r20  -> details:  , 15
+storeAI r20 => rsp, 0  -> details:  , 15
 storeAI rsp => rsp, 4  -> details:  , 15
 storeAI rfp => rsp, 8  -> details:  , 15
 jumpI -> L1  -> details:  , 15
@@ -33,29 +33,20 @@ addI rsp, 16 => rsp  -> details: main , 0
 addI rsp, 4 => rsp  -> details:  , 12
 loadI 7 => r8  -> details:  , 6
 storeAI r8 => rfp, 16  -> details: y , 2
-loadAI rfp, 16 => r10  -> details: y , 7
-loadAI rfp, 16 => r11  -> details: y , 7
-addI rpc, 7 => r13  -> details: mult , 14
-storeAI r13 => rsp, 0  -> details: mult , 14
-storeAI rsp => rsp, 4  -> details: mult , 14
-storeAI rfp => rsp, 8  -> details: mult , 14
-storeAI r10 => rsp, 16  -> details: mult , 13
-storeAI r11 => rsp, 20  -> details: mult , 13
-jumpI -> L0  -> details: mult , 14
-loadAI rsp, 12 => r12  -> details: mult , 14
-storeAI r12 => rbss, 0  -> details: x , 2
-loadAI rbss, 0 => r15  -> details: x , 7
-loadAI rfp, 16 => r16  -> details: y , 7
-add r15, r16 => r17  -> details:  , 8
-storeAI r17 => rbss, 0  -> details: x , 2
-loadI 0 => r19  -> details:  , 6
-storeAI r19 => rfp, 12  -> details:  , 1
-loadAI rfp, 0 => r20  -> details:  , 1
-loadAI rfp, 4 => r21  -> details:  , 1
-loadAI rfp, 8 => r22  -> details:  , 1
-i2i r21 => rsp  -> details:  , 1
-i2i r22 => rfp  -> details:  , 1
-jump -> r20  -> details:  , 1
+loadI 9 => r10  -> details:  , 6
+storeAI r10 => rbss, 0  -> details: x , 2
+loadAI rbss, 0 => r12  -> details: x , 7
+loadAI rfp, 16 => r13  -> details: y , 7
+add r12, r13 => r14  -> details:  , 8
+storeAI r14 => rbss, 0  -> details: x , 2
+loadAI rbss, 0 => r16  -> details: x , 7
+storeAI r16 => rfp, 12  -> details:  , 1
+loadAI rfp, 0 => r17  -> details:  , 1
+loadAI rfp, 4 => r18  -> details:  , 1
+loadAI rfp, 8 => r19  -> details:  , 1
+i2i r18 => rsp  -> details:  , 1
+i2i r19 => rfp  -> details:  , 1
+jump -> r17  -> details:  , 1
 
 
 	.comm  x,4,4
@@ -81,9 +72,12 @@ mult:
 	addq $4, %rsp
 	movl (%rsp), %edx
 	addq $4, %rsp
-	imult  %eax, %eax, %edx
+	imull  %edx, %eax
 	subq $4, %rsp
 	movl %eax, (%rsp)
+	movl (%rsp), %eax
+	addq $4, %rsp
+	movl %eax, -28(%rbp)
 	movl -28(%rbp), %eax
 	subq $4, %rsp
 	movl %eax, (%rsp)
@@ -103,12 +97,18 @@ main:
 	movq	%rsp, %rbp 
 	.cfi_def_cfa_register 6
 	subq $4, %rsp
-	movl -20(%rbp), %eax
+	movl $7, %eax 
 	subq $4, %rsp
 	movl %eax, (%rsp)
-	movl -20(%rbp), %eax
+	movl (%rsp), %eax
+	addq $4, %rsp
+	movl %eax, -20(%rbp)
+	movl $9, %eax 
 	subq $4, %rsp
 	movl %eax, (%rsp)
+	movl (%rsp), %eax
+	addq $4, %rsp
+	movl %eax, x(%rip) 
 	movl x(%rip), %eax
 	subq $4, %rsp
 	movl %eax, (%rsp)
@@ -119,7 +119,13 @@ main:
 	addq $4, %rsp
 	movl (%rsp), %edx
 	addq $4, %rsp
-	add  %eax, %edx
+	addl  %edx, %eax
+	subq $4, %rsp
+	movl %eax, (%rsp)
+	movl (%rsp), %eax
+	addq $4, %rsp
+	movl %eax, x(%rip) 
+	movl x(%rip), %eax
 	subq $4, %rsp
 	movl %eax, (%rsp)
 	movl (%rsp), %eax

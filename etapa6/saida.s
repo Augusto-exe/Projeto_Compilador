@@ -1,12 +1,8 @@
 	.globl main
 	.type main, @function
 main:
-	.cfi_startproc 
 	pushq	%rbp 
-	.cfi_def_cfa_offset 16	
-	.cfi_offset 6, -16
-	movq	%rsp, %rbp 
-	.cfi_def_cfa_register 6
+	movq	%rsp, %rbp
 	subq $16, %rsp
 	subq $4, %rsp
 	subq $4, %rsp
@@ -38,6 +34,13 @@ main:
 	movl $0, %eax 
 	subq $4, %rsp
 	movl %eax, (%rsp)
+	movl (%rsp), %eax
+	addq $4, %rsp
+	movl (%rsp), %edx
+	addq $4, %rsp
+	cmpl %eax, %edx
+	jg .L1
+	jmp .L2
 .L1:
 	movl $393, %eax 
 	subq $4, %rsp
@@ -45,7 +48,7 @@ main:
 	movl (%rsp), %eax
 	addq $4, %rsp
 	movl %eax, -24(%rbp)
-	 jmp .L3
+	jmp .L3
 .L2:
 	movl $432, %eax 
 	subq $4, %rsp
@@ -60,7 +63,5 @@ main:
 	movl (%rsp), %eax
 	addq $4, %rsp
 	leave
-	.cfi_def_cfa 7, 8
 	ret
-	.cfi_endproc
 

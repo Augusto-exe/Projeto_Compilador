@@ -722,7 +722,7 @@ void converteFunDec(Instrucao inst, MapaSimbolos tabSimbolosGlobal)
         cout << "\t.globl " << inst.nomeAux << endl;
         cout << "\t.type " << inst.nomeAux <<", @function" <<endl;
         cout << inst.nomeAux <<":" << endl;
-        cout << "\t.cfi_startproc \n\tpushq	%rbp \n\t.cfi_def_cfa_offset 16	\n\t.cfi_offset 6, -16\n\tmovq	%rsp, %rbp \n\t.cfi_def_cfa_register 6" << endl;
+        cout << "\tpushq	%rbp \n\tmovq	%rsp, %rbp" << endl;
         cout <<"\tsubq $16, \%rsp" << endl;
         break;
 
@@ -740,56 +740,59 @@ void geraFluxAsm(Instrucao inst)
         cout <<"." <<inst.operacao << ":" << endl;
         break;
     case INST_JMP:
-        cout << "\t jmp ."<< inst.dst << endl;
+        cout << "\tjmp ."<< inst.dst << endl;
         break;
     default:
         break;
     }
 
 }
-void geraRelAsm(Instrucao inst)
+string geraRelAsm(Instrucao inst,string jump_op)
 {
+    string ret ="";
     if(inst.operacao == "cbr")
     {
-        1;
+        cout<<"\t" << jump_op << " ." << inst.op1 <<endl;
+        cout<<"\tjmp ." << inst.op2 <<endl;
     }
     else
     {
+        geraPop("\%eax");
+        geraPop("\%edx");
+        cout << "\tcmpl \%eax, \%edx" << endl;
         if(inst.operacao == "cmp_GT")
         {
-            
+            ret = "jg";
         }
         if(inst.operacao == "cmp_LT")
         {
-
+            ret = "jl";
         }
         if(inst.operacao == "cmp_GE")
         {
-
+            ret = "jge";
         }
         if(inst.operacao == "cmp_LE")
         {
-
+            ret = "jle";
         }
         if(inst.operacao == "cmp_EQ")
         {
-
+            ret = "je";
         }
         if(inst.operacao == "cmp_NE")
         {
-
+            ret = "jne";
         }
     }
-    
-
-
-    
+    return ret;   
 
 }
 
 void geraCodigoAsm(list<Instrucao> ilocCode,MapaSimbolos tabSimbGlobal)
 {
     string currFun= "";
+    string lastCmp ="";
 
     for(auto inst : ilocCode)
     {
@@ -805,9 +808,9 @@ void geraCodigoAsm(list<Instrucao> ilocCode,MapaSimbolos tabSimbGlobal)
                 geraPop("\%eax");
                 if(currFun == "main")
                     cout << "\tleave"<<endl;
-                cout << "\t.cfi_def_cfa 7, 8"<<endl;
+                
                 cout << "\tret"<<endl;
-                cout << "\t.cfi_endproc"<<endl;
+                
                 cout << endl;
             }
             break;
@@ -873,10 +876,10 @@ void geraCodigoAsm(list<Instrucao> ilocCode,MapaSimbolos tabSimbGlobal)
             geraAritAsm(inst);
             break;
         case GERA_REL:
-            /* code */
+            lastCmp = geraRelAsm(inst,lastCmp);
             break;
         case GERA_ROT:
-            /* code */
+            cout <<"." <<inst.operacao << ":" << endl;
             break;
         case GERA_FLUX:
             geraFluxAsm(inst);

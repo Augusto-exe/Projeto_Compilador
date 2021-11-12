@@ -80,6 +80,7 @@ using namespace std;
 #define GERA_PARAM 		13
 #define GERA_FUN_CALL	14
 #define GERA_INIT_C		15
+#define GERA_LOGIC		16
 
 
 #define ASM_PUSH		0

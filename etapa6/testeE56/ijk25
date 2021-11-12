@@ -1,4 +1,4 @@
-/* parameter passing: 49 in the bss address */
+//56
 int x;
 
 int mult (int z, int w)
@@ -10,9 +10,9 @@ int mult (int z, int w)
 
 int main()
 {
-  int y<=7;
-  x = 9;
-  //x = mult(y, y);
+  int y;
+  y = 7;
+  x = mult(y, y);
   x = x + y;
   return x;
 }

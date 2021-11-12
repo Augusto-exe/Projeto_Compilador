@@ -685,10 +685,12 @@ void geraDeclGlob(MapaSimbolos tabSimbGlobal)
 void geraAritAsm(Instrucao inst)
 {
     string asm_operation;
-    geraPop("\%eax");
-    geraPop("\%edx");
+   
     if(inst.operacao == "add" || inst.operacao == "sub")
     {
+        geraPop("\%edx");
+        geraPop("\%eax");
+        
 
         cout << "\t" << inst.operacao<<"l"<< "  \%edx, \%eax"<<endl;
         
@@ -697,10 +699,15 @@ void geraAritAsm(Instrucao inst)
     {
         if(inst.operacao == "mult")
         {
+            geraPop("\%eax");
+            geraPop("\%edx");
             cout << "\timull  \%edx, \%eax"<<endl;
         }
         else{
-            cout << "\tidivl  \%edx, \%eax"<<endl;
+            geraPop("\%ecx");
+            geraPop("\%eax");
+            cout <<"\tmovl $0, \%edx" << endl;
+            cout << "\tidivl \%ecx"<<endl;
         }
     }
     geraPush("\%eax");
@@ -716,6 +723,7 @@ void converteFunDec(Instrucao inst, MapaSimbolos tabSimbolosGlobal)
         cout << "\t.type " << inst.nomeAux <<", @function" <<endl;
         cout << inst.nomeAux <<":" << endl;
         cout << "\t.cfi_startproc \n\tpushq	%rbp \n\t.cfi_def_cfa_offset 16	\n\t.cfi_offset 6, -16\n\tmovq	%rsp, %rbp \n\t.cfi_def_cfa_register 6" << endl;
+        cout <<"\tsubq $16, \%rsp" << endl;
         break;
 
     default:
@@ -723,6 +731,62 @@ void converteFunDec(Instrucao inst, MapaSimbolos tabSimbolosGlobal)
     }
 
 }
+void geraFluxAsm(Instrucao inst)
+{
+
+    switch (inst.tipoInst)
+    {
+    case INST_NOP_ROT:
+        cout <<"." <<inst.operacao << ":" << endl;
+        break;
+    case INST_JMP:
+        cout << "\t jmp ."<< inst.dst << endl;
+        break;
+    default:
+        break;
+    }
+
+}
+void geraRelAsm(Instrucao inst)
+{
+    if(inst.operacao == "cbr")
+    {
+        1;
+    }
+    else
+    {
+        if(inst.operacao == "cmp_GT")
+        {
+            
+        }
+        if(inst.operacao == "cmp_LT")
+        {
+
+        }
+        if(inst.operacao == "cmp_GE")
+        {
+
+        }
+        if(inst.operacao == "cmp_LE")
+        {
+
+        }
+        if(inst.operacao == "cmp_EQ")
+        {
+
+        }
+        if(inst.operacao == "cmp_NE")
+        {
+
+        }
+    }
+    
+
+
+    
+
+}
+
 void geraCodigoAsm(list<Instrucao> ilocCode,MapaSimbolos tabSimbGlobal)
 {
     string currFun= "";
@@ -760,13 +824,31 @@ void geraCodigoAsm(list<Instrucao> ilocCode,MapaSimbolos tabSimbGlobal)
                 }
             break;
         case GERA_DEC_GLB:
-            /* code */
+            /*NADA*/
             break;
         case GERA_HALT:
-            /* code */
+            /*NADA*/
             break;
         case GERA_INI:
-            /* code */
+            if(inst.operacao =="loadI")
+            {
+                cout << "\tmovl $" << inst.op1<<", \%eax "<<endl;
+                geraPush("\%eax");
+            }
+            else
+            {
+                geraPop("\%eax");
+                if(inst.op1 == "rbss")
+                {
+                    cout << "\tmovl \%eax, " << inst.nomeAux <<"(%rip) " << endl;
+                    
+                }
+                else
+                {
+                    cout << "\tmovl \%eax, -" << to_string(atoi(inst.op2.c_str())+4) <<"(%rbp)" << endl;
+                }
+            }
+            
             break;
         case GERA_SIMPLE:
             if(inst.operacao =="loadI")
@@ -797,7 +879,7 @@ void geraCodigoAsm(list<Instrucao> ilocCode,MapaSimbolos tabSimbGlobal)
             /* code */
             break;
         case GERA_FLUX:
-            /* code */
+            geraFluxAsm(inst);
             break;
         case GERA_DEC_LOC:
             cout <<"\tsubq $4, \%rsp" << endl;
@@ -810,7 +892,7 @@ void geraCodigoAsm(list<Instrucao> ilocCode,MapaSimbolos tabSimbGlobal)
             
             break;
         case GERA_INIT_C:
-            /* code */
+            /*NADA*/
             break;
         default:
             break;

@@ -1,4 +1,4 @@
-//Endereço de variáveis locais são um deslocamento =rfp=
+//99
 int z;
 int main()
 {

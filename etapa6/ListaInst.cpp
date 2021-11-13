@@ -793,13 +793,14 @@ void geraCodigoAsm(list<Instrucao> ilocCode,MapaSimbolos tabSimbGlobal)
 {
     string currFun= "";
     string lastCmp ="";
-
+    map<string,int>local_dec_Count;
     for(auto inst : ilocCode)
     {
         switch (inst.tipoGerador)
         {
         case GERA_FUN:
             currFun = inst.nomeAux;
+            local_dec_Count[currFun] = 0;
             converteFunDec(inst, tabSimbGlobal);
             break;
         case GERA_RET:
@@ -808,7 +809,13 @@ void geraCodigoAsm(list<Instrucao> ilocCode,MapaSimbolos tabSimbGlobal)
                 geraPop("\%eax");
                 if(currFun == "main")
                     cout << "\tleave"<<endl;
-                
+                else{
+                    cout <<"\taddq $16, \%rsp" << endl;
+                    cout <<"\taddq $"<<to_string(4*(local_dec_Count[currFun]))<<", \%rsp" << endl;
+                    cout <<"\tpopq	\%rbp"<<endl;
+                    local_dec_Count[currFun] = 0;    
+                }
+                   
                 cout << "\tret"<<endl;
                 
                 cout << endl;
@@ -885,14 +892,18 @@ void geraCodigoAsm(list<Instrucao> ilocCode,MapaSimbolos tabSimbGlobal)
             geraFluxAsm(inst);
             break;
         case GERA_DEC_LOC:
+            local_dec_Count[currFun] += 1;
             cout <<"\tsubq $4, \%rsp" << endl;
-            /* code */
             break;
         case GERA_PARAM :
             /* code */
             break;
         case GERA_FUN_CALL:
-            
+            if(inst.tipoInst == INST_JMP)
+            {
+                cout <<"\tcall "<< inst.nomeAux<<endl;
+                geraPush("\%eax");
+            }
             break;
         case GERA_INIT_C:
             /*NADA*/

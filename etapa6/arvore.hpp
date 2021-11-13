@@ -5,7 +5,7 @@
 
 #include <list>
 #include <string>
-#include "generateAsm.hpp"
+#include "ListaInst.hpp"
 
 
 struct arvore
@@ -18,7 +18,6 @@ struct arvore
 	struct arvore* prox_irmao;
 	string reg;
 	ListaInst cod;
-	ListaAsm codAsm;
 	list<int> idRemendosTrue;
 	list<int> idRemendosFalse;
 };

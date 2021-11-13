@@ -59,7 +59,7 @@ string getNomeValorLexico(lexic_val_type* valorLex)
 
 
 
-Instrucao PilhaContexto::insereSimboloNonVet(int line, int natureza, lexic_val_type *valorLex, int tipo,int*id,int escopo)
+Instrucao PilhaContexto::insereSimboloNonVet(int line, int natureza, lexic_val_type *valorLex, int tipo,int*id,int tipoGerador,int escopo)
 {
 	DadoTabelaSimbolos novoSimbolo;
 	list<DadoTabelaSimbolos> parametros;
@@ -113,7 +113,7 @@ Instrucao PilhaContexto::insereSimboloNonVet(int line, int natureza, lexic_val_t
 		}
 		else
 		{
-			inst = geraInst3op("addI","rsp",to_string( getTamanhoTipo(tipo)),"rsp",INST_ARITLOG,id,GERA_DEC_LOC,"");;
+			inst = geraInst3op("addI","rsp",to_string( getTamanhoTipo(tipo)),"rsp",INST_ARITLOG,id,tipoGerador,"");;
 		}
 		if(this->existeSimboloContextoAtual(nomeChave))
 			this->emitirErro(ERR_DECLARED,line,nomeOrg,nomeChave);

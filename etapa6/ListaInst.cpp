@@ -716,6 +716,7 @@ void geraAritAsm(Instrucao inst)
 }
 void converteFunDec(Instrucao inst, MapaSimbolos tabSimbolosGlobal)
 {
+    int param_nro = 0;
     switch (inst.tipoInst)
     {
     case INST_NOP_ROT:
@@ -724,6 +725,13 @@ void converteFunDec(Instrucao inst, MapaSimbolos tabSimbolosGlobal)
         cout << inst.nomeAux <<":" << endl;
         cout << "\tpushq	%rbp \n\tmovq	%rsp, %rbp" << endl;
         cout <<"\tsubq $16, \%rsp" << endl;
+        param_nro = tabSimbolosGlobal[inst.nomeAux].parametros.size();
+        cout <<"\tsubq $"<<4*param_nro <<", \%rsp" << endl;
+        for(int i = 0; i< param_nro ;i++)
+        {
+            cout << "\tmovl "<< (4*(param_nro - i -1) +16) <<"(\%rbp), \%eax"<<endl;
+            cout << "\tmovl \%eax, -"<<(4*(i+1)+16) <<"(\%rbp)"<<endl;
+        }
         break;
 
     default:
@@ -811,7 +819,7 @@ void geraCodigoAsm(list<Instrucao> ilocCode,MapaSimbolos tabSimbGlobal)
                     cout << "\tleave"<<endl;
                 else{
                     cout <<"\taddq $16, \%rsp" << endl;
-                    cout <<"\taddq $"<<to_string(4*(local_dec_Count[currFun]))<<", \%rsp" << endl;
+                    cout <<"\taddq $"<<to_string(4*(local_dec_Count[currFun]+tabSimbGlobal[currFun].parametros.size()))<<", \%rsp#a" << endl;
                     cout <<"\tpopq	\%rbp"<<endl;
                     local_dec_Count[currFun] = 0;    
                 }
@@ -896,7 +904,7 @@ void geraCodigoAsm(list<Instrucao> ilocCode,MapaSimbolos tabSimbGlobal)
             cout <<"\tsubq $4, \%rsp" << endl;
             break;
         case GERA_PARAM :
-            /* code */
+            /* NADA */
             break;
         case GERA_FUN_CALL:
             if(inst.tipoInst == INST_JMP)

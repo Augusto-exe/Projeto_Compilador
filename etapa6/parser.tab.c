@@ -1629,7 +1629,7 @@ yyreduce:
 
   case 23:
 #line 193 "parser.y" /* yacc.c:1646  */
-    {tabelas.insereSimboloNonVet(get_line_number(),NAT_VAR,(yyvsp[0].valor_lexico),INDEF,&instId,ESC_GLOBAL);libera_val((yyvsp[0].valor_lexico));}
+    {tabelas.insereSimboloNonVet(get_line_number(),NAT_VAR,(yyvsp[0].valor_lexico),INDEF,&instId,GERA_DEC_GLB,ESC_GLOBAL);libera_val((yyvsp[0].valor_lexico));}
 #line 1634 "parser.tab.c" /* yacc.c:1646  */
     break;
 
@@ -1677,13 +1677,13 @@ yyreduce:
 
   case 31:
 #line 206 "parser.y" /* yacc.c:1646  */
-    {(yyval.nodo) = (yyvsp[-3].nodo); Instrucao instAux = tabelas.insereSimboloNonVet(get_line_number(),NAT_VAR,(yyvsp[0].valor_lexico),(yyvsp[-1].tipo),&instId); (yyval.nodo)->cod.appendInstCodigo(instAux); tabelas.empilhaParametro((yyvsp[0].valor_lexico));libera_val((yyvsp[-2].valor_lexico)); libera_val((yyvsp[0].valor_lexico));/* $$->cod.appendCodigoInicio(geraInstList(&ultimoReg,&instId,"rfp"));*/}
+    {(yyval.nodo) = (yyvsp[-3].nodo); Instrucao instAux = tabelas.insereSimboloNonVet(get_line_number(),NAT_VAR,(yyvsp[0].valor_lexico),(yyvsp[-1].tipo),&instId,GERA_PARAM); (yyval.nodo)->cod.appendInstCodigo(instAux); tabelas.empilhaParametro((yyvsp[0].valor_lexico));libera_val((yyvsp[-2].valor_lexico)); libera_val((yyvsp[0].valor_lexico));/* $$->cod.appendCodigoInicio(geraInstList(&ultimoReg,&instId,"rfp"));*/}
 #line 1682 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 32:
 #line 207 "parser.y" /* yacc.c:1646  */
-    {Instrucao instAux =tabelas.insereSimboloNonVet(get_line_number(),NAT_VAR,(yyvsp[0].valor_lexico),(yyvsp[-1].tipo),&instId); tabelas.empilhaParametro((yyvsp[0].valor_lexico)); (yyval.nodo)=insere_nodo(NULL,(yyvsp[0].valor_lexico)); libera_val((yyvsp[0].valor_lexico));(yyval.nodo)->cod.appendInstCodigo(instAux);/* $$->cod.appendCodigoInicio(geraInstList(&ultimoReg,&instId,"rfp"));*/}
+    {Instrucao instAux =tabelas.insereSimboloNonVet(get_line_number(),NAT_VAR,(yyvsp[0].valor_lexico),(yyvsp[-1].tipo),&instId,GERA_PARAM); tabelas.empilhaParametro((yyvsp[0].valor_lexico)); (yyval.nodo)=insere_nodo(NULL,(yyvsp[0].valor_lexico)); libera_val((yyvsp[0].valor_lexico));(yyval.nodo)->cod.appendInstCodigo(instAux);/* $$->cod.appendCodigoInicio(geraInstList(&ultimoReg,&instId,"rfp"));*/}
 #line 1688 "parser.tab.c" /* yacc.c:1646  */
     break;
 
@@ -1797,13 +1797,13 @@ yyreduce:
 
   case 51:
 #line 233 "parser.y" /* yacc.c:1646  */
-    { (yyval.nodo) = insere_nodo(NULL,(yyvsp[-1].valor_lexico)); (yyval.nodo)= insere_filho((yyval.nodo),insere_nodo(NULL,(yyvsp[-2].valor_lexico)));(yyval.nodo)= insere_filho((yyval.nodo),(yyvsp[0].nodo));tabelas.insereSimboloNonVet(get_line_number(),NAT_VAR,(yyvsp[-2].valor_lexico),INDEF,&instId);tabelas.insereInicPendente((yyvsp[-2].valor_lexico),(yyvsp[0].nodo)->valor_lexico);}
+    { (yyval.nodo) = insere_nodo(NULL,(yyvsp[-1].valor_lexico)); (yyval.nodo)= insere_filho((yyval.nodo),insere_nodo(NULL,(yyvsp[-2].valor_lexico)));(yyval.nodo)= insere_filho((yyval.nodo),(yyvsp[0].nodo));tabelas.insereSimboloNonVet(get_line_number(),NAT_VAR,(yyvsp[-2].valor_lexico),INDEF,&instId,GERA_DEC_LOC);tabelas.insereInicPendente((yyvsp[-2].valor_lexico),(yyvsp[0].nodo)->valor_lexico);}
 #line 1802 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 52:
 #line 234 "parser.y" /* yacc.c:1646  */
-    { (yyval.nodo) = NULL;tabelas.insereSimboloNonVet(get_line_number(),NAT_VAR,(yyvsp[0].valor_lexico),INDEF,&instId); libera_val((yyvsp[0].valor_lexico));}
+    { (yyval.nodo) = NULL;tabelas.insereSimboloNonVet(get_line_number(),NAT_VAR,(yyvsp[0].valor_lexico),INDEF,&instId,GERA_DEC_LOC); libera_val((yyvsp[0].valor_lexico));}
 #line 1808 "parser.tab.c" /* yacc.c:1646  */
     break;
 
@@ -1833,97 +1833,97 @@ yyreduce:
 
   case 57:
 #line 241 "parser.y" /* yacc.c:1646  */
-    {(yyval.nodo) = insere_nodo(NULL,(yyvsp[0].valor_lexico));atualiza_tipo_semantico((yyval.nodo),ID_BOOL);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,(yyvsp[0].valor_lexico),ID_BOOL,&instId);}
+    {(yyval.nodo) = insere_nodo(NULL,(yyvsp[0].valor_lexico));atualiza_tipo_semantico((yyval.nodo),ID_BOOL);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,(yyvsp[0].valor_lexico),ID_BOOL,&instId,GERA_DEC_LOC);}
 #line 1838 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 58:
 #line 242 "parser.y" /* yacc.c:1646  */
-    {(yyval.nodo) = insere_nodo(NULL,(yyvsp[0].valor_lexico));atualiza_tipo_semantico((yyval.nodo),ID_BOOL);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,(yyvsp[0].valor_lexico),ID_BOOL,&instId);}
+    {(yyval.nodo) = insere_nodo(NULL,(yyvsp[0].valor_lexico));atualiza_tipo_semantico((yyval.nodo),ID_BOOL);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,(yyvsp[0].valor_lexico),ID_BOOL,&instId,GERA_DEC_LOC);}
 #line 1844 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 59:
 #line 243 "parser.y" /* yacc.c:1646  */
-    {(yyval.nodo) = insere_nodo(NULL,(yyvsp[0].valor_lexico));atualiza_tipo_semantico((yyval.nodo),ID_CHAR);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,(yyvsp[0].valor_lexico),ID_CHAR,&instId);}
+    {(yyval.nodo) = insere_nodo(NULL,(yyvsp[0].valor_lexico));atualiza_tipo_semantico((yyval.nodo),ID_CHAR);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,(yyvsp[0].valor_lexico),ID_CHAR,&instId,GERA_DEC_LOC);}
 #line 1850 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 60:
 #line 244 "parser.y" /* yacc.c:1646  */
-    {(yyval.nodo) = insere_nodo(NULL,(yyvsp[0].valor_lexico));atualiza_tipo_semantico((yyval.nodo),ID_STRING);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,(yyvsp[0].valor_lexico),ID_STRING,&instId);}
+    {(yyval.nodo) = insere_nodo(NULL,(yyvsp[0].valor_lexico));atualiza_tipo_semantico((yyval.nodo),ID_STRING);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,(yyvsp[0].valor_lexico),ID_STRING,&instId,GERA_DEC_LOC);}
 #line 1856 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 61:
 #line 246 "parser.y" /* yacc.c:1646  */
-    {(yyval.nodo) = insere_nodo(NULL,(yyvsp[0].valor_lexico));tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,(yyvsp[0].valor_lexico),ID_INT,&instId);atualiza_tipo_semantico((yyval.nodo),ID_INT);(yyval.nodo)->reg =geraRegistrador(&ultimoReg);(yyval.nodo)->cod.appendInstCodigo(geraInst2op("loadI",to_string((yyval.nodo)->valor_lexico->tk_value.vInt),(yyval.nodo)->reg,INST_LOADI,&instId,GERA_SIMPLE,""));}
+    {(yyval.nodo) = insere_nodo(NULL,(yyvsp[0].valor_lexico));tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,(yyvsp[0].valor_lexico),ID_INT,&instId,GERA_DEC_LOC);atualiza_tipo_semantico((yyval.nodo),ID_INT);(yyval.nodo)->reg =geraRegistrador(&ultimoReg);(yyval.nodo)->cod.appendInstCodigo(geraInst2op("loadI",to_string((yyval.nodo)->valor_lexico->tk_value.vInt),(yyval.nodo)->reg,INST_LOADI,&instId,GERA_SIMPLE,""));}
 #line 1862 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 62:
 #line 247 "parser.y" /* yacc.c:1646  */
-    {(yyval.nodo) = insere_nodo(NULL,(yyvsp[0].valor_lexico));tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,(yyvsp[0].valor_lexico),ID_FLOAT,&instId);atualiza_tipo_semantico((yyval.nodo),ID_FLOAT);}
+    {(yyval.nodo) = insere_nodo(NULL,(yyvsp[0].valor_lexico));tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,(yyvsp[0].valor_lexico),ID_FLOAT,&instId,GERA_DEC_LOC);atualiza_tipo_semantico((yyval.nodo),ID_FLOAT);}
 #line 1868 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 63:
 #line 248 "parser.y" /* yacc.c:1646  */
-    {(yyval.nodo) = insere_nodo(NULL,(yyvsp[0].valor_lexico));tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,(yyvsp[0].valor_lexico),ID_BOOL,&instId);atualiza_tipo_semantico((yyval.nodo),ID_BOOL);}
+    {(yyval.nodo) = insere_nodo(NULL,(yyvsp[0].valor_lexico));tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,(yyvsp[0].valor_lexico),ID_BOOL,&instId,GERA_DEC_LOC);atualiza_tipo_semantico((yyval.nodo),ID_BOOL);}
 #line 1874 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 64:
 #line 249 "parser.y" /* yacc.c:1646  */
-    {(yyval.nodo) = insere_nodo(NULL,(yyvsp[0].valor_lexico));tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,(yyvsp[0].valor_lexico),ID_BOOL,&instId);atualiza_tipo_semantico((yyval.nodo),ID_BOOL);}
+    {(yyval.nodo) = insere_nodo(NULL,(yyvsp[0].valor_lexico));tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,(yyvsp[0].valor_lexico),ID_BOOL,&instId,GERA_DEC_LOC);atualiza_tipo_semantico((yyval.nodo),ID_BOOL);}
 #line 1880 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 65:
 #line 251 "parser.y" /* yacc.c:1646  */
-    {(yyval.nodo) = insere_nodo(NULL,(yyvsp[0].valor_lexico)); libera_val((yyvsp[-1].valor_lexico));tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,(yyvsp[0].valor_lexico),ID_INT,&instId);atualiza_tipo_semantico((yyval.nodo),ID_INT);}
+    {(yyval.nodo) = insere_nodo(NULL,(yyvsp[0].valor_lexico)); libera_val((yyvsp[-1].valor_lexico));tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,(yyvsp[0].valor_lexico),ID_INT,&instId,GERA_DEC_LOC);atualiza_tipo_semantico((yyval.nodo),ID_INT);}
 #line 1886 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 66:
 #line 252 "parser.y" /* yacc.c:1646  */
-    {(yyval.nodo) = insere_nodo(NULL,(yyvsp[0].valor_lexico));tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,(yyvsp[0].valor_lexico),ID_INT,&instId);atualiza_tipo_semantico((yyval.nodo),ID_INT);}
+    {(yyval.nodo) = insere_nodo(NULL,(yyvsp[0].valor_lexico));tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,(yyvsp[0].valor_lexico),ID_INT,&instId,GERA_DEC_LOC);atualiza_tipo_semantico((yyval.nodo),ID_INT);}
 #line 1892 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 67:
 #line 254 "parser.y" /* yacc.c:1646  */
-    { (yyval.nodo) = insere_nodo(NULL,inverte_sinal((yyvsp[0].valor_lexico))); libera_val((yyvsp[-1].valor_lexico));tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,inverte_sinal((yyvsp[0].valor_lexico)),ID_INT,&instId);atualiza_tipo_semantico((yyval.nodo),ID_INT);}
+    { (yyval.nodo) = insere_nodo(NULL,inverte_sinal((yyvsp[0].valor_lexico))); libera_val((yyvsp[-1].valor_lexico));tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,inverte_sinal((yyvsp[0].valor_lexico)),ID_INT,&instId,GERA_DEC_LOC);atualiza_tipo_semantico((yyval.nodo),ID_INT);}
 #line 1898 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 68:
 #line 255 "parser.y" /* yacc.c:1646  */
-    {(yyval.nodo) = insere_nodo(NULL,(yyvsp[0].valor_lexico));tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,(yyvsp[0].valor_lexico),ID_INT,&instId);atualiza_tipo_semantico((yyval.nodo),ID_INT);}
+    {(yyval.nodo) = insere_nodo(NULL,(yyvsp[0].valor_lexico));tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,(yyvsp[0].valor_lexico),ID_INT,&instId,GERA_DEC_LOC);atualiza_tipo_semantico((yyval.nodo),ID_INT);}
 #line 1904 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 69:
 #line 256 "parser.y" /* yacc.c:1646  */
-    {(yyval.nodo) = insere_nodo(NULL,(yyvsp[0].valor_lexico)); libera_val((yyvsp[-1].valor_lexico));tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,(yyvsp[0].valor_lexico),ID_INT,&instId);atualiza_tipo_semantico((yyval.nodo),ID_INT);}
+    {(yyval.nodo) = insere_nodo(NULL,(yyvsp[0].valor_lexico)); libera_val((yyvsp[-1].valor_lexico));tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,(yyvsp[0].valor_lexico),ID_INT,&instId,GERA_DEC_LOC);atualiza_tipo_semantico((yyval.nodo),ID_INT);}
 #line 1910 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 70:
 #line 258 "parser.y" /* yacc.c:1646  */
-    { (yyval.nodo) = insere_nodo(NULL,inverte_sinal((yyvsp[0].valor_lexico)));libera_val((yyvsp[-1].valor_lexico));tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,inverte_sinal((yyvsp[0].valor_lexico)),ID_FLOAT,&instId);atualiza_tipo_semantico((yyval.nodo),ID_FLOAT);}
+    { (yyval.nodo) = insere_nodo(NULL,inverte_sinal((yyvsp[0].valor_lexico)));libera_val((yyvsp[-1].valor_lexico));tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,inverte_sinal((yyvsp[0].valor_lexico)),ID_FLOAT,&instId,GERA_DEC_LOC);atualiza_tipo_semantico((yyval.nodo),ID_FLOAT);}
 #line 1916 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 71:
 #line 259 "parser.y" /* yacc.c:1646  */
-    {(yyval.nodo) = insere_nodo(NULL,(yyvsp[0].valor_lexico));tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,(yyvsp[0].valor_lexico),ID_FLOAT,&instId);atualiza_tipo_semantico((yyval.nodo),ID_FLOAT);}
+    {(yyval.nodo) = insere_nodo(NULL,(yyvsp[0].valor_lexico));tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,(yyvsp[0].valor_lexico),ID_FLOAT,&instId,GERA_DEC_LOC);atualiza_tipo_semantico((yyval.nodo),ID_FLOAT);}
 #line 1922 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 72:
 #line 260 "parser.y" /* yacc.c:1646  */
-    {(yyval.nodo) = insere_nodo(NULL,(yyvsp[0].valor_lexico)); libera_val((yyvsp[-1].valor_lexico));tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,(yyvsp[0].valor_lexico),ID_FLOAT,&instId);atualiza_tipo_semantico((yyval.nodo),ID_FLOAT);}
+    {(yyval.nodo) = insere_nodo(NULL,(yyvsp[0].valor_lexico)); libera_val((yyvsp[-1].valor_lexico));tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,(yyvsp[0].valor_lexico),ID_FLOAT,&instId,GERA_DEC_LOC);atualiza_tipo_semantico((yyval.nodo),ID_FLOAT);}
 #line 1928 "parser.tab.c" /* yacc.c:1646  */
     break;
 
@@ -2020,13 +2020,13 @@ yyreduce:
 
   case 88:
 #line 287 "parser.y" /* yacc.c:1646  */
-    { (yyval.nodo) = insere_nodo(NULL,(yyvsp[0].valor_lexico));atualiza_tipo_semantico((yyval.nodo),ID_CHAR);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,(yyvsp[0].valor_lexico),ID_CHAR,&instId);}
+    { (yyval.nodo) = insere_nodo(NULL,(yyvsp[0].valor_lexico));atualiza_tipo_semantico((yyval.nodo),ID_CHAR);tabelas.insereSimboloNonVet(get_line_number(),NAT_LIT,(yyvsp[0].valor_lexico),ID_CHAR,&instId,GERA_DEC_LOC);}
 #line 2025 "parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 89:
 #line 288 "parser.y" /* yacc.c:1646  */
-    { (yyval.nodo) = insere_nodo(NULL,(yyvsp[0].valor_lexico));atualiza_tipo_semantico((yyval.nodo),ID_STRING);tabelas.insereSimboloNonVet(get_line_number(),NAT_VAR,(yyvsp[0].valor_lexico),ID_STRING,&instId);}
+    { (yyval.nodo) = insere_nodo(NULL,(yyvsp[0].valor_lexico));atualiza_tipo_semantico((yyval.nodo),ID_STRING);tabelas.insereSimboloNonVet(get_line_number(),NAT_VAR,(yyvsp[0].valor_lexico),ID_STRING,&instId,GERA_DEC_LOC);}
 #line 2031 "parser.tab.c" /* yacc.c:1646  */
     break;
 

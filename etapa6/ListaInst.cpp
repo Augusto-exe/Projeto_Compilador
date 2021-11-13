@@ -819,7 +819,7 @@ void geraCodigoAsm(list<Instrucao> ilocCode,MapaSimbolos tabSimbGlobal)
                     cout << "\tleave"<<endl;
                 else{
                     cout <<"\taddq $16, \%rsp" << endl;
-                    cout <<"\taddq $"<<to_string(4*(local_dec_Count[currFun]+tabSimbGlobal[currFun].parametros.size()))<<", \%rsp#a" << endl;
+                    cout <<"\taddq $"<<to_string(4*(local_dec_Count[currFun]+tabSimbGlobal[currFun].parametros.size()))<<", \%rsp" << endl;
                     cout <<"\tpopq	\%rbp"<<endl;
                     local_dec_Count[currFun] = 0;    
                 }
@@ -910,6 +910,8 @@ void geraCodigoAsm(list<Instrucao> ilocCode,MapaSimbolos tabSimbGlobal)
             if(inst.tipoInst == INST_JMP)
             {
                 cout <<"\tcall "<< inst.nomeAux<<endl;
+                if(tabSimbGlobal[inst.nomeAux].parametros.size()>0)
+                    cout << "\taddq $"<<4*tabSimbGlobal[inst.nomeAux].parametros.size() <<", \%rsp" << endl;
                 geraPush("\%eax");
             }
             break;

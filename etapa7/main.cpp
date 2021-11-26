@@ -22,15 +22,24 @@ int main (int argc, char **argv)
   
   if(ret ==0)
   {
-      ((a_nodo*)arvore)->cod.exportaCod();
+      //((a_nodo*)arvore)->cod.exportaCod();
       //cout << endl << endl;
-      if(string(argv[1]) == "-O")
+      if( argc >1 )
       {
-        cout <<"otimizando" << endl;
-        ((a_nodo*)arvore)->cod.geraCodigoOtimizado();
-      }
+        //((a_nodo*)arvore)->cod.geraCodigoOtimizado();
         
-      //generateAsm(((a_nodo*)arvore)->cod.getCodigo(),tabelas.getContexto());
+        if(string(argv[1]) == "-O")
+          generateAsm(((a_nodo*)arvore)->cod.geraCodigoOtimizado(),tabelas.getContexto());
+        else
+          generateAsm(((a_nodo*)arvore)->cod.getCodigo(),tabelas.getContexto());
+        
+      }
+      else{
+        //((a_nodo*)arvore)->cod.exportaCod();
+        generateAsm(((a_nodo*)arvore)->cod.getCodigo(),tabelas.getContexto());
+      }
+      
+      
       
   }
 

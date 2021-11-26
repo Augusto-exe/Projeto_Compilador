@@ -931,11 +931,122 @@ void generateAsm(list<Instrucao> ilocCode, MapaSimbolos tabSimbGlobal)
 }
 list<Instrucao> ListaInst::geraCodigoOtimizado()
 {
-    //janela de 3 -> intenção é evitar o load de 0/1 desnecessaŕio à registradores 
+    //-> intenção é evitar o load de 0/1 desnecessaŕio à registradores 
     //além de evitar a opreação aritimética sem efeito prático e a carga de outro registrador
+    //mantém um contexto global dos regs(unicos na nossa implementação) que devem ser suprimidos/substituidos
     map<string,string> replaceMap; // mapa que armazena registradores que serão substituido quando há supressão de regs desnecessários
+    list<string> regDstToRemove;
+    list<string> regOne;
+    list<string> regZero;
     list<Instrucao>  retList;
+    bool op1Found;
+    bool op2Found;
+    bool dstFound;
+    for(Instrucao inst : this->codigo)
+    {
+        if(inst.operacao == "loadI" )
+        {
+            if(inst.op1 == "1")
+                regOne.push_back(inst.dst);
+            else if (inst.op1 == "0")
+            {
+                regZero.push_back(inst.dst);
+            }
+            
+        }
+        else if (inst.n_op == 3 &&  inst.operacao !="jump")
+        {
+            if(inst.operacao == "mult")
+            {
+                op1Found = (find(regOne.begin(), regOne.end(), inst.op1) != regOne.end());
+                op2Found = (find(regOne.begin(), regOne.end(), inst.op2) != regOne.end());
+                if(op1Found)
+                {
+                    replaceMap[inst.dst] = inst.op2;
+                    regDstToRemove.push_back(inst.op1);
+                    regDstToRemove.push_back(inst.dst);
+                }
+                else if (op2Found)
+                {
+                    replaceMap[inst.dst] = inst.op1;
+                    regDstToRemove.push_back(inst.op2);
+                    regDstToRemove.push_back(inst.dst);
+                }
+                
+            }
+            else
+            {
+                
+                if(inst.operacao == "add" )
+                {
+                    op1Found = (find(regZero.begin(), regZero.end(), inst.op1) != regZero.end());
+                    op2Found = (find(regZero.begin(), regZero.end(), inst.op2) != regZero.end());
+                    if(op1Found)
+                    {
+                        replaceMap[inst.dst] = inst.op2;
+                        regDstToRemove.push_back(inst.op1);
+                        regDstToRemove.push_back(inst.dst);
+                    }
+                    else if (op2Found)
+                    {
+                        replaceMap[inst.dst] = inst.op1;
+                        regDstToRemove.push_back(inst.op2);
+                        regDstToRemove.push_back(inst.dst);
+                    }
+                    
+                }
+                else
+                {
+                    if(inst.operacao == "sub" )
+                    {
+                        op2Found = (find(regZero.begin(), regZero.end(), inst.op2) != regZero.end());
+                        if (op2Found)
+                        {
+                            replaceMap[inst.dst] = inst.op1;
+                            regDstToRemove.push_back(inst.op2);
+                            regDstToRemove.push_back(inst.dst);
+                        }
+                        
+                    }   
+                    else if(inst.operacao == "div")
+                    {
+                        op2Found = (find(regOne.begin(), regOne.end(), inst.op2) != regOne.end());
+                        if (op2Found)
+                        {
+                            replaceMap[inst.dst] = inst.op1;
+                            regDstToRemove.push_back(inst.op2);
+                            regDstToRemove.push_back(inst.dst);
+                        }
+                    }
+                    
+                }
+            }
+        }
+        
+        
+    }
 
+    for(Instrucao inst : this->codigo)
+    {
+        dstFound = (find(regDstToRemove.begin(), regDstToRemove.end(), inst.dst) != regDstToRemove.end());
+        if(replaceMap.find(inst.op1) != replaceMap.end())
+            inst.op1 = replaceMap[inst.op1];
+        if(replaceMap.find(inst.op2) != replaceMap.end())
+            inst.op2 = replaceMap[inst.op2];
+        if(dstFound && inst.tipoInst == INST_MEM)
+        {
+            dstFound = false;
+            inst.dst = replaceMap[inst.dst];
+        }
+        if(!dstFound)
+        {
+            //printaInst(inst);
+            retList.push_back(inst);
+        }
+            
+
+    }
+/*
     list<Instrucao>::iterator itList;
     Instrucao inst1,inst2,inst3;
     itList = this->codigo.begin();
@@ -954,9 +1065,13 @@ list<Instrucao> ListaInst::geraCodigoOtimizado()
             if(inst3.operacao == "mult")
             {
                 
-                if(inst1.op1 == "1")
+                if(inst1.operacao == "loadI" && inst1.op1 == "1")
+                {
                     cout <<"op1" << endl;
-                if(inst2.op1 == "1")
+                    
+                }
+                    
+                if(inst2.operacao == "loadI" &&inst2.op1 == "1")
                     cout <<"op2" << endl;
             }
             else
@@ -965,9 +1080,9 @@ list<Instrucao> ListaInst::geraCodigoOtimizado()
                 if(inst3.operacao == "add" ||inst3.operacao == "sub" )
                 {
                     
-                    if(inst1.op1 == "0")
+                    if(inst1.operacao == "loadI" &&inst1.op1 == "0")
                         cout <<"op1" << endl;
-                    if(inst2.op1 == "0")
+                    if(inst2.operacao == "loadI" &&inst2.op1 == "0")
                         cout <<"op2" << endl;
                 }
                 else
@@ -975,7 +1090,7 @@ list<Instrucao> ListaInst::geraCodigoOtimizado()
                     
                     if(inst3.operacao == "div")
                     {
-                        if(inst2.op1 == "1")
+                        if(inst2.operacao == "loadI" &&inst2.op1 == "1")
                             cout <<"op2" << endl;
                     }
                 }
@@ -984,7 +1099,7 @@ list<Instrucao> ListaInst::geraCodigoOtimizado()
         cout << "-----------------------------------------"<< endl;
 
     }
-
+*/
     return retList;
 
 }

@@ -1,0 +1,11 @@
+//100
+int z;
+int main()
+{
+
+  int a;
+
+  a = 5*((2+3)*4);
+
+  return a;
+}

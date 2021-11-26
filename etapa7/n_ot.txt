@@ -1,0 +1,47 @@
+loadI 47 => rbss  -> details:  , 15
+loadI 1024 => rsp  -> details:  , 15
+loadI 1024 => rfp  -> details:  , 15
+addI rpc, 5 => r23  -> details:  , 15
+storeAI r23 => rsp, 0  -> details:  , 15
+storeAI rsp => rsp, 4  -> details:  , 15
+storeAI rfp => rsp, 8  -> details:  , 15
+jumpI -> L0  -> details:  , 15
+loadAI rsp, 12 => r0  -> details:  , 15
+halt
+  -> details:  , 4
+L0: nop  -> details: main , 0
+i2i rsp => rfp  -> details: main , 0
+addI rsp, 16 => rsp  -> details: main , 0
+addI rsp, 4 => rsp  -> details:  , 12
+addI rsp, 4 => rsp  -> details:  , 12
+addI rsp, 4 => rsp  -> details:  , 12
+loadI 234 => r0  -> details:  , 6
+storeAI r0 => rbss, 0  -> details: z , 2
+loadI 456 => r2  -> details:  , 6
+storeAI r2 => rfp, 20  -> details: b , 2
+loadI 98 => r4  -> details:  , 6
+storeAI r4 => rfp, 24  -> details: c , 2
+loadI 0 => r8  -> details:  , 6
+loadI 4 => r6  -> details:  , 6
+sub r8, r6 => r7  -> details:  , 8
+storeAI r7 => rfp, 16  -> details: a , 2
+loadAI rfp, 16 => r10  -> details: a , 7
+loadI 0 => r11  -> details:  , 6
+cmp_GT r10, r11 -> r12  -> details:  , 9
+cbr r12 -> L1, L2  -> details:  , 9
+L1: nop  -> details:  , 11
+loadI 123 => r13  -> details:  , 6
+storeAI r13 => rfp, 24  -> details: c , 2
+loadAI rbss, 0 => r15  -> details: z , 7
+loadAI rfp, 24 => r16  -> details: c , 7
+add r15, r16 => r17  -> details:  , 8
+storeAI r17 => rfp, 20  -> details: b , 2
+L2: nop  -> details:  , 11
+loadAI rfp, 20 => r19  -> details: b , 7
+storeAI r19 => rfp, 12  -> details:  , 1
+loadAI rfp, 0 => r20  -> details:  , 1
+loadAI rfp, 4 => r21  -> details:  , 1
+loadAI rfp, 8 => r22  -> details:  , 1
+i2i r21 => rsp  -> details:  , 1
+i2i r22 => rfp  -> details:  , 1
+jump -> r20  -> details:  , 1

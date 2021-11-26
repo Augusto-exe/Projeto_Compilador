@@ -6,8 +6,8 @@ int main()
   int c;
   int b;
   int a;
-  z = 923 +0;
-  b = 456*1;
-  a = (z + b)/1;
+  z = 23 - 0;
+  b = 1*(15*4);
+  a = 0 + (z + b)/1;
   return a;
 }

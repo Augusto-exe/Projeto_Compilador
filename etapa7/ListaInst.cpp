@@ -931,9 +931,7 @@ void generateAsm(list<Instrucao> ilocCode, MapaSimbolos tabSimbGlobal)
 }
 list<Instrucao> ListaInst::geraCodigoOtimizado()
 {
-    //-> intenção é evitar o load de 0/1 desnecessaŕio à registradores 
-    //além de evitar a opreação aritimética sem efeito prático e a carga de outro registrador
-    //mantém um contexto global dos regs(unicos na nossa implementação) que devem ser suprimidos/substituidos
+    
     map<string,string> replaceMap; // mapa que armazena registradores que serão substituido quando há supressão de regs desnecessários
     list<string> regDstToRemove;
     list<string> regOne;
@@ -942,6 +940,61 @@ list<Instrucao> ListaInst::geraCodigoOtimizado()
     bool op1Found;
     bool op2Found;
     bool dstFound;
+    list<Instrucao>::iterator itList;
+    Instrucao inst1,inst2,inst3,instAux;
+    bool updated = true;
+    int auxResult,auxId;
+    // primeiro removemos todas as operações aritiméticas feitas entre 2 imediatos -> realiza o calculo em tempo
+    // tempo de compilação e troca loadI , loadI , opArit por loadI
+    // janela de 3 instruções ( o necessário em nossa gereção para verificar o padrão)
+    //fazer passagens até q n otimize mais nada
+    itList = this->codigo.begin();
+    ++itList;
+    //this->exportaCod();
+    for(;next(itList) !=this->codigo.end();++itList)
+    {
+        //cout << "-----------------------------------------"<< endl;
+        inst1 = *(prev(itList));
+        inst2 = *(itList);
+        inst3 = *(next(itList));
+        //printaInst(inst1);
+        //printaInst(inst2);
+        //printaInst(inst3);
+        if(inst3.n_op == 3 &&  inst3.operacao !="jump")
+        {
+            if(inst1.operacao == "loadI" && inst2.operacao == "loadI")
+            {
+                if(inst3.operacao == "mult"||inst3.operacao == "add"||inst3.operacao == "sub"||inst3.operacao == "div")
+                {
+                    auxId = inst3.id-1;
+                    if(inst3.operacao == "mult")
+                        auxResult = stoi(inst1.op1)*stoi(inst2.op1);
+                    else if(inst3.operacao == "add" )
+                        auxResult = stoi(inst1.op1)+stoi(inst2.op1);
+                    else if(inst3.operacao == "sub" )
+                        auxResult = stoi(inst1.op1)-stoi(inst2.op1);
+                    else if(inst3.operacao == "div" )
+                        auxResult = stoi(inst1.op1)/stoi(inst2.op1);
+                    instAux= geraInst2op("loadI",to_string(auxResult),inst3.dst,INST_LOADI, &auxId,inst2.tipoGerador,inst3.nomeAux);
+                    //updated = true;
+                    //printaInst(instAux);
+                    this->codigo.erase(prev(itList));
+                    this->codigo.erase(itList);
+                    *(next(itList)) = instAux;
+                }
+                
+            }               
+            
+        }
+        //cout << "-----------------------------------------"<< endl;
+
+    }
+    
+        
+
+    //-> intenção é evitar o load de 0/1 desnecessaŕio à registradores 
+    //além de evitar a opreação aritimética sem efeito prático e a carga de outro registrador
+    //mantém um contexto global dos regs(unicos na nossa implementação) que devem ser suprimidos/substituidos
     for(Instrucao inst : this->codigo)
     {
         if(inst.operacao == "loadI" )
@@ -1025,7 +1078,7 @@ list<Instrucao> ListaInst::geraCodigoOtimizado()
         
         
     }
-
+    //cout<<endl<<endl;
     for(Instrucao inst : this->codigo)
     {
         dstFound = (find(regDstToRemove.begin(), regDstToRemove.end(), inst.dst) != regDstToRemove.end());
@@ -1038,6 +1091,7 @@ list<Instrucao> ListaInst::geraCodigoOtimizado()
             dstFound = false;
             inst.dst = replaceMap[inst.dst];
         }
+        
         if(!dstFound)
         {
             //printaInst(inst);

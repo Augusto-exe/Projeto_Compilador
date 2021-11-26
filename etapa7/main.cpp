@@ -22,11 +22,15 @@ int main (int argc, char **argv)
   
   if(ret ==0)
   {
-      //((a_nodo*)arvore)->cod.exportaCod();
+      ((a_nodo*)arvore)->cod.exportaCod();
       //cout << endl << endl;
       if(string(argv[1]) == "-O")
+      {
         cout <<"otimizando" << endl;
-      generateAsm(((a_nodo*)arvore)->cod.getCodigo(),tabelas.getContexto());
+        ((a_nodo*)arvore)->cod.geraCodigoOtimizado();
+      }
+        
+      //generateAsm(((a_nodo*)arvore)->cod.getCodigo(),tabelas.getContexto());
       
   }
 

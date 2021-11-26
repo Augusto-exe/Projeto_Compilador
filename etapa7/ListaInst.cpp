@@ -929,6 +929,65 @@ void generateAsm(list<Instrucao> ilocCode, MapaSimbolos tabSimbGlobal)
     geraCodigoAsm(ilocCode,tabSimbGlobal);
 
 }
+list<Instrucao> ListaInst::geraCodigoOtimizado()
+{
+    //janela de 3 -> intenção é evitar o load de 0/1 desnecessaŕio à registradores 
+    //além de evitar a opreação aritimética sem efeito prático e a carga de outro registrador
+    map<string,string> replaceMap; // mapa que armazena registradores que serão substituido quando há supressão de regs desnecessários
+    list<Instrucao>  retList;
+
+    list<Instrucao>::iterator itList;
+    Instrucao inst1,inst2,inst3;
+    itList = this->codigo.begin();
+    ++itList;
+    for(;next(itList) !=this->codigo.end();++itList)
+    {
+        cout << "-----------------------------------------"<< endl;
+        inst1 = *(prev(itList));
+        inst2 = *(itList);
+        inst3 = *(next(itList));
+        printaInst(inst1);
+        printaInst(inst2);
+        printaInst(inst3);
+        if(inst3.n_op == 3 &&  inst3.operacao !="jump")
+        {
+            if(inst3.operacao == "mult")
+            {
+                
+                if(inst1.op1 == "1")
+                    cout <<"op1" << endl;
+                if(inst2.op1 == "1")
+                    cout <<"op2" << endl;
+            }
+            else
+            {
+                
+                if(inst3.operacao == "add" ||inst3.operacao == "sub" )
+                {
+                    
+                    if(inst1.op1 == "0")
+                        cout <<"op1" << endl;
+                    if(inst2.op1 == "0")
+                        cout <<"op2" << endl;
+                }
+                else
+                {
+                    
+                    if(inst3.operacao == "div")
+                    {
+                        if(inst2.op1 == "1")
+                            cout <<"op2" << endl;
+                    }
+                }
+            }
+        }
+        cout << "-----------------------------------------"<< endl;
+
+    }
+
+    return retList;
+
+}
 
 /*
 int main()

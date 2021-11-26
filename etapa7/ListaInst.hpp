@@ -2,6 +2,7 @@
 #include <string>
 #include <list>
 #include <iostream>
+#include <iterator>
 #include <map>
 #include "common.hpp"
 
@@ -37,6 +38,7 @@ class ListaInst
         void appendCodigoInicio(list<Instrucao> codigoPref);
         void appendCodigoFim(list<Instrucao> codigoPos);
         list<Instrucao> getCodigo();
+        list<Instrucao> geraCodigoOtimizado();
         void remendaTrue(list<int> idsRemendo, string rotulo);
         void remendaFalse(list<int> idsRemendo, string rotulo); 
         void exportaCod();
